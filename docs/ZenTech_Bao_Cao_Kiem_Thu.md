@@ -2,7 +2,7 @@
 
 > **Ngày kiểm thử:** 12/11/2026  
 > **Môi trường:** PHP 8.2 (máy chủ tích hợp), MariaDB (XAMPP), Chrome; chạy tại `localhost:8001`  
-> **Kết quả tự động:** 86 trên 86 ca đạt
+> **Kết quả tự động:** 117 trên 117 ca đạt
 
 ---
 
@@ -11,11 +11,11 @@
 | Chỉ số | Kết quả |
 |---|---|
 | Ca kiểm thử tự động: kiểm tra trang, bảo mật, đơn hàng, quản trị | 57 / 57 đạt |
-| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 29 / 29 đạt |
+| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 60 / 60 đạt |
 | Kiểm thử logic JavaScript: bộ chọn biến thể (Node, `scratch/variant_picker_test.js`) | Đạt |
 | Kiểm thử thủ công trên trình duyệt | Máy tính (khoảng 800px) và điện thoại giả lập (375px); không có thanh cuộn ngang |
 | Rà soát theo checklist thiết kế | 8 checklist: giỏ hàng, thanh toán, đăng nhập, đăng ký, tìm kiếm, 404, báo lỗi nhập liệu, gửi biểu mẫu |
-| Kiểm tra schema | File SQL nạp sạch vào database trống: 24 bảng, 26 khóa ngoại, khớp database đang chạy |
+| Kiểm tra schema | File SQL nạp sạch vào database trống: 26 bảng, 29 khóa ngoại, khớp database đang chạy |
 
 ### Dữ liệu trong hệ thống khi kiểm thử
 
@@ -23,11 +23,11 @@
 |---|---|
 | Sản phẩm | 330 |
 | Biến thể (màu, phiên bản, giá, tồn kho) | 571 |
-| Hình ảnh sản phẩm | 1827 |
+| Hình ảnh sản phẩm | 1848 |
 | Thông số kỹ thuật (EAV) | 1834 |
 | Thương hiệu | 34 |
-| Người dùng | 9 |
-| Đơn hàng | 16 |
+| Người dùng | 11 |
+| Đơn hàng | 19 |
 
 Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm dữ liệu mẫu. Tồn kho, lượt bán và lượt xem là số giả lập.
 
@@ -85,8 +85,8 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E44 | không có cảnh báo PHP tại /admin/products | Đạt |
 | E45 | Truy cập /admin/orders trả về 200 | Đạt |
 | E46 | không có cảnh báo PHP tại /admin/orders | Đạt |
-| E47 | Truy cập /admin/orders/detail/62 trả về 200 | Đạt |
-| E48 | không có cảnh báo PHP tại /admin/orders/detail/62 | Đạt |
+| E47 | Truy cập /admin/orders/detail/128 trả về 200 | Đạt |
+| E48 | không có cảnh báo PHP tại /admin/orders/detail/128 | Đạt |
 | E49 | Truy cập /admin/products/create trả về 200 | Đạt |
 | E50 | không có cảnh báo PHP tại /admin/products/create | Đạt |
 | E51 | Trang đơn hàng admin không có cảnh báo PHP | Đạt |
@@ -97,7 +97,7 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E56 | Trả hàng hoàn kho +1 | Đạt |
 | E57 | Khách hàng không vào được khu quản trị | Đạt |
 
-### 2.2 Luồng nghiệp vụ (29 ca)
+### 2.2 Luồng nghiệp vụ (60 ca)
 
 | Mã | Khu vực | Nội dung kiểm tra | Kết quả |
 |---|---|---|---|
@@ -111,25 +111,56 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | F08 | Thanh toán | Đặt hàng thành công, hiện thông báo | Đạt |
 | F09 | Thanh toán | Trừ tồn kho đúng số lượng đặt | Đạt |
 | F10 | Đơn hàng | Hủy đơn đang chờ: đổi trạng thái và có thông báo | Đạt |
-| F11 | Đơn hàng | Hủy đơn hoàn lại tồn kho | Đạt |
-| F12 | Đơn hàng | Hủy lần hai không cộng kho thêm | Đạt |
-| F13 | Đăng nhập | Đăng xuất có thông báo | Đạt |
-| F14 | Bộ lọc | Chọn nhiều thương hiệu cho ra nhiều kết quả hơn một thương hiệu | Đạt |
-| F15 | Bộ lọc | Chọn nhiều loại sản phẩm | Đạt |
-| F16 | Bộ lọc | Liên kết cũ ?category=slug vẫn dùng được | Đạt |
-| F17 | Bộ lọc | Không có kết quả: hiện trạng thái trống có nút đặt lại | Đạt |
-| F18 | Bộ lọc | Tham số lạ không gây lỗi PHP | Đạt |
-| F19 | Tìm kiếm | API gợi ý trả về kết quả JSON | Đạt |
-| F20 | Thương hiệu | Trang riêng của hãng chuyển sang danh sách đã lọc | Đạt |
-| F21 | Admin | Thêm sản phẩm thiếu tên: báo lỗi | Đạt |
-| F22 | Admin | Từ chối giá bán âm | Đạt |
-| F23 | Admin | Từ chối giá khuyến mãi lớn hơn giá gốc | Đạt |
-| F24 | Admin | Thêm sản phẩm hợp lệ thành công | Đạt |
-| F25 | Admin | Xóa mềm sản phẩm (is_active = 0) | Đạt |
-| F26 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
-| F27 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
-| F28 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
-| F29 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
+| F11 | Mã giảm giá | Tính đúng: 10% của 1 triệu, giảm cố định, dưới mức tối thiểu bị từ chối | Đạt |
+| F12 | Mã giảm giá | Mã sai: báo lỗi, không tạo đơn, giữ giỏ hàng | Đạt |
+| F13 | Mã giảm giá | Dùng ZENTECH10: lưu đúng số tiền giảm, tổng = tạm tính + ship - giảm | Đạt |
+| F14 | Mã giảm giá | Tăng số lượt đã dùng của mã | Đạt |
+| F15 | Mã giảm giá | Trang chi tiết đơn hiện dòng mã giảm giá | Đạt |
+| F16 | Mã giảm giá | Hủy đơn trả lại lượt dùng mã | Đạt |
+| F17 | Đơn hàng | Hủy đơn hoàn lại tồn kho | Đạt |
+| F18 | Đơn hàng | Hủy lần hai không cộng kho thêm | Đạt |
+| F19 | Đăng nhập | Đăng xuất có thông báo | Đạt |
+| F20 | Bộ lọc | Chọn nhiều thương hiệu cho ra nhiều kết quả hơn một thương hiệu | Đạt |
+| F21 | Bộ lọc | Chọn nhiều loại sản phẩm | Đạt |
+| F22 | Bộ lọc | Liên kết cũ ?category=slug vẫn dùng được | Đạt |
+| F23 | Bộ lọc | Không có kết quả: hiện trạng thái trống có nút đặt lại | Đạt |
+| F24 | Bộ lọc | Tham số lạ không gây lỗi PHP | Đạt |
+| F25 | Tìm kiếm | API gợi ý trả về kết quả JSON | Đạt |
+| F26 | Thương hiệu | Trang riêng của hãng chuyển sang danh sách đã lọc | Đạt |
+| F27 | Admin | Thêm sản phẩm thiếu tên: báo lỗi | Đạt |
+| F28 | Admin | Từ chối giá bán âm | Đạt |
+| F29 | Admin | Từ chối giá khuyến mãi lớn hơn giá gốc | Đạt |
+| F30 | Admin | Thêm sản phẩm hợp lệ thành công | Đạt |
+| F31 | Admin | Xóa mềm sản phẩm (is_active = 0) | Đạt |
+| F32 | Mã giảm giá | Nút Áp dụng: xem trước tiền giảm và tổng | Đạt |
+| F33 | Mã giảm giá | Nút Áp dụng: mã sai trả lỗi 422 | Đạt |
+| F34 | Mã giảm giá | Trang thanh toán có nút Áp dụng | Đạt |
+| F35 | Tài khoản | Cập nhật họ tên, số điện thoại | Đạt |
+| F36 | Tài khoản | Từ chối thông tin sai định dạng | Đạt |
+| F37 | Tài khoản | Đổi mật khẩu: mật khẩu hiện tại sai bị từ chối | Đạt |
+| F38 | Tài khoản | Đổi mật khẩu thành công, đăng nhập được bằng mật khẩu mới | Đạt |
+| F39 | Tài khoản | Thêm địa chỉ vào sổ địa chỉ | Đạt |
+| F40 | Tài khoản | Trang thanh toán cho chọn nhanh địa chỉ đã lưu | Đạt |
+| F41 | Tài khoản | Xóa địa chỉ | Đạt |
+| F42 | Đánh giá | Chưa nhận hàng thì không được đánh giá | Đạt |
+| F43 | Đánh giá | Đã nhận hàng: trang sản phẩm hiện form đánh giá | Đạt |
+| F44 | Đánh giá | Gửi đánh giá thành công và hiện trên trang | Đạt |
+| F45 | Đánh giá | Mỗi sản phẩm chỉ đánh giá một lần | Đạt |
+| F46 | Quên mật khẩu | Yêu cầu tạo liên kết đặt lại (môi trường thử nghiệm) | Đạt |
+| F47 | Quên mật khẩu | Email lạ: thông báo chung, không lộ tài khoản có tồn tại | Đạt |
+| F48 | Quên mật khẩu | Trang đặt lại hiện form khi token hợp lệ | Đạt |
+| F49 | Quên mật khẩu | Mật khẩu mới ngắn bị từ chối | Đạt |
+| F50 | Quên mật khẩu | Đặt lại xong đăng nhập được bằng mật khẩu mới | Đạt |
+| F51 | Quên mật khẩu | Token dùng một lần: dùng lại bị từ chối | Đạt |
+| F52 | Admin mã giảm giá | Xem danh sách mã | Đạt |
+| F53 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
+| F54 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
+| F55 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
+| F56 | Admin mã giảm giá | Bật/tắt mã | Đạt |
+| F57 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
+| F58 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
+| F59 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
+| F60 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
 
 ---
 

@@ -397,6 +397,9 @@ Khách bấm "Đặt hàng"
         ├─ [5] Ghi log trạng thái đơn (INSERT INTO order_status_logs)
         │
         └─ [6] COMMIT — Thành công
+
+  (Nếu khách nhập mã giảm giá: sau bước [1] khóa dòng coupons, kiểm tra mã,
+   trừ tiền giảm vào tổng, rồi tăng used_count và ghi order_coupons cùng giao dịch.)
 ```
 
 ### 3.2 SQL thuần (mô tả từng bước)
@@ -692,6 +695,28 @@ class OrderModel
         }
     }
 }
+```
+
+---
+
+### 3.5 Mã giảm giá trong giao dịch đặt hàng
+
+Dòng mã bị khóa (`FOR UPDATE`) để hai đơn đặt cùng lúc không vượt `max_uses`. Việc tính tiền giảm nằm trong hàm thuần `OrderModel::couponDiscount()` nên kiểm thử riêng được.
+
+```sql
+SELECT * FROM coupons WHERE code = :code FOR UPDATE;
+-- kiểm tra: is_active, starts_at, expires_at, used_count < max_uses, subtotal >= min_order_value
+-- percent: FLOOR(subtotal * discount_value / 100); fixed: discount_value; không vượt quá subtotal
+UPDATE coupons SET used_count = used_count + 1 WHERE id = :coupon_id;
+INSERT INTO order_coupons (order_id, coupon_id) VALUES (:order_id, :coupon_id);
+```
+
+Khi đơn bị hủy hoặc trả hàng, cùng giao dịch hoàn kho cũng trả lại lượt dùng:
+
+```sql
+UPDATE coupons c JOIN order_coupons oc ON oc.coupon_id = c.id
+SET c.used_count = GREATEST(c.used_count - 1, 0)
+WHERE oc.order_id = :order_id;
 ```
 
 ---

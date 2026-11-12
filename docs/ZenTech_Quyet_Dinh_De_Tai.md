@@ -34,11 +34,12 @@ Nhóm quyết định xây dựng ZenTech, lấy cảm hứng từ cách phân l
 - Cho phép lọc sản phẩm theo nhiều loại, nhiều thương hiệu và khoảng giá cùng lúc, qua cửa sổ bộ lọc.
 - Đặt hàng nhanh trong một trang thanh toán, trừ tồn kho an toàn, tránh bán quá số lượng khi nhiều người đặt cùng lúc.
 - Tích hợp trợ lý ZenBot tư vấn gear theo ngân sách và nhu cầu.
+- Hỗ trợ mã giảm giá (xem trước tiền giảm, hoàn lượt khi hủy đơn), đánh giá sản phẩm của khách đã nhận hàng, trang tài khoản kèm sổ địa chỉ, quên và đặt lại mật khẩu, quản lý mã giảm giá cho admin.
 
 ### 2.2 Mục tiêu kỹ thuật và học thuật
 
 - Nắm kiến trúc Model, View, Controller (MVC) bằng PHP thuần.
-- Thiết kế cơ sở dữ liệu quan hệ chuẩn 3NF, dùng mô hình EAV (Entity, Attribute, Value) để lưu thông số kỹ thuật linh hoạt (24 bảng).
+- Thiết kế cơ sở dữ liệu quan hệ chuẩn 3NF, dùng mô hình EAV (Entity, Attribute, Value) để lưu thông số kỹ thuật linh hoạt (26 bảng).
 - Làm chủ giao dịch cơ sở dữ liệu (BEGIN, COMMIT, ROLLBACK và khóa dòng `SELECT ... FOR UPDATE`).
 - Bảo mật cơ bản: chống CSRF, chống cố định phiên, mã hóa mật khẩu, truy vấn có tham số.
 - Thiết kế UI/UX có hệ thống: bảng màu, typography, thành phần giao diện, đáp ứng nhiều kích thước màn hình.

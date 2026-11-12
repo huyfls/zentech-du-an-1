@@ -447,17 +447,43 @@
 
 ---
 
+### Bảng `order_coupons` — Mã giảm giá đã dùng cho đơn hàng
+
+> Mỗi đơn dùng tối đa một mã. Bảng này giúp hoàn lại lượt dùng của mã khi đơn bị hủy hoặc trả hàng.
+
+| Cột | Kiểu | Ràng buộc | Mô tả |
+|-----|------|-----------|-------|
+| `order_id` | `INT UNSIGNED` | PK · FK → `orders.id` (ON DELETE CASCADE) | Đơn hàng đã dùng mã |
+| `coupon_id` | `INT UNSIGNED` | NN · FK → `coupons.id` | Mã giảm giá đã áp dụng |
+
+---
+
+### Bảng `password_resets` — Đặt lại mật khẩu
+
+> Mỗi yêu cầu "Quên mật khẩu" tạo một dòng. Chỉ lưu SHA-256 của token, token gốc chỉ có trong liên kết gửi cho người dùng. Hiệu lực 30 phút, dùng một lần.
+
+| Cột | Kiểu | Ràng buộc | Mô tả |
+|-----|------|-----------|-------|
+| `id` | `INT UNSIGNED` | PK · AI | Khóa chính |
+| `user_id` | `INT UNSIGNED` | NN · FK → `users.id` (ON DELETE CASCADE) | Tài khoản yêu cầu |
+| `token_hash` | `CHAR(64)` | NN · INDEX | SHA-256 của token |
+| `expires_at` | `DATETIME` | NN | Hết hạn |
+| `used_at` | `DATETIME` | — | Thời điểm đã dùng; NULL = chưa dùng |
+| `created_at` | `DATETIME` | NN · D=NOW() | Ngày tạo |
+
+---
+
 ## Tổng kết thống kê
 
 | Thống kê | Giá trị |
 |---------|---------|
-| Tổng số bảng | **24 bảng** |
-| Bảng thực thể chính | 15 |
-| Bảng trung gian (n-n) | 3 (`variant_attribute_values`, `cart_items`, `order_items`) |
+| Tổng số bảng | **26 bảng** |
+| Bảng thực thể chính | 16 |
+| Bảng trung gian (n-n) | 4 (`variant_attribute_values`, `cart_items`, `order_items`, `order_coupons`) |
 | Bảng log/audit | 2 (`order_status_logs`, `ai_messages`) |
-| Tổng quan hệ FK | **27 khóa ngoại** |
+| Tổng quan hệ FK | **29 khóa ngoại** |
 | Mock data sản phẩm | 10 sản phẩm · 19 biến thể |
-| Danh mục | 16 (3 cấp) |
+| Danh mục | 13 (2 cấp) |
 | Thương hiệu | 5 |
 
 ---

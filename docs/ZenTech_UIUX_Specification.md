@@ -126,7 +126,9 @@ sequenceDiagram
     UI->>Server: POST /cart/add (kèm CSRF token)
     Server-->>UI: Số lượng giỏ hàng mới
     UI-->>User: Thông báo và số trên biểu tượng giỏ
-    User->>UI: Thanh toán
+    User->>UI: Thanh toán, nhập mã giảm giá và bấm Áp dụng
+    UI->>Server: POST /coupon/preview
+    Server-->>UI: Tiền giảm và tổng mới (hoặc lý do mã không dùng được)
     UI->>Server: POST /order/place
     Server->>DB: BEGIN, SELECT ... FOR UPDATE, trừ kho, tạo đơn, COMMIT
     Server-->>UI: Chuyển tới chi tiết đơn, thông báo đặt hàng thành công
@@ -164,17 +166,23 @@ graph LR
         CHK["Thanh toán"]
         ORD["Đơn hàng của tôi"]
         AU["Đăng nhập, đăng ký"]
+        FG["Quên và đặt lại mật khẩu"]
+        ACC["Tài khoản: thông tin, mật khẩu, địa chỉ"]
         AB["Về ZenTech"]
     end
     subgraph ADMIN["Phía quản trị"]
         DASH["Tổng quan"]
         ADM_P["Quản lý sản phẩm"]
         ADM_O["Quản lý đơn hàng"]
+        ADM_C["Mã giảm giá"]
     end
     H --> CAT --> DET --> CART --> CHK --> ORD
     BR --> CAT
     DASH --> ADM_P
     DASH --> ADM_O
+    DASH --> ADM_C
+    AU --> FG
+    AU --> ACC
 ```
 
 | Màn hình | Nội dung chính |
@@ -184,7 +192,12 @@ graph LR
 | Thương hiệu | Danh sách hãng kèm số sản phẩm và giá thấp nhất, bấm vào mở danh sách đã lọc |
 | Chi tiết sản phẩm | Bộ ảnh, tên, đánh giá, giá, bộ chọn màu và phiên bản, số lượng, nút Thêm vào giỏ và Mua ngay, tab thông số, mô tả, đánh giá, sản phẩm liên quan |
 | Giỏ hàng, thanh toán | Danh sách hàng, sửa số lượng, tóm tắt đơn, form giao hàng, 3 cách thanh toán |
-| Đăng nhập, đăng ký | Form một cột, báo lỗi cụ thể, giữ lại dữ liệu đã nhập |
+| Đăng nhập, đăng ký | Form một cột, báo lỗi cụ thể, giữ lại dữ liệu đã nhập, liên kết "Quên mật khẩu?" |
+| Quên và đặt lại mật khẩu | Nhập email, nhận liên kết hiệu lực 30 phút, đặt mật khẩu mới từ 8 ký tự; thông báo chung để không lộ email có tồn tại |
+| Tài khoản | Sửa họ tên và số điện thoại, đổi mật khẩu, sổ địa chỉ (thêm, xóa, đặt mặc định); địa chỉ đã lưu chọn nhanh được ở trang thanh toán |
+| Thanh toán (mã giảm giá) | Ô nhập mã và nút "Áp dụng": xem tiền giảm và tổng mới trước khi đặt hàng; mã sai báo lỗi cụ thể |
+| Chi tiết sản phẩm (đánh giá) | Khách đã nhận hàng mới có form đánh giá (số sao, nhận xét), mỗi sản phẩm một lần; thanh phân bố sao tính từ đánh giá thật |
+| Quản trị: mã giảm giá | Bảng mã kèm lượt đã dùng, form tạo mã, bật/tắt mã |
 | Quản trị | Tổng quan, bảng sản phẩm và đơn hàng, menu bên trái (thu thành ngăn kéo trên điện thoại) |
 
 ---

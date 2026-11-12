@@ -18,7 +18,7 @@
 ```
 app/            controllers, models, views, core (Router, BaseController, BaseModel, Csrf)
 config/         app.php (cấu hình), database.php (kết nối PDO)
-database/       zentech_schema.sql (24 bảng, 10 sản phẩm mẫu), zentech_full_dump.sql (dữ liệu đầy đủ)
+database/       zentech_schema.sql (26 bảng, 10 sản phẩm mẫu), zentech_full_dump.sql (dữ liệu đầy đủ)
 public/         index.php (điểm vào), assets (css, js, vendor, fonts), uploads/products (ảnh sản phẩm), api/ai-assistant.php
 docs/           tài liệu nguồn (.md), bản mẫu giao diện; thư mục "tuần 1 - dự án 1" chứa file nộp (Word, PDF, khảo sát)
 scratch/        script kiểm thử, thu thập và nạp dữ liệu, phân tích khảo sát
@@ -29,7 +29,7 @@ PRODUCT.md      mô tả sản phẩm và người dùng mục tiêu
 
 1. Bật MySQL trong XAMPP. Trong phpMyAdmin, nhập (Import) một trong hai file:
    - `database/zentech_full_dump.sql`: dữ liệu đầy đủ (330 sản phẩm, 34 thương hiệu, ảnh, biến thể). Khuyến nghị.
-   - `database/zentech_schema.sql`: chỉ cấu trúc 24 bảng và 10 sản phẩm mẫu.
+   - `database/zentech_schema.sql`: chỉ cấu trúc 26 bảng và 10 sản phẩm mẫu.
 2. Chạy website:
    ```bash
    /Applications/XAMPP/xamppfiles/bin/php -S localhost:8001 -t public/

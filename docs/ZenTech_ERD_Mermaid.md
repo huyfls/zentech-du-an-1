@@ -8,7 +8,7 @@
 
 ---
 
-## Sơ đồ tổng quan (24 bảng và các quan hệ)
+## Sơ đồ tổng quan (26 bảng và các quan hệ)
 
 Chỉ gồm tên bảng và quan hệ, để nhìn được toàn bộ cấu trúc trên một trang. Sơ đồ đầy đủ từng cột nằm ngay bên dưới và trong file ảnh `06_ERD_day_du.png` (phóng to để đọc).
 
@@ -40,11 +40,14 @@ erDiagram
     orders                  ||--o{  reviews                 : "phát sinh"
     reviews                 ||--o{  review_images           : "đính kèm"
     ai_conversations        ||--o{  ai_messages             : "gồm"
+    orders                  ||--o|  order_coupons           : "dùng mã"
+    coupons                 ||--o{  order_coupons           : "được dùng"
+    users                   ||--o{  password_resets         : "yêu cầu"
 ```
 
 ---
 
-## Sơ đồ ERD đầy đủ (24 bảng)
+## Sơ đồ ERD đầy đủ (26 bảng)
 
 ```mermaid
 erDiagram
@@ -315,6 +318,20 @@ erDiagram
         TINYINT1    is_active           "1=đang hoạt động"
     }
 
+    order_coupons {
+        INT      order_id    PK  "Đơn hàng đã dùng mã (FK orders)"
+        INT      coupon_id   FK  "Mã giảm giá đã dùng (FK coupons)"
+    }
+
+    password_resets {
+        INT      id          PK  "Khóa chính"
+        INT      user_id     FK  "Tài khoản yêu cầu đặt lại"
+        CHAR64   token_hash      "SHA-256 của token, không lưu token gốc"
+        DATETIME expires_at      "Hết hạn sau 30 phút"
+        DATETIME used_at         "Thời điểm đã dùng, NULL nếu chưa"
+        DATETIME created_at      "Ngày tạo"
+    }
+
     %% =============================================
     %% RELATIONSHIPS
     %% =============================================
@@ -351,6 +368,9 @@ erDiagram
 
     reviews                 ||--o{  review_images           : "đính kèm"
     ai_conversations        ||--o{  ai_messages             : "gồm"
+    orders                  ||--o|  order_coupons           : "dùng mã"
+    coupons                 ||--o{  order_coupons           : "được dùng"
+    users                   ||--o{  password_resets         : "yêu cầu"
 ```
 
 ---

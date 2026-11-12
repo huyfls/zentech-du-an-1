@@ -111,6 +111,13 @@ flowchart TD
 | # | Bảng | PK | FK chính | Chức năng |
 |---|------|----|----------|-----------|
 | 24 | **`coupons`** | `id` | — | Mã giảm giá (phần trăm hoặc số tiền cố định) |
+| 25 | **`order_coupons`** | `order_id` | `order_id → orders`, `coupon_id → coupons` | Mã giảm giá đã dùng cho từng đơn (để hoàn lượt khi hủy) |
+
+### 🔑 Section 8 — Đặt lại mật khẩu
+
+| # | Bảng | PK | FK chính | Chức năng |
+|---|------|----|----------|-----------|
+| 26 | **`password_resets`** | `id` | `user_id → users` | Token đặt lại mật khẩu (chỉ lưu SHA-256, hiệu lực 30 phút, dùng một lần) |
 
 ---
 
@@ -153,19 +160,25 @@ flowchart LR
 
 ## 4. Mock Data tóm tắt
 
-### 4.1 Categories (3 cấp)
+### 4.1 Categories (13 danh mục, 2 cấp)
 
 | ID | Cấp | Tên | Parent |
 |----|-----|-----|--------|
-| 1 | 1 | Chuột Gaming | — |
-| 2 | 1 | Bàn Phím Gaming | — |
-| 3 | 1 | Tai Nghe Gaming | — |
-| 6 | 2 | Chuột Có Dây | Chuột Gaming |
-| 7 | 2 | Chuột Không Dây | Chuột Gaming |
-| 9 | 2 | Bàn Phím Cơ | Bàn Phím Gaming |
-| 14 | 3 | Chuột KD Dưới 500K | Chuột Không Dây |
-| 15 | 3 | Chuột KD 500K–1Tr | Chuột Không Dây |
-| 16 | 3 | Chuột KD Trên 1Tr | Chuột Không Dây |
+| 1 | 1 | Chuột | — |
+| 2 | 1 | Bàn Phím | — |
+| 3 | 1 | Tai Nghe | — |
+| 4 | 1 | Lót Chuột | — |
+| 5 | 1 | Ghế & Bàn Gaming | — |
+| 6 | 2 | Chuột Có Dây | Chuột |
+| 7 | 2 | Chuột Không Dây | Chuột |
+| 8 | 2 | Chuột Bluetooth | Chuột |
+| 9 | 2 | Bàn Phím Cơ | Bàn Phím |
+| 10 | 2 | Bàn Phím Membrane | Bàn Phím |
+| 11 | 2 | Bàn Phím Mini / TKL | Bàn Phím |
+| 12 | 2 | Tai Nghe Có Dây | Tai Nghe |
+| 13 | 2 | Tai Nghe Không Dây | Tai Nghe |
+
+Bộ lọc chỉ liệt kê loại cuối (cấp 2 và danh mục không có con) để tránh trùng giữa cha và con. Khoảng giá do bộ lọc giá xử lý, không tạo danh mục theo giá.
 
 ### 4.2 Brands
 

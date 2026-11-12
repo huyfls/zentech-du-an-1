@@ -34,7 +34,7 @@ md = f"""# Báo Cáo Kiểm Thử Hệ Thống ZenTech
 | Kiểm thử logic JavaScript: bộ chọn biến thể (Node, `scratch/variant_picker_test.js`) | Đạt |
 | Kiểm thử thủ công trên trình duyệt | Máy tính (khoảng 800px) và điện thoại giả lập (375px); không có thanh cuộn ngang |
 | Rà soát theo checklist thiết kế | 8 checklist: giỏ hàng, thanh toán, đăng nhập, đăng ký, tìm kiếm, 404, báo lỗi nhập liệu, gửi biểu mẫu |
-| Kiểm tra schema | File SQL nạp sạch vào database trống: 24 bảng, 26 khóa ngoại, khớp database đang chạy |
+| Kiểm tra schema | File SQL nạp sạch vào database trống: 26 bảng, 29 khóa ngoại, khớp database đang chạy |
 
 ### Dữ liệu trong hệ thống khi kiểm thử
 
