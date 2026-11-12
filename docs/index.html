@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZenTech: Bản mẫu hệ thống thiết kế</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Token lấy từ public/assets/css/custom.css và tailwind-theme.js của website */
+:root{
+  --bg:#ffffff; --surface:#f5f5f7; --line:#e8e8ed; --ink:#1d1d1f; --muted:#6e6e73;
+  --accent:#0f5de0; --accent-d:#0b4fc2; --accent-soft:#eef4ff; --sale:#d92d20; --ok:#097a3c; --star:#e8a100;
+  --radius:18px; --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,-apple-system,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{letter-spacing:-.025em;text-wrap:balance;margin:0;line-height:1.15}
+p{margin:0;text-wrap:pretty}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:20px;height:60px;overflow-x:auto}
+header.top b{font-size:18px;margin-right:8px;white-space:nowrap}
+header.top a{color:var(--muted);text-decoration:none;font-size:14px;white-space:nowrap}
+header.top a:hover{color:var(--accent)}
+.hero{padding:64px 20px 24px}
+.hero h1{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:700}
+.hero p{margin-top:16px;font-size:18px;color:var(--muted);max-width:60ch}
+section{padding:56px 0;border-top:1px solid var(--line)}
+section>.wrap>h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700}
+section>.wrap>.lead{margin-top:10px;color:var(--muted);max-width:68ch}
+.grid{display:grid;gap:16px;margin-top:28px}
+.sw{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.chip{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.chip i{display:block;height:84px}
+.chip div{padding:12px 14px;font-size:13px}
+.chip b{display:block;font-size:14px}
+.chip code{color:var(--muted)}
+table{border-collapse:collapse;width:100%;margin-top:24px;font-size:14px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:baseline}
+th{font-weight:600;color:var(--muted);font-size:12px}
+.tw{overflow-x:auto}
+.t-hero{font-size:3.6rem;font-weight:700;letter-spacing:-.025em;line-height:1.05}
+.t-h2{font-size:2.2rem;font-weight:700;letter-spacing:-.025em}
+.t-name{font-size:15px;font-weight:600}
+.t-body{font-size:16px}
+.t-small{font-size:12px;font-weight:500;color:var(--muted)}
+.num{font-variant-numeric:tabular-nums;font-weight:600}
+/* Nút */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:999px;border:0;background:var(--accent);color:#fff;font:600 15px "Be Vietnam Pro",sans-serif;cursor:pointer;transition:background .2s,transform .2s var(--ease)}
+.btn:hover{background:var(--accent-d)} .btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--accent)} .btn.ghost:hover{background:var(--accent-soft)}
+.btn.line{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px #d2d2d7} .btn.line:hover{box-shadow:inset 0 0 0 1px var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:24px}
+/* Thẻ sản phẩm */
+.cards{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.card{position:relative;display:flex;flex-direction:column}
+.stage{position:relative;aspect-ratio:1;background:var(--surface);border-radius:var(--radius);overflow:hidden}
+.stage img{width:100%;height:100%;object-fit:contain;padding:22px;mix-blend-mode:multiply;transition:transform .6s var(--ease)}
+.card:hover .stage img{transform:scale(1.05)}
+.tag{position:absolute;top:12px;left:12px;z-index:1;background:var(--sale);color:#fff;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
+.card .brand{margin-top:14px;font-size:12px;font-weight:500;color:var(--muted)}
+.card .name{margin-top:2px}
+.card .price{margin-top:10px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.card .old{color:#737378;text-decoration:line-through;font-size:14px}
+/* Biến thể */
+.demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:28px;margin-top:28px;align-items:start}
+@media(max-width:720px){.demo{grid-template-columns:1fr}}
+.opt-title{font-size:14px;color:var(--muted);margin-top:18px}
+.opt-title b{color:var(--ink)}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pill{padding:9px 18px;border-radius:999px;border:1px solid #d2d2d7;background:#fff;font:500 14px "Be Vietnam Pro",sans-serif;cursor:pointer;color:var(--ink);transition:border-color .2s,background .2s}
+.pill:hover{border-color:var(--muted)}
+.pill.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.pill.na:not(.on){opacity:.45;text-decoration:line-through}
+.stock{margin-top:16px;font-size:14px;color:var(--ok);font-weight:500}
+.stock.out{color:var(--sale)}
+.price-big{font-size:2rem;font-weight:700;margin-top:8px}
+/* Bộ lọc */
+dialog{width:min(40rem,calc(100vw - 24px));max-height:calc(100vh - 32px);padding:0;border:0;border-radius:24px;background:#fff;color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+dialog[open]{display:flex;flex-direction:column}
+.dh,.df{display:flex;align-items:center;padding:18px 24px;border-bottom:1px solid var(--line)}
+.df{border-bottom:0;border-top:1px solid var(--line);margin-top:auto}
+.dh h3{font-size:20px;flex:1}
+.db{padding:20px 24px;overflow-y:auto}
+.db h4{margin:18px 0 10px;font-size:14px;font-weight:600}
+.db h4:first-child{margin-top:0}
+.x{background:0;border:0;font-size:22px;cursor:pointer;color:var(--muted);border-radius:50%;width:36px;height:36px}
+.x:hover{background:var(--surface)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.fchip{display:inline-flex;gap:6px;align-items:center;background:var(--accent-soft);color:var(--accent);padding:7px 8px 7px 14px;border-radius:999px;font-size:14px;font-weight:500}
+/* Form */
+.field{display:grid;gap:6px;max-width:360px;margin-top:18px}
+.field label{font-size:13px;font-weight:600}
+.field input{padding:12px 14px;border:1px solid #d2d2d7;border-radius:12px;font:15px "Be Vietnam Pro",sans-serif;background:#fff;color:var(--ink)}
+.field input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.field input:user-invalid{border-color:var(--sale);box-shadow:0 0 0 3px rgba(217,45,32,.12)}
+.hint{font-size:12px;color:var(--muted)}
+/* Toast */
+#toasts{position:fixed;right:20px;bottom:20px;display:grid;gap:10px;z-index:20}
+.toast{background:var(--ink);color:#fff;padding:14px 18px;border-radius:14px;font-size:14px;box-shadow:0 12px 32px rgba(0,0,0,.18);animation:in .35s var(--ease)}
+.toast.err{background:var(--sale)}
+@keyframes in{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+footer{padding:40px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <b>ZenTech</b>
+  <a href="#mau">Màu</a><a href="#chu">Chữ</a><a href="#nut">Nút</a><a href="#the">Thẻ sản phẩm</a><a href="#bien-the">Biến thể</a><a href="#loc">Bộ lọc</a><a href="#form">Biểu mẫu</a><a href="#thong-bao">Thông báo</a>
+</div></header>
+
+<div class="wrap hero">
+  <h1>Hệ thống thiết kế ZenTech</h1>
+  <p>Bản mẫu các thành phần giao diện của website, theo phong cách phòng trưng bày sáng. Các token và thành phần ở đây lấy trực tiếp từ mã nguồn website. Các phần có nút bấm đều chạy được.</p>
+</div>
+
+<section id="mau"><div class="wrap">
+  <h2>Màu sắc</h2>
+  <p class="lead">Một màu nhấn duy nhất cho hành động. Đỏ chỉ dùng cho giảm giá và lỗi, xanh lá chỉ cho trạng thái tốt.</p>
+  <div class="grid sw">
+    <div class="chip"><i style="background:#fff;border-bottom:1px solid var(--line)"></i><div><b>Nền trang</b><code>#ffffff</code><br>Nền toàn trang</div></div>
+    <div class="chip"><i style="background:#f5f5f7"></i><div><b>Bề mặt</b><code>#f5f5f7</code><br>Thẻ, vùng ảnh, khối thông tin</div></div>
+    <div class="chip"><i style="background:#e8e8ed"></i><div><b>Đường kẻ</b><code>#e8e8ed</code><br>Viền mảnh, phân cách</div></div>
+    <div class="chip"><i style="background:#1d1d1f"></i><div><b>Mực</b><code>#1d1d1f</code><br>Chữ chính, tương phản 16,8:1</div></div>
+    <div class="chip"><i style="background:#6e6e73"></i><div><b>Chữ phụ</b><code>#6e6e73</code><br>Mô tả, nhãn, 5,1:1</div></div>
+    <div class="chip"><i style="background:#0f5de0"></i><div><b>Xanh hành động</b><code>#0f5de0</code><br>Nút chính, liên kết, 5,7:1</div></div>
+    <div class="chip"><i style="background:#d92d20"></i><div><b>Đỏ</b><code>#d92d20</code><br>Giảm giá, lỗi, 4,8:1</div></div>
+    <div class="chip"><i style="background:#097a3c"></i><div><b>Xanh lá</b><code>#097a3c</code><br>Còn hàng, thành công, 5,4:1</div></div>
+    <div class="chip"><i style="background:#e8a100"></i><div><b>Vàng sao</b><code>#e8a100</code><br>Sao đánh giá</div></div>
+  </div>
+</div></section>
+
+<section id="chu"><div class="wrap">
+  <h2>Chữ</h2>
+  <p class="lead">Be Vietnam Pro cho toàn bộ giao diện, vì được thiết kế cho tiếng Việt. Số liệu dùng chữ số đều nhau để cột giá thẳng hàng.</p>
+  <div class="tw"><table>
+    <tr><th>Cấp bậc</th><th>Mẫu</th><th>Quy cách</th></tr>
+    <tr><td>Tiêu đề trang chủ</td><td class="t-hero">Chọn gear</td><td>40 đến 60px, Bold 700, khoảng cách chữ -0,025em</td></tr>
+    <tr><td>Tiêu đề mục</td><td class="t-h2">Mua theo loại.</td><td>28 đến 36px, Bold 700</td></tr>
+    <tr><td>Tên sản phẩm</td><td class="t-name">Chuột Gaming không dây Logitech G304 Lightspeed</td><td>15px, SemiBold 600</td></tr>
+    <tr><td>Nội dung</td><td class="t-body">Chuột gaming không dây, cảm biến HERO, pin 250 giờ.</td><td>16 đến 18px, Regular 400</td></tr>
+    <tr><td>Nhãn nhỏ</td><td class="t-small">Logitech</td><td>12px, Medium 500</td></tr>
+    <tr><td>Số liệu</td><td class="num">1.750.000₫ &nbsp; 725.000₫ &nbsp; 19.900.000₫</td><td>Chữ số đều nhau (tabular-nums)</td></tr>
+  </table></div>
+</div></section>
+
+<section id="nut"><div class="wrap">
+  <h2>Nút</h2>
+  <p class="lead">Nút chính dạng viên thuốc, mỗi màn hình chỉ có một nút chính nổi bật.</p>
+  <div class="row">
+    <button class="btn">Thêm vào giỏ hàng</button>
+    <button class="btn line">Mua ngay</button>
+    <button class="btn ghost">Hỏi ZenBot ›</button>
+    <button class="btn" disabled>Hết hàng</button>
+    <button class="btn" id="load">Đặt hàng</button>
+  </div>
+  <p class="hint" style="margin-top:12px">Nút "Đặt hàng" mô phỏng trạng thái đang gửi: khóa nút và đổi chữ trong khi chờ.</p>
+</div></section>
+
+<section id="the"><div class="wrap">
+  <h2>Thẻ sản phẩm</h2>
+  <p class="lead">Vùng ảnh vuông nền xám nhạt, ảnh có nền trắng hòa vào. Tên hãng, tên sản phẩm tối đa 2 dòng, giá bắt đầu bằng "Từ". Cả thẻ là một liên kết. Dữ liệu và ảnh lấy từ database của ZenTech.</p>
+  <div class="grid cards">
+    <a class="card" href="#the" style="text-decoration:none;color:inherit">
+      <div class="stage"><span class="tag">Giảm 24%</span><img alt="" src="https://cdn2.cellphones.com.vn/insecure/rs:fill:600:600/q:90/plain/https://cellphones.com.vn/media/catalog/product/c/h/chuot-gaming-khong-day-logitech-g304-lightspeed_1_1.png"></div>
+      <div class="brand">Logitech</div><div class="name t-name">Chuột Gaming không dây Logitech G304 Lightspeed</div>
+      <div class="price"><span class="t-name num">Từ 725.000₫</span><span class="old num">949.000₫</span></div>
+    </a>
+    <a class="card" href="#the" style="text-decoration:none;color:inherit">
+      <div class="stage"><span class="tag">Giảm 12%</span><img alt="" src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&auto=format&fit=crop&q=80"></div>
+      <div class="brand">DareU</div><div class="name t-name">Bàn phím cơ DareU EK87 Pro</div>
+      <div class="price"><span class="t-name num">Từ 699.000₫</span><span class="old num">790.000₫</span></div>
+    </a>
+    <a class="card" href="#the" style="text-decoration:none;color:inherit">
+      <div class="stage"><img alt="" src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&auto=format&fit=crop&q=80"></div>
+      <div class="brand">Corsair</div><div class="name t-name">Corsair HS80 RGB Wireless Spatial Audio</div>
+      <div class="price"><span class="t-name num">Từ 2.490.000₫</span></div>
+    </a>
+  </div>
+</div></section>
+
+<section id="bien-the"><div class="wrap">
+  <h2>Bộ chọn biến thể</h2>
+  <p class="lead">Chọn màu hoặc phiên bản thì giá, giá gốc, tồn kho đổi ngay. Tổ hợp không có (ví dụ Trắng với Brown Switch) bị mờ gạch ngang, bấm vào sẽ tự chuyển sang biến thể có thật để hàng hiển thị luôn khớp hàng được thêm vào giỏ. Thử bấm bên dưới. Dữ liệu là của DareU EK87 Pro.</p>
+  <div class="demo">
+    <div class="stage" style="aspect-ratio:4/3"><img alt="Bàn phím DareU EK87 Pro" src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80"></div>
+    <div>
+      <h3 style="font-size:1.6rem">DareU EK87 Pro</h3>
+      <div class="price-big num" id="v-price">699.000₫</div>
+      <div class="opt-title">Màu sắc: <b id="v-color-l">Đen</b></div>
+      <div class="pills" id="v-colors"></div>
+      <div class="opt-title">Phiên bản: <b id="v-ver-l">Red Switch</b></div>
+      <div class="pills" id="v-vers"></div>
+      <div class="stock" id="v-stock"></div>
+      <div class="row"><button class="btn" id="v-add">Thêm vào giỏ hàng</button><button class="btn line" id="v-oos">Giả lập hết hàng</button></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="loc"><div class="wrap">
+  <h2>Bộ lọc dạng cửa sổ</h2>
+  <p class="lead">Nút "Bộ lọc" mở cửa sổ có ba nhóm. Loại sản phẩm và thương hiệu chọn nhiều cùng lúc. Khoảng giá có nút chọn nhanh. Bộ lọc đang áp dụng hiện thành thẻ nhỏ, bấm × để bỏ từng thẻ. Esc hoặc bấm ra ngoài để đóng.</p>
+  <div class="row"><button class="btn line" id="open-f">Bộ lọc <span id="f-count" style="background:var(--accent);color:#fff;border-radius:999px;padding:0 8px;font-size:12px;display:none"></span></button></div>
+  <div class="chips" id="f-chips"></div>
+  <dialog id="dlg" aria-labelledby="dlg-t">
+    <div class="dh"><h3 id="dlg-t">Bộ lọc</h3><button class="x" id="dlg-x" aria-label="Đóng bộ lọc">×</button></div>
+    <div class="db">
+      <h4>Loại sản phẩm</h4><div class="pills" id="f-cat"></div>
+      <h4>Thương hiệu</h4><div class="pills" id="f-brand"></div>
+      <h4>Khoảng giá</h4><div class="pills" id="f-price"></div>
+    </div>
+    <div class="df"><button class="btn ghost" id="f-clear">Xóa lọc</button><button class="btn" id="f-ok" style="margin-left:auto">Xem kết quả</button></div>
+  </dialog>
+</div></section>
+
+<section id="form"><div class="wrap">
+  <h2>Biểu mẫu và báo lỗi</h2>
+  <p class="lead">Ô nhập không báo lỗi khi đang gõ. Sau khi rời ô mà giá trị sai, viền chuyển đỏ. Các lỗi cụ thể được liệt kê khi gửi biểu mẫu, và dữ liệu đã nhập được giữ lại.</p>
+  <form onsubmit="event.preventDefault();toast('Đã gửi biểu mẫu mẫu.')">
+    <div class="field"><label for="e">Email</label><input id="e" type="email" required placeholder="you@domain.com" autocomplete="email"></div>
+    <div class="field"><label for="p">Số điện thoại</label><input id="p" inputmode="numeric" pattern="0[0-9]{9}" title="10 chữ số, bắt đầu bằng 0" placeholder="0912345678" autocomplete="tel"><span class="hint">10 chữ số, bắt đầu bằng 0. Gõ sai rồi bấm sang ô khác để thấy viền đỏ.</span></div>
+    <div class="field"><label for="w">Mật khẩu</label><input id="w" type="password" minlength="8" required placeholder="Tối thiểu 8 ký tự" autocomplete="new-password"></div>
+    <div class="row"><button class="btn" type="submit">Đăng ký tài khoản</button></div>
+  </form>
+</div></section>
+
+<section id="thong-bao"><div class="wrap">
+  <h2>Thông báo</h2>
+  <p class="lead">Mọi hành động có thông báo nổi ở góc màn hình: đăng ký, thêm vào giỏ, đặt hàng, hủy đơn, đăng xuất.</p>
+  <div class="row">
+    <button class="btn line" onclick="toast('Đã thêm vào giỏ hàng!')">Thành công</button>
+    <button class="btn line" onclick="toast('Sản phẩm đã hết hàng.','err')">Lỗi</button>
+  </div>
+</div></section>
+
+<footer><div class="wrap">ZenTech, đồ án môn Dự án 1. Tài liệu đặc tả đầy đủ: ZenTech_UIUX_Specification.docx.</div></footer>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+function toast(m,t){const e=document.createElement('div');e.className='toast'+(t==='err'?' err':'');e.textContent=m;$('#toasts').append(e);setTimeout(()=>e.remove(),3500)}
+const fmt=n=>n.toLocaleString('vi-VN')+'₫';
+
+/* Nút đang gửi */
+$('#load').onclick=function(){const b=this,t=b.textContent;b.disabled=true;b.textContent='Đang xử lý…';setTimeout(()=>{b.disabled=false;b.textContent=t;toast('Đặt hàng thành công!')},1400)};
+
+/* Bộ chọn biến thể: dữ liệu thật của DareU EK87 Pro */
+const V=[{c:'Đen',v:'Red Switch',price:699000,old:790000,stock:45},{c:'Đen',v:'Brown Switch',price:699000,old:790000,stock:30},{c:'Trắng',v:'Red Switch',price:699000,old:790000,stock:25}];
+let sc='Đen',sv='Red Switch',oos=false;
+const colors=[...new Set(V.map(x=>x.c))],vers=[...new Set(V.map(x=>x.v))];
+const find=(c,v)=>V.find(x=>x.c===c&&x.v===v);
+function pick(c,v,changed){let x=find(c,v);if(!x){x=V.find(y=>changed==='c'?y.c===c:y.v===v);c=x.c;v=x.v}sc=c;sv=v;render()}
+function render(){
+  const x=find(sc,sv),stock=oos?0:x.stock;
+  $('#v-price').innerHTML=fmt(x.price)+' <s style="font-size:16px;color:#737378;font-weight:400">'+fmt(x.old)+'</s>';
+  $('#v-color-l').textContent=sc;$('#v-ver-l').textContent=sv;
+  $('#v-colors').innerHTML=colors.map(c=>`<button class="pill${c===sc?' on':''}${find(c,sv)?'':' na'}" data-c="${c}">${c}</button>`).join('');
+  $('#v-vers').innerHTML=vers.map(v=>`<button class="pill${v===sv?' on':''}${find(sc,v)?'':' na'}" data-v="${v}">${v}</button>`).join('');
+  const s=$('#v-stock');s.className='stock'+(stock?'':' out');s.textContent=stock?`Còn hàng (${stock} sản phẩm)`:'Hết hàng';
+  $('#v-add').disabled=!stock;
+}
+$('#v-colors').onclick=e=>{const b=e.target.closest('[data-c]');b&&pick(b.dataset.c,sv,'c')};
+$('#v-vers').onclick=e=>{const b=e.target.closest('[data-v]');b&&pick(sc,b.dataset.v,'v')};
+$('#v-add').onclick=()=>toast(`Đã thêm: ${sc} / ${sv}`);
+$('#v-oos').onclick=function(){oos=!oos;this.textContent=oos?'Bỏ giả lập hết hàng':'Giả lập hết hàng';render()};
+render();
+
+/* Bộ lọc */
+const CATS=['Chuột Gaming','Chuột Có Dây','Bàn Phím Cơ','Tai Nghe Có Dây','Bàn Phím Gaming','Chuột Không Dây'],BRANDS=['Logitech','Razer','DareU','Akko','Rapoo','Aula','Corsair'],PRICES=['Dưới 500K','500K - 1 triệu','1 - 2 triệu','2 - 4 triệu','Trên 4 triệu'];
+const F={cat:new Set(),brand:new Set(),price:null};
+const pills=(id,list,k)=>{$(id).innerHTML=list.map(name=>`<button type="button" class="pill" data-k="${k}" data-v="${name}">${name}</button>`).join('')};
+pills('#f-cat',CATS,'cat');pills('#f-brand',BRANDS,'brand');pills('#f-price',PRICES,'price');
+const dlg=$('#dlg');
+$('#open-f').onclick=()=>{sync();dlg.showModal()};
+$('#dlg-x').onclick=()=>dlg.close();
+dlg.addEventListener('click',e=>{if(e.target===dlg){dlg.close();return}
+  const b=e.target.closest('.pill');if(!b)return;const k=b.dataset.k,v=b.dataset.v;
+  if(k==='price'){F.price=F.price===v?null:v}else{F[k].has(v)?F[k].delete(v):F[k].add(v)}sync()});
+function sync(){dlg.querySelectorAll('.pill').forEach(b=>{const k=b.dataset.k,v=b.dataset.v;b.classList.toggle('on',k==='price'?F.price===v:F[k].has(v))})}
+function reset(){F.cat.clear();F.brand.clear();F.price=null}
+function apply(){const items=[...F.cat].map(v=>['cat',v]).concat([...F.brand].map(v=>['brand',v]),F.price?[['price',F.price]]:[]);
+  $('#f-chips').innerHTML=items.map(([k,v])=>`<span class="fchip">${v}<button class="x" style="width:24px;height:24px;font-size:16px;color:inherit" data-rm="${k}|${v}" aria-label="Bỏ lọc ${v}">×</button></span>`).join('')+(items.length?'<button class="btn ghost" style="padding:6px 12px;font-size:14px" id="f-all">Xóa tất cả</button>':'');
+  const c=$('#f-count');c.style.display=items.length?'inline':'none';c.textContent=items.length}
+$('#f-ok').onclick=()=>{apply();dlg.close()};
+$('#f-clear').onclick=()=>{reset();sync();apply()};
+$('#f-chips').onclick=e=>{if(e.target.id==='f-all'){reset();apply();return}const r=e.target.closest('[data-rm]');if(!r)return;const[k,v]=r.dataset.rm.split('|');k==='price'?F.price=null:F[k].delete(v);apply()};
+</script>
+</body>
+</html>
