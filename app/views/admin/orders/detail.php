@@ -31,16 +31,17 @@ $statuses = [
         <!-- Form Update Status -->
         <form action="/admin/orders/update/<?= $order['id'] ?>" method="POST" class="flex items-center gap-2">
 <?= Csrf::field() ?>
+<?php $next = OrderModel::TRANSITIONS[$order['status']] ?? []; ?>
+<?php if ($next): ?>
             <select name="status" class="bg-zinc-900 border border-zinc-700 text-xs font-semibold text-white rounded-xl px-3 py-2 outline-none focus:border-accent-400">
-                <?php foreach ($statuses as $k => $v): ?>
-                    <option value="<?= $k ?>" <?= $order['status'] === $k ? 'selected' : '' ?>>
-                        <?= $v ?> (<?= strtoupper($k) ?>)
-                    </option>
+                <?php foreach ($next as $k): ?>
+                    <option value="<?= $k ?>"><?= $statuses[$k] ?? $k ?> (<?= strtoupper($k) ?>)</option>
                 <?php endforeach; ?>
             </select>
             <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold bg-accent-500 hover:bg-accent-400 text-black transition">
                 Cập nhật trạng thái
             </button>
+        <?php else: ?><span class="text-xs text-zinc-500">Đơn đã kết thúc, không thể đổi trạng thái.</span><?php endif; ?>
         </form>
     </div>
 

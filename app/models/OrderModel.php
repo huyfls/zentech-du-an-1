@@ -322,7 +322,7 @@ class OrderModel extends BaseModel
     }
 
     /** Các chuyển trạng thái hợp lệ (state machine). */
-    private const TRANSITIONS = [
+    public const TRANSITIONS = [
         'pending'    => ['confirmed', 'cancelled'],
         'confirmed'  => ['processing', 'cancelled'],
         'processing' => ['shipping', 'cancelled'],
