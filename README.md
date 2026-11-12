@@ -42,7 +42,6 @@ Website không cần internet: Tailwind, phông chữ và ảnh sản phẩm đ�
 
 | Vai trò | Email | Mật khẩu |
 |---|---|---|
-| Quản trị viên | `admin@zentech.vn` | `Password@123` |
 | Khách hàng | `nguyenvanan@gmail.com` | `Password@123` |
 | Khách hàng | `tranthibinh@gmail.com` | `Password@123` |
 

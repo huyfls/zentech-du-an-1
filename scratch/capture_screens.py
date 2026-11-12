@@ -11,7 +11,9 @@ from playwright.sync_api import sync_playwright
 B = "http://localhost:8001"
 OUT = Path(__file__).resolve().parent.parent / "docs" / "tuần 1 - dự án 1" / "hinh_anh_giao_dien"
 OUT.mkdir(exist_ok=True)
+import os
 PW = "Password@123"
+ADMIN_PW = os.environ.get("ZENTECH_ADMIN_PW", PW)
 SLUG = "chuot-gaming-khong-day-logitech-g304-lightspeed"
 
 def shot(pg, name, full=False):
@@ -20,7 +22,8 @@ def shot(pg, name, full=False):
     print("  ", name)
 
 def login(pg, email):
-    pg.goto(B + "/dang-nhap"); pg.fill('input[name=email]', email); pg.fill('input[name=password]', PW)
+    pw = ADMIN_PW if email.startswith('admin@') else PW
+    pg.goto(B + "/dang-nhap"); pg.fill('input[name=email]', email); pg.fill('input[name=password]', pw)
     pg.click('button[type=submit]'); pg.wait_for_load_state("networkidle")
 
 def logout(pg):

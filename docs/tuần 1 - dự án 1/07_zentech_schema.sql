@@ -503,7 +503,7 @@ INSERT INTO roles (id, name, description) VALUES
 -- Users (mật khẩu hash bcrypt của "Password@123")
 -- -------------------------------------------------------
 INSERT INTO users (id, role_id, full_name, email, phone, password_hash, is_active) VALUES
-(1, 1, 'Admin ZenTech',  'admin@zentech.vn',       '0909000001', '$2y$10$hTIH2RlmRqPVpUrIV5LLc.NGwLxLkZOa/4QT.CtyLN1WlWccHcReS', 1),
+(1, 1, 'Admin ZenTech',  'admin@zentech.vn',       '0909000001', '$2y$10$cbBVm9gEjnZYo/lpva74XO05PPfEvUbhKikseq47l7W/ifhV3XHlS', 1),
 (2, 2, 'Nguyễn Văn An',  'nguyenvanan@gmail.com',  '0912345678', '$2y$10$hTIH2RlmRqPVpUrIV5LLc.NGwLxLkZOa/4QT.CtyLN1WlWccHcReS',  1),
 (3, 2, 'Trần Thị Bình',  'tranthibinh@gmail.com',  '0923456789', '$2y$10$hTIH2RlmRqPVpUrIV5LLc.NGwLxLkZOa/4QT.CtyLN1WlWccHcReS',  1),
 (4, 3, 'Lê Minh Cường',  'leminhcuong@zentech.vn', '0934567890', '$2y$10$hTIH2RlmRqPVpUrIV5LLc.NGwLxLkZOa/4QT.CtyLN1WlWccHcReS', 1);

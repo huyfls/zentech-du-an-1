@@ -96,7 +96,6 @@ unset($_SESSION['flash']);
             <!-- Demo account hint (chỉ hiện ở môi trường development) -->
             <?php if (defined('APP_ENV') && APP_ENV === 'development'): ?>
             <div class="mt-4 p-3 rounded-xl bg-zinc-950/60 border border-zinc-800/80 text-[11px] text-zinc-400 space-y-1">
-                <div><strong>Admin demo:</strong> admin@zentech.vn (Pass: Password@123)</div>
                 <div><strong>Khách hàng:</strong> nguyenvanan@gmail.com</div>
             </div>
             <?php endif; ?>

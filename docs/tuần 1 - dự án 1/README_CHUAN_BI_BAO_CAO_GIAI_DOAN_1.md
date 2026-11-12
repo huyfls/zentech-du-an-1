@@ -126,7 +126,7 @@ cd ~/Documents/"dự án 1 - bản chính"
 # 3. Mở http://localhost:8001
 ```
 
-Tài khoản: khách `nguyenvanan@gmail.com`, quản trị `admin@zentech.vn`, mật khẩu cả hai là `Password@123`.
+Tài khoản khách: `nguyenvanan@gmail.com` / `Password@123`. Tài khoản quản trị: mật khẩu giữ riêng, xem file `scratch/data/ADMIN_PASSWORD.local.txt` (không đưa lên GitHub).
 
 **Các bước demo:**
 
