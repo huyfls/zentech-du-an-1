@@ -82,9 +82,15 @@ class CartController extends BaseController
         $currentQty = $_SESSION['cart'][$variantId]['quantity'] ?? 0;
         $newQty     = $currentQty + $qty;
 
-        // Giới hạn không vượt quá tồn kho
+        // Vượt tồn kho: không cộng thêm và báo rõ số còn lại
+        $adjusted = false;
         if ($newQty > $variant['stock_qty']) {
-            $newQty = $variant['stock_qty'];
+            if ($currentQty >= $variant['stock_qty']) {
+                $this->renderJson(['success' => false, 'message' => 'Bạn đã có đủ ' . (int) $variant['stock_qty'] . ' sản phẩm còn trong kho trong giỏ hàng.']);
+                return;
+            }
+            $newQty   = (int) $variant['stock_qty'];
+            $adjusted = true;
         }
 
         // Giá ưu tiên sale_price, nếu không có thì dùng price gốc
@@ -114,7 +120,7 @@ class CartController extends BaseController
 
         $this->renderJson([
             'success'  => true,
-            'message'  => 'Đã thêm vào giỏ hàng!',
+            'message'  => $adjusted ? 'Kho chỉ còn ' . $newQty . ' sản phẩm, giỏ hàng của bạn đã được điều chỉnh về ' . $newQty . '.' : 'Đã thêm vào giỏ hàng!',
             'count'    => $summary['count'],
             'subtotal' => $summary['subtotal'],
         ]);

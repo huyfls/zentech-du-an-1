@@ -14,6 +14,13 @@ session_set_cookie_params([
 ]);
 session_start();
 
+// Header bảo mật. CSP cho phép inline script/style vì giao diện dùng Tailwind và script nhúng trong trang.
+header_remove('X-Powered-By');
+header('X-Frame-Options: SAMEORIGIN');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'");
+
 // Load cấu hình ứng dụng
 require_once dirname(__DIR__) . '/config/app.php';
 require_once dirname(__DIR__) . '/config/database.php';

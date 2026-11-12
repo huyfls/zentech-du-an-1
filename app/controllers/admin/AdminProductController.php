@@ -69,7 +69,7 @@ class AdminProductController extends BaseController
             return;
         }
 
-        if ($errs = $this->variantErrors(is_array($variantsRaw) ? $variantsRaw : [])) {
+        if ($errs = $this->variantErrors(is_array($variantsRaw) ? $variantsRaw : [], $thumbnail)) {
             $this->setFlash('error', implode(' ', $errs));
             $this->redirect('/admin/products/create');
             return;
@@ -196,7 +196,7 @@ class AdminProductController extends BaseController
         $isFeatured  = isset($_POST['is_featured']) ? 1 : 0;
         $variantsRaw = $_POST['variants'] ?? [];
 
-        if ($errs = $this->variantErrors(is_array($variantsRaw) ? $variantsRaw : [])) {
+        if ($errs = $this->variantErrors(is_array($variantsRaw) ? $variantsRaw : [], $thumbnail)) {
             $this->setFlash('error', implode(' ', $errs));
             $this->redirect('/admin/products/edit/' . $id);
             return;
@@ -302,9 +302,12 @@ class AdminProductController extends BaseController
     }
 
     /** Kiểm tra các dòng biến thể; trả về danh sách lỗi (rỗng nếu hợp lệ). */
-    private function variantErrors(array $variants): array
+    private function variantErrors(array $variants, string $thumbnail = ''): array
     {
         $errors = [];
+        // Chỉ nhận ảnh http(s) hoặc ảnh tải lên nội bộ, chặn javascript:, data: ...
+        $okUrl = fn(string $u): bool => $u === '' || (bool) preg_match('#^(https?://|/uploads/)#i', $u);
+        if (!$okUrl($thumbnail)) $errors[] = 'URL ảnh đại diện phải bắt đầu bằng http://, https:// hoặc /uploads/.';
         foreach ($variants as $i => $v) {
             if (empty($v['price']) && empty($v['id'])) continue;   // dòng trống bị bỏ qua như cũ
             $n = (int) $i + 1;
@@ -312,7 +315,9 @@ class AdminProductController extends BaseController
             $sale  = isset($v['sale_price']) && $v['sale_price'] !== '' ? (float) $v['sale_price'] : null;
             if ($price <= 0) $errors[] = "Biến thể {$n}: giá bán phải lớn hơn 0.";
             if ($sale !== null && ($sale <= 0 || $sale >= $price)) $errors[] = "Biến thể {$n}: giá khuyến mãi phải lớn hơn 0 và nhỏ hơn giá gốc.";
-            if ((int) ($v['stock_qty'] ?? 0) < 0) $errors[] = "Biến thể {$n}: tồn kho không được âm.";
+            $stock = trim((string) ($v['stock_qty'] ?? '0'));
+            if ($stock !== '' && !preg_match('/^\d+$/', $stock)) $errors[] = "Biến thể {$n}: tồn kho phải là số nguyên không âm.";
+            if (!$okUrl(trim((string) ($v['image_url'] ?? '')))) $errors[] = "Biến thể {$n}: URL ảnh không hợp lệ.";
         }
         return $errors;
     }

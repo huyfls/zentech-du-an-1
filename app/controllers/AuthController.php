@@ -42,9 +42,24 @@ class AuthController extends BaseController
             return;
         }
 
+        // Giới hạn thử sai: 5 lần / 15 phút cho mỗi cặp (IP, email). shortcut: lưu file tạm, đủ cho 1 máy chủ; nhiều máy chủ cần Redis/DB.
+        $throttle = sys_get_temp_dir() . '/zentech_login_' . sha1(($_SERVER['REMOTE_ADDR'] ?? '') . '|' . mb_strtolower($email));
+        $state = is_file($throttle) ? (json_decode((string) file_get_contents($throttle), true) ?: []) : [];
+        if (($state['until'] ?? 0) > time()) {
+            $this->setFlash('error', 'Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau ' . (int) ceil((($state['until']) - time()) / 60) . ' phút.');
+            $this->redirect('/auth/login' . ($redirect ? '?redirect=' . urlencode($redirect) : ''));
+            return;
+        }
+
         $user = $this->userModel->findByEmail($email);
 
         if (!$user || !$this->userModel->verifyPassword($password, $user['password_hash'])) {
+            $fails = (($state['until'] ?? 0) > 0 || time() - ($state['first'] ?? 0) > 900) ? 1 : ($state['fails'] ?? 0) + 1;
+            file_put_contents($throttle, json_encode([
+                'fails' => $fails,
+                'first' => $fails === 1 ? time() : ($state['first'] ?? time()),
+                'until' => $fails >= 5 ? time() + 900 : 0,
+            ]), LOCK_EX);
             $this->setFlash('error', 'Email hoặc mật khẩu không chính xác.');
             $this->redirect('/auth/login' . ($redirect ? '?redirect=' . urlencode($redirect) : ''));
             return;
@@ -56,6 +71,7 @@ class AuthController extends BaseController
             return;
         }
 
+        @unlink($throttle);
         // Đăng nhập thành công -> chống session fixation, rồi lưu session
         session_regenerate_id(true);
         $_SESSION['user_id']    = (int) $user['id'];
