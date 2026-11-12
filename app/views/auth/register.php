@@ -23,9 +23,7 @@ unset($_SESSION['flash']);
         <!-- Logo -->
         <div class="text-center mb-8">
             <a href="/" class="inline-flex items-center gap-2 group">
-                <svg class="w-8 h-8 text-accent-400 group-hover:text-ember-400 transition" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M13 2L4.5 13.5H11L10 22l9-12h-6.5L13 2Z"/>
-                </svg>
+                <img src="/assets/img/logo-mark.svg" alt="" class="w-8 h-8  transition" width="28" height="28">
                 <span class="text-2xl font-black text-accent-400">
                     ZenTech
                 </span>

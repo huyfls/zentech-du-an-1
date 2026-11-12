@@ -10,6 +10,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
 <!DOCTYPE html>
 <html lang="vi" class="h-full bg-zinc-950 text-white">
 <head>
+    <link rel="icon" type="image/svg+xml" href="/assets/img/logo-mark.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?= Csrf::meta() ?>
@@ -47,9 +48,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
     <aside id="admin-sidebar" class="fixed inset-y-0 left-0 w-64 -translate-x-full lg:translate-x-0 lg:static transition-transform duration-200 bg-zinc-900 lg:bg-zinc-900/90 border-r border-zinc-800 flex flex-col shrink-0 z-40">
         <!-- Brand -->
         <div class="h-16 flex items-center px-6 border-b border-zinc-800 gap-2.5">
-            <svg class="w-6 h-6 text-accent-400" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M13 2L4.5 13.5H11L10 22l9-12h-6.5L13 2Z"/>
-            </svg>
+            <img src="/assets/img/logo-mark.svg" alt="" class="w-6 h-6" width="28" height="28">
             <div class="font-black text-lg text-accent-400">
                 ZenTech Admin
             </div>

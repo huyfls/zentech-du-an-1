@@ -18,7 +18,7 @@ $title  = $titles[$errorCode] ?? 'Có lỗi xảy ra';
 <body class="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-4 font-sans antialiased">
     <main class="text-center max-w-md">
         <a href="/" class="inline-flex items-center gap-2 mb-10" aria-label="ZenTech - về trang chủ">
-            <svg class="w-6 h-6 text-accent-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2L4.5 13.5H11L10 22l9-12h-6.5L13 2Z"/></svg>
+            <img src="/assets/img/logo-mark.svg" alt="" class="w-6 h-6" width="28" height="28">
             <span class="text-xl font-bold">ZenTech</span>
         </a>
         <p class="text-7xl font-extrabold text-accent-400"><?= (int) $errorCode ?></p>

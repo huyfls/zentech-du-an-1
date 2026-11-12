@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
 <head>
+    <link rel="icon" type="image/svg+xml" href="/assets/img/logo-mark.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?= Csrf::meta() ?>
@@ -79,10 +80,7 @@
             <!-- ---------- LOGO ---------- -->
             <a href="/" class="flex items-center gap-2 shrink-0 group">
                 <!-- Lightning bolt SVG icon -->
-                <svg class="w-6 h-6 text-accent-500"
-                     viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M13 2L4.5 13.5H11L10 22l9-12h-6.5L13 2Z"/>
-                </svg>
+                <img src="/assets/img/logo-mark.svg" alt="" class="w-6 h-6" width="28" height="28">
                 <span class="text-xl font-bold tracking-tight text-zinc-100">
                     ZenTech
                 </span>
@@ -294,7 +292,7 @@
         <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
             <div class="md:col-span-5">
                 <a href="/" class="inline-flex items-center gap-2">
-                    <svg class="w-6 h-6 text-accent-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2L4.5 13.5H11L10 22l9-12h-6.5L13 2Z"/></svg>
+                    <img src="/assets/img/logo-mark.svg" alt="" class="w-6 h-6" width="28" height="28">
                     <span class="text-xl font-bold text-zinc-100">ZenTech</span>
                 </a>
                 <p class="mt-4 max-w-sm text-sm leading-relaxed text-zinc-400">Gaming gear chính hãng, chọn theo thông số. Chuột, bàn phím cơ, tai nghe và phụ kiện.</p>
