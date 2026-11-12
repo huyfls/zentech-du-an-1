@@ -22,6 +22,7 @@ class Router {
         // Tìm kiếm nhanh (Spotlight) & số lượng giỏ hàng (badge)
         ['GET',  '/search',                    'HomeController',          'search'],
         ['GET',  '/cart/count',                'CartController',          'getCount'],
+        ['POST', '/danh-gia',                  'ReviewController',        'add'],
         ['POST', '/wishlist/toggle',           'WishlistController',      'toggle'],
 
         // Giỏ hàng
@@ -35,6 +36,7 @@ class Router {
         ['GET',  '/thanh-toan',                'OrderController',         'checkout'],
         ['GET',  '/checkout',                  'OrderController',         'checkout'],
         ['POST', '/order/place',               'OrderController',         'place'],
+        ['POST', '/coupon/preview',            'OrderController',         'couponPreview'],
 
         // Đơn hàng cá nhân
         ['GET',  '/don-hang',                  'OrderController',         'history'],
@@ -42,6 +44,13 @@ class Router {
         ['GET',  '/don-hang/{id}',             'OrderController',         'detail'],
         ['GET',  '/orders/{id}',               'OrderController',         'detail'],
         ['POST', '/orders/cancel/{id}',        'OrderController',         'cancel'],
+
+        // Tài khoản cá nhân
+        ['GET',  '/tai-khoan',                 'AccountController',       'index'],
+        ['POST', '/tai-khoan/thong-tin',       'AccountController',       'updateProfile'],
+        ['POST', '/tai-khoan/mat-khau',        'AccountController',       'changePassword'],
+        ['POST', '/tai-khoan/dia-chi',         'AccountController',       'addAddress'],
+        ['POST', '/tai-khoan/dia-chi/xoa/{id}','AccountController',       'deleteAddress'],
 
         // Điều hướng thương hiệu / về chúng tôi
         ['GET',  '/thuong-hieu',               'BrandController',         'index'],
@@ -66,6 +75,11 @@ class Router {
         ['POST', '/register',                  'AuthController',          'register'],
         ['POST', '/dang-ky',                   'AuthController',          'register'],
 
+        ['GET',  '/quen-mat-khau',             'AuthController',          'forgotPage'],
+        ['POST', '/quen-mat-khau',             'AuthController',          'forgot'],
+        ['GET',  '/dat-lai-mat-khau/{token}',  'AuthController',          'resetPage'],
+        ['POST', '/dat-lai-mat-khau/{token}',  'AuthController',          'reset'],
+
         // Đăng xuất bắt buộc POST + CSRF (tránh logout CSRF)
         ['POST', '/auth/logout',               'AuthController',          'logout'],
         ['POST', '/logout',                    'AuthController',          'logout'],
@@ -81,6 +95,9 @@ class Router {
         ['POST', '/admin/products/delete/{id}','AdminProductController',  'delete'],
         ['GET',  '/admin/orders',              'AdminOrderController',    'index'],
         ['GET',  '/admin/orders/detail/{id}',  'AdminOrderController',    'detail'],
+        ['GET',  '/admin/coupons',             'AdminCouponController',   'index'],
+        ['POST', '/admin/coupons/create',      'AdminCouponController',   'store'],
+        ['POST', '/admin/coupons/toggle/{id}', 'AdminCouponController',   'toggle'],
         ['GET',  '/403',                       'ErrorController',         'forbidden'],
         ['GET',  '/404',                       'ErrorController',         'notFound'],
         ['POST', '/admin/orders/update/{id}',  'AdminOrderController',    'updateStatus'],

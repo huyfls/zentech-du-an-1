@@ -156,6 +156,7 @@ class OrderModel extends BaseModel
             $orderId = (int) $this->pdo->lastInsertId();
             if ($couponId) {
                 $this->pdo->prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ?')->execute([$couponId]);
+                $this->pdo->prepare('INSERT INTO order_coupons (order_id, coupon_id) VALUES (?, ?)')->execute([$orderId, $couponId]);
             }
 
             // ── BƯỚC 3: Lưu chi tiết đơn hàng (Snapshot tên & giá) ──
@@ -418,6 +419,29 @@ class OrderModel extends BaseModel
              SET pv.stock_qty = pv.stock_qty + oi.quantity
              WHERE oi.order_id = ?"
         )->execute([$orderId]);
+        // Hủy/hoàn đơn thì trả lại lượt dùng mã giảm giá
+        $this->pdo->prepare(
+            "UPDATE coupons c JOIN order_coupons oc ON oc.coupon_id = c.id
+             SET c.used_count = GREATEST(c.used_count - 1, 0)
+             WHERE oc.order_id = ?"
+        )->execute([$orderId]);
+    }
+
+    /** Xem trước tiền giảm cho giỏ hiện tại (giá lấy từ database, không khóa dòng). */
+    public function previewCoupon(array $cart, string $code): array
+    {
+        $ids = array_map('intval', array_keys($cart));
+        $subtotal = 0.0;
+        if ($ids) {
+            $in = implode(',', array_fill(0, count($ids), '?'));
+            $st = $this->pdo->prepare("SELECT id, COALESCE(sale_price, price) AS p FROM product_variants WHERE id IN ($in) AND is_active = 1");
+            $st->execute($ids);
+            foreach ($st->fetchAll() as $r) $subtotal += (float) $r['p'] * (int) $cart[$r['id']]['quantity'];
+        }
+        $ship = self::shippingFee($subtotal);
+        $c = $this->rawQueryOne('SELECT * FROM coupons WHERE code = ?', [strtoupper(trim($code))]);
+        [$discount, $err] = self::couponDiscount($c, $subtotal);
+        return ['subtotal' => (int) $subtotal, 'shipping' => $ship, 'discount' => $discount, 'total' => (int) $subtotal + $ship - $discount, 'error' => $err];
     }
 
     /**

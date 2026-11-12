@@ -490,6 +490,23 @@ class ProductModel extends BaseModel
         return $this->rawQuery($sql, [$productId]);
     }
 
+    /** Khách có được đánh giá sản phẩm không: ['ok'|'done'|'not_bought', order_id]. */
+    public function reviewEligibility(int $userId, int $productId): array
+    {
+        if ($this->rawQueryOne('SELECT 1 AS x FROM reviews WHERE user_id = ? AND product_id = ?', [$userId, $productId])) {
+            return ['done', null];
+        }
+        $o = $this->rawQueryOne(
+            "SELECT o.id FROM orders o
+             JOIN order_items oi ON oi.order_id = o.id
+             JOIN product_variants pv ON pv.id = oi.variant_id
+             WHERE o.user_id = ? AND o.status = 'delivered' AND pv.product_id = ?
+             ORDER BY o.id DESC LIMIT 1",
+            [$userId, $productId]
+        );
+        return $o ? ['ok', (int) $o['id']] : ['not_bought', null];
+    }
+
     /**
      * Lấy danh sách sản phẩm cho trang quản trị (Admin)
      */

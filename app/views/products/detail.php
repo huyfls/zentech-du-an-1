@@ -413,7 +413,10 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
                     <p class="text-zinc-400 text-sm"><?= number_format($product['review_count'] ?? 0) ?> đánh giá</p>
                     <!-- Rating bars -->
                     <?php
-                    $ratingBars = [5 => 72, 4 => 18, 3 => 6, 2 => 2, 1 => 2];
+                    $ratingBars = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+                    foreach (($reviews ?? []) as $rv) { $ratingBars[max(1, min(5, (int) $rv['rating']))]++; }
+                    $nRv = max(1, count($reviews ?? []));
+                    foreach ($ratingBars as $k => $v) { $ratingBars[$k] = (int) round($v * 100 / $nRv); }
                     foreach ($ratingBars as $star => $pct):
                     ?>
                     <div class="w-full flex items-center gap-2">
@@ -431,6 +434,24 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
 
                 <!-- Danh sách review -->
                 <div class="md:col-span-2 space-y-4">
+                    <?php if (($reviewState ?? '') === 'ok'): ?>
+                    <form action="/danh-gia" method="POST" class="bg-zinc-800/60 border border-white/5 rounded-2xl p-5 space-y-3">
+                        <?= Csrf::field() ?>
+                        <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                        <p class="text-white font-semibold text-sm">Viết đánh giá của bạn</p>
+                        <div class="flex items-center gap-3 text-sm text-zinc-300">Số sao:
+                            <select name="rating" required class="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm text-white">
+                                <?php for ($i = 5; $i >= 1; $i--): ?><option value="<?= $i ?>"><?= $i ?> sao</option><?php endfor; ?>
+                            </select></div>
+                        <input name="title" maxlength="200" placeholder="Tiêu đề (không bắt buộc)" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white">
+                        <textarea name="content" required minlength="5" maxlength="1000" rows="3" placeholder="Bạn thấy sản phẩm thế nào?" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white"></textarea>
+                        <button class="px-5 py-2 rounded-lg bg-accent-500 text-on text-sm font-semibold">Gửi đánh giá</button>
+                    </form>
+                    <?php elseif (($reviewState ?? '') === 'done'): ?>
+                    <p class="text-xs text-zinc-500">Bạn đã đánh giá sản phẩm này. Cảm ơn bạn!</p>
+                    <?php else: ?>
+                    <p class="text-xs text-zinc-500">Chỉ khách đã nhận hàng sản phẩm này mới viết đánh giá được.</p>
+                    <?php endif; ?>
                     <?php
                     // Dữ liệu review từ Database (hoặc fallback nếu chưa có đánh giá)
                     $displayReviews = $reviews ?? [];

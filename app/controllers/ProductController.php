@@ -102,6 +102,8 @@ class ProductController extends BaseController
         // Lấy danh sách đánh giá
         $reviews = $this->productModel->getReviews($product['id']);
 
+        $reviewState = $this->isLoggedIn() ? $this->productModel->reviewEligibility((int) $_SESSION['user_id'], (int) $product['id'])[0] : 'guest';
+
         // Lấy sản phẩm liên quan (cùng category, trừ sản phẩm hiện tại)
         $relatedProducts = $this->productModel->getRelated(
             $product['category_id'],
@@ -112,7 +114,7 @@ class ProductController extends BaseController
         $this->render('products/detail', compact(
             'product', 'variants', 'variantsByColor',
             'variantsBySpec', 'variantsJson', 'relatedProducts',
-            'images', 'reviews', 'specs'
+            'images', 'reviews', 'specs', 'reviewState'
         ) + ['pageTitle' => $product['name'] . ' – ZenTech']);
     }
 }

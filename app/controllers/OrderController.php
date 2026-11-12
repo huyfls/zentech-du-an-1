@@ -42,7 +42,11 @@ class OrderController extends BaseController
         // Phí ship mặc định (có thể tính động theo địa chỉ)
         $shippingFee = OrderModel::shippingFee($subtotal);
 
-        $this->render('orders/checkout', compact('cartItems', 'subtotal', 'shippingFee'));
+        $st = $this->pdo->prepare('SELECT * FROM addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC');
+        $st->execute([(int) $_SESSION['user_id']]);
+        $addresses = $st->fetchAll();
+
+        $this->render('orders/checkout', compact('cartItems', 'subtotal', 'shippingFee', 'addresses'));
     }
 
     /**
@@ -124,6 +128,19 @@ class OrderController extends BaseController
             $this->setFlash('old', ['receiver_name' => $receiverName, 'receiver_phone' => $receiverPhone, 'shipping_address' => $shippingAddress, 'note' => $note, 'payment_method' => $paymentMethod, 'coupon_code' => $couponCode]);
             $this->redirect('/checkout');
         }
+    }
+
+    /** POST (AJAX) - Xem trước tiền giảm của mã giảm giá cho giỏ hàng hiện tại. */
+    public function couponPreview(): void
+    {
+        $this->requireLogin();
+        $code = trim((string) $this->getPost('coupon_code', ''));
+        if ($code === '' || empty($_SESSION['cart'])) {
+            $this->renderJson(['ok' => false, 'message' => 'Vui lòng nhập mã giảm giá.'], 422);
+            return;
+        }
+        $r = $this->orderModel->previewCoupon($_SESSION['cart'], $code);
+        $this->renderJson($r + ['ok' => $r['error'] === null, 'message' => $r['error'] ?? 'Đã áp dụng mã, giảm ' . number_format($r['discount'], 0, ',', '.') . '₫.'], $r['error'] === null ? 200 : 422);
     }
 
     /**

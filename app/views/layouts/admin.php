@@ -80,6 +80,14 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
                 <span>Quản lý đơn hàng</span>
             </a>
 
+            <a href="/admin/coupons" 
+               class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition <?= str_starts_with($currentPath, '/admin/coupons') ? 'bg-accent-500/10 text-accent-400 border border-accent-500/30' : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60' ?>">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                <span>Mã giảm giá</span>
+            </a>
+
             <div class="pt-4 pb-2 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
                 Hệ thống
             </div>

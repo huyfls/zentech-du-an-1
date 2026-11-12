@@ -769,3 +769,22 @@ INSERT INTO coupons (code, description, discount_type, discount_value, min_order
 ('ZENTECH10',   'Giảm 10% cho đơn hàng từ 500K',  'percent', 10.00,  500000, 100, '2026-11-01 00:00:00', '2026-12-31 23:59:59'),
 ('GAMING200K',  'Giảm 200K cho đơn hàng từ 1.5Tr', 'fixed',  200000, 1500000,  50, '2026-11-01 00:00:00', '2026-11-30 23:59:59'),
 ('NEWUSER50K',  'Tặng 50K cho thành viên mới',      'fixed',   50000,       0, 500, '2026-11-01 00:00:00', '2027-12-31 23:59:59');
+
+-- Mã giảm giá đã dùng cho từng đơn (để hoàn lượt dùng khi hủy) và token đặt lại mật khẩu.
+CREATE TABLE IF NOT EXISTS order_coupons (
+    order_id  INT UNSIGNED NOT NULL PRIMARY KEY,
+    coupon_id INT UNSIGNED NOT NULL,
+    CONSTRAINT fk_oc_order  FOREIGN KEY (order_id)  REFERENCES orders (id)  ON DELETE CASCADE,
+    CONSTRAINT fk_oc_coupon FOREIGN KEY (coupon_id) REFERENCES coupons (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS password_resets (
+    id         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id    INT UNSIGNED NOT NULL,
+    token_hash CHAR(64)     NOT NULL,
+    expires_at DATETIME     NOT NULL,
+    used_at    DATETIME     NULL,
+    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_pr_token (token_hash),
+    CONSTRAINT fk_pr_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

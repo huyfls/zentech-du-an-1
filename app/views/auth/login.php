@@ -62,6 +62,7 @@ unset($_SESSION['flash']);
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
                         <label class="text-xs font-semibold text-zinc-300">Mật khẩu</label>
+                        <a href="/quen-mat-khau" class="text-[11px] text-accent-400 hover:underline">Quên mật khẩu?</a>
                     </div>
                     <div class="relative">
                         <input type="password" 

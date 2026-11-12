@@ -187,4 +187,70 @@ class AuthController extends BaseController
         $this->setFlash('success', 'Bạn đã đăng xuất.');
         $this->redirect('/auth/login');
     }
+
+    /** GET - Form quên mật khẩu */
+    public function forgotPage(): void
+    {
+        $this->render('auth/forgot', [], 'blank');
+    }
+
+    /**
+     * POST - Tạo liên kết đặt lại mật khẩu (hiệu lực 30 phút).
+     * shortcut: chưa có máy chủ gửi mail, liên kết hiện trên trang khi APP_ENV=development và ghi vào error_log; nối SMTP trước khi chạy thật.
+     */
+    public function forgot(): void
+    {
+        $email = trim((string) $this->getPost('email', ''));
+        $user = $email !== '' ? $this->userModel->findByEmail($email) : null;
+        if ($user) {
+            $token = bin2hex(random_bytes(32));
+            $this->pdo->prepare('INSERT INTO password_resets (user_id, token_hash, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 30 MINUTE))')
+                ->execute([(int) $user['id'], hash('sha256', $token)]);
+            $link = APP_URL . '/dat-lai-mat-khau/' . $token;
+            error_log('[ZenTech][Reset password] ' . $email . ' -> ' . $link);
+            if (defined('APP_ENV') && APP_ENV === 'development') {
+                $this->setFlash('success', 'Môi trường thử nghiệm chưa gửi email. Mở liên kết này để đặt lại mật khẩu: ' . $link);
+                $this->redirect('/quen-mat-khau');
+                return;
+            }
+        }
+        $this->setFlash('success', 'Nếu email tồn tại trong hệ thống, hướng dẫn đặt lại mật khẩu đã được gửi.');
+        $this->redirect('/quen-mat-khau');
+    }
+
+    private function findReset(string $token): ?array
+    {
+        $st = $this->pdo->prepare('SELECT * FROM password_resets WHERE token_hash = ? AND used_at IS NULL AND expires_at > NOW()');
+        $st->execute([hash('sha256', $token)]);
+        return $st->fetch() ?: null;
+    }
+
+    /** GET - Form đặt mật khẩu mới */
+    public function resetPage(string $token): void
+    {
+        $this->render('auth/reset', ['token' => $token, 'valid' => (bool) $this->findReset($token)], 'blank');
+    }
+
+    /** POST - Lưu mật khẩu mới */
+    public function reset(string $token): void
+    {
+        $r = $this->findReset($token);
+        $new = (string) $this->getPost('new_password', '');
+        if (!$r) {
+            $this->setFlash('error', 'Liên kết không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu lại.');
+            $this->redirect('/quen-mat-khau');
+            return;
+        }
+        if (strlen($new) < 8 || $new !== (string) $this->getPost('confirm_password', '')) {
+            $this->setFlash('error', 'Mật khẩu mới phải từ 8 ký tự và hai lần nhập phải khớp.');
+            $this->redirect('/dat-lai-mat-khau/' . $token);
+            return;
+        }
+        $this->pdo->beginTransaction();
+        $this->pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?')->execute([password_hash($new, PASSWORD_BCRYPT), (int) $r['user_id']]);
+        $this->pdo->prepare('UPDATE password_resets SET used_at = NOW() WHERE user_id = ?')->execute([(int) $r['user_id']]);
+        $this->pdo->commit();
+        $this->setFlash('success', 'Đã đặt lại mật khẩu. Bạn có thể đăng nhập.');
+        $this->redirect('/dang-nhap');
+    }
 }

@@ -54,6 +54,18 @@ unset($_SESSION['flash']);
                     Thông Tin Giao Hàng
                 </h2>
 
+                <?php if (!empty($addresses)): ?>
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-300 mb-1.5" for="saved-address">Chọn nhanh địa chỉ đã lưu</label>
+                    <select id="saved-address" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-xs text-white">
+                        <option value="">-- Nhập địa chỉ mới --</option>
+                        <?php foreach ($addresses as $a): ?>
+                        <option value="1" data-name="<?= e($a['receiver_name']) ?>" data-phone="<?= e($a['phone']) ?>" data-addr="<?= e($a['street'] . ', ' . $a['ward'] . ', ' . $a['district'] . ', ' . $a['province']) ?>"><?= e($a['receiver_name'] . ' – ' . $a['street'] . ', ' . $a['province']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <?php endif; ?>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Họ và tên người nhận *</label>
@@ -178,10 +190,13 @@ unset($_SESSION['flash']);
                 <!-- Mã giảm giá -->
                 <div>
                     <label class="block text-xs font-semibold text-zinc-300 mb-1.5" for="coupon_code">Mã giảm giá (nếu có)</label>
-                    <input type="text" id="coupon_code" name="coupon_code" form="checkout-form" maxlength="50"
-                           value="<?= e($flash['old']['coupon_code'] ?? '') ?>" placeholder="VD: ZENTECH10"
-                           class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none uppercase">
-                    <p class="text-[11px] text-zinc-500 mt-1">Giảm tiền được tính khi bấm hoàn tất đặt hàng.</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="coupon_code" name="coupon_code" form="checkout-form" maxlength="50"
+                               value="<?= e($flash['old']['coupon_code'] ?? '') ?>" placeholder="VD: ZENTECH10"
+                               class="flex-1 min-w-0 bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none uppercase">
+                        <button type="button" id="coupon-apply" class="px-4 rounded-xl border border-zinc-700 text-xs font-semibold text-zinc-200 hover:border-accent-400">Áp dụng</button>
+                    </div>
+                    <p id="coupon-msg" class="text-[11px] text-zinc-500 mt-1" role="status">Bấm "Áp dụng" để xem số tiền giảm trước khi đặt hàng.</p>
                 </div>
 
                 <!-- Price Breakdown -->
@@ -198,10 +213,14 @@ unset($_SESSION['flash']);
                     </div>
                 </div>
 
+                <div id="discount-row" class="hidden flex justify-between text-xs text-zinc-400">
+                    <span>Mã giảm giá:</span><span id="discount-val" class="font-bold text-green-400"></span>
+                </div>
+
                 <!-- Grand Total -->
                 <div class="pt-4 border-t border-zinc-800 flex justify-between items-baseline">
                     <span class="text-sm font-bold text-white">Tổng thanh toán:</span>
-                    <span class="text-2xl font-black text-transparent bg-clip-text bg-accent-500">
+                    <span id="grand-total" class="text-2xl font-black text-transparent bg-clip-text bg-accent-500">
                         <?= number_format($total, 0, ',', '.') ?>₫
                     </span>
                 </div>
@@ -230,5 +249,32 @@ document.getElementById('checkout-form').addEventListener('submit', function() {
     const btn = document.getElementById('submit-order-btn');
     btn.disabled = true;
     btn.innerHTML = '<span>Đang xử lý đơn hàng...</span>';
+});
+</script>
+
+<script>
+(() => {
+    const btn = document.getElementById('coupon-apply'), inp = document.getElementById('coupon_code');
+    if (!btn) return;
+    const msg = document.getElementById('coupon-msg'), fmt = n => n.toLocaleString('vi-VN') + '₫';
+    btn.addEventListener('click', async () => {
+        const code = inp.value.trim();
+        btn.disabled = true;
+        try {
+            const r = await fetch('/coupon/preview', {method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: 'coupon_code=' + encodeURIComponent(code)});
+            const d = await r.json();
+            msg.textContent = d.message; msg.className = 'text-[11px] mt-1 ' + (d.ok ? 'text-green-500' : 'text-red-500');
+            document.getElementById('discount-row').classList.toggle('hidden', !d.ok);
+            if (d.ok) { document.getElementById('discount-val').textContent = '-' + fmt(d.discount); document.getElementById('grand-total').textContent = fmt(d.total); }
+        } catch (e) { msg.textContent = 'Không kiểm tra được mã, thử lại sau.'; }
+        btn.disabled = false;
+    });
+})();
+</script>
+<script>
+document.getElementById('saved-address')?.addEventListener('change', e => {
+    const o = e.target.selectedOptions[0]; if (!o || !o.dataset.addr) return;
+    const f = document.getElementById('checkout-form');
+    f.receiver_name.value = o.dataset.name; f.receiver_phone.value = o.dataset.phone; f.shipping_address.value = o.dataset.addr;
 });
 </script>
