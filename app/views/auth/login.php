@@ -57,7 +57,7 @@ unset($_SESSION['flash']);
                     <input type="email" autocomplete="email"
                            name="email" 
                            required 
-                           placeholder="admin@zentech.vn hoặc user@..."
+                           placeholder="Email của bạn"
                            class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-4 py-3 text-xs text-white outline-none">
                 </div>
 
