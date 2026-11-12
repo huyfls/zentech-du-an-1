@@ -74,7 +74,21 @@ class AdminOrderController extends BaseController
         if ($this->orderModel->updateStatus($id, $status, $adminId)) {
             $this->setFlash('success', 'Đã cập nhật trạng thái đơn hàng sang: ' . strtoupper($status));
         } else {
-            $this->setFlash('error', 'Cập nhật thất bại: trạng thái mới không hợp lệ với trạng thái hiện tại của đơn.');
+            $label = ['pending' => 'Chờ xác nhận', 'confirmed' => 'Đã xác nhận', 'processing' => 'Đang xử lý', 'shipping' => 'Đang giao', 'delivered' => 'Đã giao', 'cancelled' => 'Đã hủy', 'returned' => 'Đã trả hàng'];
+            $q = $this->pdo->prepare('SELECT status FROM orders WHERE id = ?');
+            $q->execute([$id]);
+            $cur = $q->fetchColumn();
+            if ($cur === false) {
+                $this->setFlash('error', 'Không tìm thấy đơn hàng.');
+            } elseif ($cur === $status) {
+                $this->setFlash('error', 'Đơn hàng đã ở trạng thái "' . ($label[$cur] ?? $cur) . '" rồi, không cần cập nhật lại.');
+            } elseif (!array_key_exists($status, $label)) {
+                $this->setFlash('error', 'Trạng thái bạn chọn không tồn tại.');
+            } else {
+                $next = array_map(fn($k) => $label[$k], OrderModel::TRANSITIONS[$cur] ?? []);
+                $this->setFlash('error', 'Không thể chuyển từ "' . ($label[$cur] ?? $cur) . '" sang "' . $label[$status] . '". '
+                    . ($next ? 'Bước tiếp theo hợp lệ: ' . implode(', ', $next) . '.' : 'Đơn này đã kết thúc, không đổi trạng thái được nữa.'));
+            }
         }
 
         $this->redirect('/admin/orders/detail/' . $id);
