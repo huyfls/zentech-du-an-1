@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tài Liệu Tổng Quan & Tóm Tắt Dự Án 1 - ZenTech</title>
+<style>
+  
+
+  @page {
+    size: A4 portrait;
+    margin: 14mm 12mm 14mm 12mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    background-color: #ffffff;
+    line-height: 1.5;
+    font-size: 13px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet {
+    page-break-after: always;
+    break-after: page;
+    min-height: 265mm;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .sheet:last-child {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .sheet-content {
+    flex: 1;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Cover Header */
+  .cover-header {
+    background: linear-gradient(135deg, #090d16 0%, #0f172a 65%, #1e1b4b 100%);
+    color: #ffffff;
+    padding: 22px 24px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    position: relative;
+    border: 1px solid #334155;
+  }
+
+  .badge-phase {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(6, 182, 212, 0.18);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .cover-title {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 6px;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+
+  .cover-subtitle {
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .cover-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+    padding-top: 10px;
+  }
+
+  .cover-meta-item {
+    font-size: 11px;
+  }
+
+  .cover-meta-label {
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 9.5px;
+    letter-spacing: 0.4px;
+    margin-bottom: 2px;
+  }
+
+  .cover-meta-value {
+    color: #f1f5f9;
+    font-weight: 600;
+  }
+
+  /* Metric cards */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .metric-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    border-top: 3px solid #0284c7;
+  }
+
+  .metric-card.purple { border-top-color: #8b5cf6; }
+  .metric-card.emerald { border-top-color: #10b981; }
+  .metric-card.amber { border-top-color: #f59e0b; }
+
+  .metric-number {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .metric-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .metric-desc {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+
+  /* Section Styling */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .section-tag {
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+  }
+
+  h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 12px 0 6px 0;
+  }
+
+  p {
+    margin-bottom: 8px;
+    color: #334155;
+    text-align: justify;
+    font-size: 12.5px;
+  }
+
+  /* Callout Boxes */
+  .callout {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-left: 4px solid #16a34a;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 12px;
+  }
+
+  .callout-title {
+    font-weight: 700;
+    color: #15803d;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .callout.info {
+    background: #f0f9ff;
+    border-color: #bae6fd;
+    border-left-color: #0284c7;
+  }
+  .callout.info .callout-title { color: #0369a1; }
+
+  .callout.purple {
+    background: #faf5ff;
+    border-color: #e9d5ff;
+    border-left-color: #9333ea;
+  }
+  .callout.purple .callout-title { color: #7e22ce; }
+
+  .callout.warning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    border-left-color: #d97706;
+  }
+  .callout.warning .callout-title { color: #b45309; }
+
+  /* Feature Grid Cards */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 10px 0;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .feature-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 11px 13px;
+  }
+
+  .feature-box-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .feature-box ul {
+    margin-left: 16px;
+    margin-top: 4px;
+    color: #475569;
+    font-size: 11.5px;
+    line-height: 1.45;
+  }
+
+  .feature-box li {
+    margin-bottom: 3px;
+  }
+
+  /* Table styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 14px 0;
+    font-size: 11.5px;
+  }
+
+  th, td {
+    padding: 4.5px 8px;
+    text-align: left;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+    font-size: 10.8px;
+  }
+  th { font-size: 11px; }
+
+  th {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .badge-done { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+  .badge-tech { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+  .badge-purple { background: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe; }
+
+  /* Code snippet block */
+  .code-block {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.45;
+    margin: 8px 0;
+    overflow-x: hidden;
+  }
+
+  .code-block .keyword { color: #38bdf8; font-weight: 600; }
+  .code-block .string { color: #a5f3fc; }
+  .code-block .comment { color: #64748b; font-style: italic; }
+  .code-block .func { color: #c084fc; }
+
+  /* Team list */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .team-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #ffffff;
+  }
+
+  .team-role {
+    font-weight: 700;
+    font-size: 11.5px;
+    color: #0284c7;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 3px;
+  }
+
+  .team-tasks {
+    font-size: 11px;
+    color: #475569;
+    margin-left: 14px;
+    line-height: 1.45;
+  }
+
+  .doc-footer {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 6px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #94a3b8;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ==================== TRANG 1 ==================== -->
+  <div class="sheet">
+    <div class="sheet-content">
+      <div class="cover-header">
+        <div class="badge-phase">🚀 BÁO CÁO NHÓM • HOÀN THÀNH GIAI ĐOẠN 1 (TUẦN 1)</div>
+        <div class="cover-title">TỔNG QUAN & TỔNG KẾT DỰ ÁN 1: ZENTECH</div>
+        <div class="cover-subtitle">Website Thương mại Điện tử Gaming Gear & Phụ kiện Công nghệ cao cấp<br>Tài liệu Định hướng Kỹ thuật, Hướng dẫn Chạy thử & Kế hoạch Phối hợp Nhóm</div>
+        
+        <div class="cover-meta-grid">
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Môn học</div>
+            <div class="cover-meta-value">Dự án 1 (Lập trình Website)</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Deadline GĐ 1</div>
+            <div class="cover-meta-value">Thứ 6, 13/11 (Đạt 100%)</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Ngăn xếp Công nghệ</div>
+            <div class="cover-meta-value">PHP MVC • PDO • MySQL • AI</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Trạng thái Database</div>
+            <div class="cover-meta-value">Đã Import phpMyAdmin</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-number">139</div>
+          <div class="metric-label">Khảo sát thị trường</div>
+          <div class="metric-desc">Vượt chỉ tiêu 100 mẫu</div>
+        </div>
+        <div class="metric-card purple">
+          <div class="metric-number">24</div>
+          <div class="metric-label">Bảng Database</div>
+          <div class="metric-desc">Chuẩn hóa 3NF + EAV Specs</div>
+        </div>
+        <div class="metric-card emerald">
+          <div class="metric-number">06</div>
+          <div class="metric-label">Màn hình UI/UX</div>
+          <div class="metric-desc">Prototype tương tác trực tiếp</div>
+        </div>
+        <div class="metric-card amber">
+          <div class="metric-number">38</div>
+          <div class="metric-label">Tập tin Code MVC</div>
+          <div class="metric-desc">0 lỗi cú pháp, đã chạy thử</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <span class="section-tag">PHẦN I</span>
+        <span class="section-title">CHÚNG TA ĐANG LÀM VỀ CÁI GÌ? (WHAT ARE WE BUILDING?)</span>
+      </div>
+
+      <p>
+        Dự án 1 của chúng ta là xây dựng một hệ thống website thương mại điện tử hoàn chỉnh mang tên <strong>ZenTech</strong>, chuyên kinh doanh các dòng sản phẩm <strong>Gaming Gear & Phụ kiện máy tính</strong> cao cấp (bàn phím cơ đa dạng switch, chuột gaming độ trễ thấp, tai nghe eSports 7.1, lót chuột cao cấp, giá treo tai nghe RGB, bàn ghế công thái học setup).
+      </p>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Tinh thần cốt lõi & Cảm hứng thiết kế</div>
+        ZenTech dung hòa giữa <strong>trải nghiệm thương mại điện tử thực dụng, tốc độ cao của CellphoneS và GearVN</strong> với phong cách thị giác <strong>phòng trưng bày sáng, tối giản</strong> (nền trắng, ảnh sản phẩm làm trung tâm, một màu nhấn xanh dương cho hành động). Đồng thời, nhóm tạo điểm nhấn bằng <strong>Trợ lý ảo AI ZenBot</strong> giúp tư vấn build gear chuyên nghiệp cho người dùng.
+      </div>
+
+      <div class="grid-2">
+        <div class="feature-box">
+          <div class="feature-box-title">🛒 Phân hệ Khách hàng (Client Storefront)</div>
+          <ul>
+            <li><strong>Tìm kiếm Spotlight (Ctrl + K):</strong> Tra cứu sản phẩm siêu tốc với hộp tìm kiếm thông minh mô phỏng MacOS Spotlight.</li>
+            <li><strong>Bộ lọc đa tiêu chí kiểu CellphoneS:</strong> Lọc linh hoạt theo hãng, khoảng giá trượt, chuẩn kết nối (Dây / Wireless 2.4G / Bluetooth), loại switch.</li>
+            <li><strong>Trình chọn biến thể (Variant Matrix):</strong> Nhấp chọn Màu sắc + Switch -> Tự động đổi giá tiền, ảnh sản phẩm và báo tồn kho thời gian thực.</li>
+            <li><strong>Giỏ hàng & One-Page Checkout:</strong> Quản lý giỏ qua Session, áp dụng mã voucher, đặt hàng an toàn chống âm kho (Database ACID Transaction).</li>
+            <li><strong>Trợ lý AI ZenBot:</strong> Cửa sổ chat tư vấn switch, form tay chuột và setup góc làm việc.</li>
+          </ul>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-box-title">⚙️ Phân hệ Quản trị (Admin Dashboard)</div>
+          <ul>
+            <li><strong>Bảng điều khiển trực quan:</strong> Biểu đồ doanh thu, số lượng đơn hàng, sản phẩm bán chạy, khách hàng đăng ký mới.</li>
+            <li><strong>CRUD Sản phẩm đa biến thể:</strong> Một sản phẩm có thể thêm hàng loạt SKU biến thể (màu sắc, cấu hình, giá bán, giá sale, số lượng tồn kho riêng biệt).</li>
+            <li><strong>Quản lý đơn hàng chuẩn luồng:</strong> Lọc theo trạng thái: <em>Chờ xử lý &rarr; Đang giao &rarr; Hoàn thành &rarr; Đã hủy</em>, xem chi tiết hóa đơn.</li>
+            <li><strong>Quản lý Khuyến mãi Voucher:</strong> Tạo mã coupon giảm %, giảm tiền trực tiếp, đặt giới hạn ngày hết hạn.</li>
+            <li><strong>Phân quyền Role-Based:</strong> Bảo vệ trang quản trị bằng phân quyền chặt chẽ giữa Quản trị viên (Admin) và Khách hàng (Customer).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-footer">
+      <div>Dự án 1: Website Gaming Gear ZenTech • Tài liệu Onboarding nhóm</div>
+      <div>Trang 1 / 6</div>
+    </div>
+  </div>
+
+  <!-- ==================== TRANG 2 ==================== -->
+  <div class="sheet">
+    <div class="sheet-content">
+      <div class="section-header">
+        <span class="section-tag">PHẦN II</span>
+        <span class="section-title">CHÚNG TA ĐÃ LÀM ĐƯỢC NHỮNG GÌ? (ĐỐI CHIẾU TIẾN ĐỘ GIAI ĐOẠN 1)</span>
+      </div>
+
+      <p>
+        Dựa trên <strong>yêu cầu chính thức của Giảng viên môn Dự án 1 (Deadline Thứ 6, 13/11)</strong>, toàn bộ các hạng mục công việc đã được hoàn thành 100% với chất lượng cao và được lưu trữ khoa học trong thư mục <code>docs/tuần 1 - dự án 1/</code>.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 24%;">Hạng mục yêu cầu</th>
+            <th style="width: 44%;">Chi tiết kết quả thực hiện</th>
+            <th style="width: 14%;">Trạng thái</th>
+            <th style="width: 18%;">Tệp bàn giao</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Quyết định đề tài</strong></td>
+            <td>Xác lập tên đề tài ZenTech, sứ mệnh, phạm vi 2 giai đoạn, phân tích đối thủ cạnh tranh (CellphoneS, GearVN, MemoryZone), bảng phân công nhiệm vụ.</td>
+            <td><span class="badge-tag badge-done">✓ Đạt 100%</span></td>
+            <td><code>01_Quyet_Dinh_De_Tai_ZenTech.docx</code></td>
+          </tr>
+          <tr>
+            <td><strong>2. Google Form khảo sát</strong></td>
+            <td>Xây dựng bảng câu hỏi 8 phần về hành vi mua sắm Gaming Gear. <strong>Bộ dữ liệu 139 câu trả lời</strong> (vượt xa mức tối thiểu 100 biểu mẫu).</td>
+            <td><span class="badge-tag badge-done">✓ 139 Mẫu</span></td>
+            <td><code>zentech_survey_139.xlsx</code><br><code>zentech_survey_139.csv</code></td>
+          </tr>
+          <tr>
+            <td><strong>3. Phân tích kết quả khảo sát</strong></td>
+            <td>Tính lại từ 139 dòng: <strong>82.7%</strong> từ 18 đến 28 tuổi; <strong>59.7%</strong> ngân sách tối đa 1 triệu; <strong>53.2%</strong> khó chọn vì thông số và so sánh; <strong>67.6%</strong> hào hứng với trợ lý AI.</td>
+            <td><span class="badge-tag badge-done">✓ Đã phân tích</span></td>
+            <td>Có biểu đồ trong <code>08_Phan_Tich_Khao_Sat_ZenTech.docx</code></td>
+          </tr>
+          <tr>
+            <td><strong>4. Thiết kế UI/UX</strong></td>
+            <td>Xây dựng Design System nền sáng, tối giản (Be Vietnam Pro, một màu nhấn xanh dương). Đặc tả wireframe & User Flow 6 màn hình. <strong>Xây dựng bản HTML prototype tương tác trực tiếp</strong>.</td>
+            <td><span class="badge-tag badge-done">✓ 6 Màn hình</span></td>
+            <td><code>02_Dac_Ta_UIUX.docx</code><br><code>03_Ban_Mau_UIUX.html</code></td>
+          </tr>
+          <tr>
+            <td><strong>5. Thiết kế Database</strong></td>
+            <td>Kiến trúc CSDL chuyên nghiệp gồm <strong>24 bảng quan hệ</strong> chuẩn 3NF, xử lý linh hoạt thuộc tính EAV, biến thể sản phẩm, đơn hàng, giỏ hàng, flash sale, coupon.</td>
+            <td><span class="badge-tag badge-done">✓ 24 Bảng</span></td>
+            <td><code>04_Kien_Truc_CSDL.docx</code><br><code>05_Tu_Dien_Du_Lieu.docx</code></td>
+          </tr>
+          <tr>
+            <td><strong>6. Sơ đồ ERD & Script SQL</strong></td>
+            <td>Vẽ mã Mermaid ERD trực quan. Viết trọn bộ mã nguồn SQL <code>zentech_schema.sql</code> kèm ràng buộc khóa ngoại và dữ liệu mẫu phong phú.</td>
+            <td><span class="badge-tag badge-done">✓ Chuẩn 3NF</span></td>
+            <td><code>06_So_Do_ERD.docx</code><br><code>07_zentech_schema.sql</code></td>
+          </tr>
+          <tr>
+            <td><strong>7. Import CSDL vào phpMyAdmin</strong></td>
+            <td><strong>Đã thực thi import thành công vào MySQL local (XAMPP)</strong>. Cơ sở dữ liệu <code>zentech_db</code> đã có sẵn 24 bảng dữ liệu sống để chạy code!</td>
+            <td><span class="badge-tag badge-done">✓ Sẵn sàng</span></td>
+            <td>Database <code>zentech_db</code> (MySQL Port 3306)</td>
+          </tr>
+          <tr>
+            <td><strong>8. Kiến trúc Code Backend MVC</strong></td>
+            <td>Khởi tạo kiến trúc PHP MVC thuần: Database PDO an toàn, Router, BaseController, BaseModel, 4 luồng SQL tối ưu, API AI ZenBot. <strong>Test 38 files: 0 lỗi cú pháp!</strong></td>
+            <td><span class="badge-tag badge-done">✓ Hoàn thành sớm</span></td>
+            <td>Thư mục <code>app/</code>, <code>config/</code>, <code>public/</code>, <code>api/</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout purple">
+        <div class="callout-title">🏆 Điểm nổi trội của nhóm ZenTech so với các nhóm khác</div>
+        Không chỉ dừng lại ở lý thuyết và báo cáo giấy, nhóm chúng ta đã <strong>hoàn thành trước hạn toàn bộ CSDL thực tế (đã nạp vào phpMyAdmin)</strong> và <strong>dựng sẵn khung mã nguồn MVC cùng Prototype tương tác 6 màn hình</strong>. Khi giảng viên chấm bài hoặc mở kiểm tra trực tiếp trên máy chiếu, chúng ta có thể mở sản phẩm sống ngay lập tức để gây ấn tượng mạnh!
+      </div>
+    </div>
+
+    <div class="doc-footer">
+      <div>Dự án 1: Website Gaming Gear ZenTech • Tài liệu Onboarding nhóm</div>
+      <div>Trang 2 / 6</div>
+    </div>
+  </div>
+
+  <!-- ==================== TRANG 3 ==================== -->
+  <div class="sheet">
+    <div class="sheet-content">
+      <div class="section-header">
+        <span class="section-tag">PHẦN II (TIẾP THEO)</span>
+        <span class="section-title">PHÂN TÍCH CHUYÊN SÂU DỮ LIỆU KHẢO SÁT THỊ TRƯỜNG (139 PHẢN HỒI)</span>
+      </div>
+
+      <p>
+        Bộ dữ liệu gồm 139 phản hồi (file <code>zentech_survey_139.csv</code>, bản gán nhãn <code>zentech_survey_139_labeled.csv</code>). Mọi tỷ lệ dưới đây được tính lại từ 139 dòng bằng script <code>scratch/analyze_survey.py</code>. Phân tích đầy đủ, có biểu đồ, nằm trong <code>08_Phan_Tich_Khao_Sat_ZenTech.docx</code>.
+      </p>
+
+      <div class="grid-2">
+        <div class="feature-box">
+          <div class="feature-box-title">1. Đối tượng</div>
+          <ul>
+            <li><strong>82.7% từ 18 đến 28 tuổi:</strong> nhóm 18 đến 22 tuổi đông nhất (60.4%).</li>
+            <li><strong>Học sinh, sinh viên (40.3%):</strong> nhóm nghề nghiệp lớn nhất, tiếp theo là nhân viên văn phòng, IT (23.7%).</li>
+            <li><strong>Mục đích:</strong> chơi game 41.7%, vừa chơi game vừa làm việc 25.9%.</li>
+          </ul>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-box-title">2. Ngân sách và kết nối</div>
+          <ul>
+            <li><strong>59.7% chi tối đa 1 triệu đồng:</strong> dưới 500.000đ 15.8%, từ 500.000đ đến 1 triệu 43.9%.</li>
+            <li><strong>1 đến 2 triệu 28.1%, trên 2 triệu 12.2%.</strong></li>
+            <li><strong>67.6% thích kết nối không dây:</strong> không dây 2.4GHz 34.5%, đa chế độ 17.3%, Bluetooth 15.8%; có dây 32.4%.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 10px;">
+        <div class="feature-box">
+          <div class="feature-box-title">3. Loại gear quan tâm nhất</div>
+          <ul>
+            <li><strong>Bàn phím (43.2%)</strong> và <strong>chuột (30.2%)</strong>: cộng lại 73.4%.</li>
+            <li><strong>Tai nghe (10.8%)</strong>, ghế và bàn gaming (7.9%), lót chuột (2.9%).</li>
+          </ul>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-box-title">4. Khó khăn và yếu tố quyết định</div>
+          <ul>
+            <li><strong>Khó khăn khi mua online:</strong> không biết thông số có hợp nhu cầu 26.6%, khó so sánh phiên bản và màu sắc 26.6%, lo hàng không chính hãng 25.2%.</li>
+            <li><strong>Mức quan trọng (thang 1 đến 5):</strong> thông số kỹ thuật cao nhất (3.78), nhưng năm yếu tố chênh nhau rất ít (3.69 đến 3.78).</li>
+            <li><strong>67.6% hào hứng với trợ lý AI</strong> tư vấn gear.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-top: 12px;">
+        <div class="callout-title">Khảo sát dẫn tới quyết định thiết kế nào</div>
+        Khó chọn vì thông số và so sánh (53.2%) dẫn tới tab thông số và bộ chọn màu, phiên bản đổi giá, tồn kho ngay. Ngân sách tối đa 1 triệu (59.7%) dẫn tới bộ lọc khoảng giá có nút chọn nhanh. Hào hứng với AI (67.6%) dẫn tới trợ lý ZenBot. <strong>Lưu ý:</strong> khảo sát không có câu hỏi về giao diện sáng hay tối, nên lựa chọn giao diện được quyết định theo nguyên tắc thiết kế, không dựa trên số liệu khảo sát.
+      </div>
+    </div>
+
+    <div class="doc-footer">
+      <div>Dự án 1: Website Gaming Gear ZenTech • Tài liệu Onboarding nhóm</div>
+      <div>Trang 3 / 6</div>
+    </div>
+  </div>
+
+  <!-- ==================== TRANG 4 ==================== -->
+  <div class="sheet">
+    <div class="sheet-content">
+      <div class="section-header">
+        <span class="section-tag">PHẦN III</span>
+        <span class="section-title">HỆ THỐNG HOẠT ĐỘNG NHƯ THẾ NÀO? (CƠ CHẾ KỸ THUẬT DỄ HIỂU)</span>
+      </div>
+
+      <p>
+        Phần này giải thích chi tiết nhưng trực quan về cơ chế hoạt động của các thành phần trong dự án, giúp tất cả các thành viên (dù là chuyên sâu về code hay thiên về báo cáo/giao diện) đều hiểu rõ và tự tin trả lời vấn đáp trước giảng viên.
+      </p>
+
+      <h3>1. Luồng dữ liệu theo kiến trúc MVC (Model - View - Controller)</h3>
+      <div class="feature-box" style="margin-bottom: 8px;">
+        <div style="font-size: 11.5px; font-weight: 700; color: #0284c7; margin-bottom: 3px;">Ví dụ thực tế: Khách mở trang xem Bàn phím cơ AKKO (URL: /san-pham/ban-phim-co-akko-3098b-plus-multi-modes)</div>
+        <ol style="margin-left: 18px; font-size: 11px; color: #334155; line-height: 1.45;">
+          <li><strong>Trình duyệt gửi yêu cầu:</strong> Người dùng nhấp vào thẻ sản phẩm, gửi HTTP Request lên server.</li>
+          <li><strong>Front Controller (<code>public/index.php</code>):</strong> Khởi tạo Session, nạp cấu hình PDO từ <code>config/database.php</code>, định tuyến gọi hàm <code>ProductController->detail(1)</code>.</li>
+          <li><strong>Controller (<code>app/controllers/ProductController.php</code>):</strong> Gọi <code>ProductModel</code> lấy dữ liệu: thông tin chung, toàn bộ biến thể màu sắc/switch, thông số kỹ thuật.</li>
+          <li><strong>Model (<code>app/models/ProductModel.php</code>):</strong> Chạy câu lệnh SQL qua PDO an toàn chống SQL Injection, trả về mảng dữ liệu.</li>
+          <li><strong>View (<code>app/views/client/products/detail.php</code>):</strong> Kết hợp mã HTML/Tailwind CSS để xuất ra màn hình giao diện bóng bẩy cho khách.</li>
+        </ol>
+      </div>
+
+      <h3>2. Cơ chế chọn biến thể Realtime (Variant Matrix - Không tải lại trang)</h3>
+      <div class="code-block">
+<span class="comment">// 1. Backend PHP xuất sẵn toàn bộ danh sách biến thể thành mảng JSON ẩn trong HTML</span>
+&lt;div id=<span class="string">"variant-matrix"</span> data-variants=<span class="string">'[{"id":1,"color":"Đen","version":"Linear Switch","price":1890000,"stock":15,"image":"akko_black.png"}, ...]'</span>&gt;&lt;/div&gt;
+
+<span class="comment">// 2. JavaScript bắt sự kiện nhấp chuột trên các nút pill chọn Màu sắc / Switch</span>
+document.<span class="func">querySelectorAll</span>(<span class="string">'.variant-pill'</span>).<span class="func">forEach</span>(btn =&gt; {
+    btn.<span class="func">addEventListener</span>(<span class="string">'click'</span>, () =&gt; {
+        <span class="keyword">const</span> match = variants.<span class="func">find</span>(v =&gt; v.color === selectedColor &amp;&amp; v.version === selectedVersion);
+        <span class="keyword">if</span> (match) {
+            document.<span class="func">querySelector</span>(<span class="string">'#product-price'</span>).innerText = <span class="func">formatVND</span>(match.price);
+            document.<span class="func">querySelector</span>(<span class="string">'#product-stock'</span>).innerText = `Còn ${match.stock} sản phẩm`;
+            document.<span class="func">querySelector</span>(<span class="string">'#main-image'</span>).src = match.image;
+        }
+    });
+});
+      </div>
+
+      <h3>3. Cơ chế Đặt hàng an toàn tuyệt đối (ACID Transaction & SELECT FOR UPDATE)</h3>
+      <div class="code-block">
+<span class="keyword">try</span> {
+    $db-&gt;<span class="func">beginTransaction</span>(); <span class="comment">// 1. Mở phiên giao dịch an toàn</span>
+
+    <span class="comment">// 2. Khóa dòng bản ghi sản phẩm lại (người thứ 2 phải xếp hàng chờ trong tích tắc)</span>
+    $stmt = $db-&gt;<span class="func">prepare</span>(<span class="string">"SELECT stock FROM product_variants WHERE id = ? FOR UPDATE"</span>);
+    $stmt-&gt;<span class="func">execute</span>([$variantId]);
+    $stock = $stmt-&gt;<span class="func">fetchColumn</span>();
+
+    <span class="keyword">if</span> ($stock &lt; $buyQty) {
+        <span class="keyword">throw new</span> <span class="func">Exception</span>(<span class="string">"Sản phẩm này vừa hết hàng! Vui lòng chọn mẫu khác."</span>);
+    }
+
+    <span class="comment">// 3. Tạo đơn hàng -> Lưu danh sách sản phẩm -> Trừ số lượng tồn kho</span>
+    $orderId = $orderModel-&gt;<span class="func">create</span>($orderData);
+    $orderModel-&gt;<span class="func">addDetail</span>($orderId, $variantId, $price, $buyQty);
+    $variantModel-&gt;<span class="func">decreaseStock</span>($variantId, $buyQty);
+
+    $db-&gt;<span class="func">commit</span>(); <span class="comment">// 4. TẤT CẢ THÀNH CÔNG -> Lưu vĩnh viễn vào Database</span>
+} <span class="keyword">catch</span> (Exception $e) {
+    $db-&gt;<span class="func">rollBack</span>(); <span class="comment">// 5. CÓ LỖI XẢY RA -> Hủy bỏ toàn bộ, không mất tiền, không âm kho</span>
+}
+      </div>
+    </div>
+
+    <div class="doc-footer">
+      <div>Dự án 1: Website Gaming Gear ZenTech • Tài liệu Onboarding nhóm</div>
+      <div>Trang 4 / 6</div>
+    </div>
+  </div>
+
+  <!-- ==================== TRANG 5 ==================== -->
+  <div class="sheet">
+    <div class="sheet-content">
+      <div class="section-header">
+        <span class="section-tag">PHẦN IV</span>
+        <span class="section-title">VỊ TRÍ TÀI NGUYÊN & HƯỚNG DẪN CHẠY THỬ TRÊN MÁY CÁ NHÂN</span>
+      </div>
+
+      <p>
+        Tất cả các tài liệu, số liệu và mã nguồn đã được gom vào thư mục chuẩn <code>docs/tuần 1 - dự án 1/</code>. Dưới đây là hướng dẫn chi tiết để bất kỳ thành viên nào cũng có thể tự chạy thử website trên máy tính cá nhân trong vòng 2 phút.
+      </p>
+
+      <div class="grid-2">
+        <div class="feature-box">
+          <div class="feature-box-title">📁 Danh mục 11 tệp tài liệu bàn giao Tuần 1</div>
+          <p style="font-size: 11px; color: #64748b; margin-bottom: 5px;">Vị trí: <code>dự án 1 - lập trình website/docs/tuần 1 - dự án 1/</code></p>
+          <ul style="font-size: 11px;">
+            <li><code>00_BAO_CAO_TONG_HOP_GIAI_DOAN_1.docx</code>: Báo cáo Word hoàn chỉnh nộp giảng viên.</li>
+            <li><code>01_Quyet_Dinh_De_Tai_ZenTech.docx</code>: Văn bản phê duyệt đề tài.</li>
+            <li><code>02_Dac_Ta_Thiet_Ke_UIUX_ZenTech.docx</code>: Đặc tả chi tiết Design System & Wireframes.</li>
+            <li><code>03_Ban_Mau_Giao_Dien_Tuong_Tac_UIUX.html</code>: Bản prototype HTML mở trình duyệt xem ngay 6 màn hình sống.</li>
+            <li><code>04_Thiet_Ke_Kien_Truc_Co_So_Du_Lieu.docx</code>: Tài liệu kiến trúc 24 bảng CSDL.</li>
+            <li><code>05_Tu_Dien_Du_Lieu_Data_Dictionary.docx</code>: Bảng từ điển dữ liệu tra cứu chi tiết từng cột.</li>
+            <li><code>06_So_Do_Quan_He_Thuc_The_ERD.docx</code>: Sơ đồ ERD thực thể quan hệ chuẩn 3NF.</li>
+            <li><code>07_zentech_schema.sql</code>: Tệp script SQL nạp vào phpMyAdmin.</li>
+            <li><code>zentech_survey_139.xlsx</code> / <code>.csv</code>: File Excel & CSV 139 dữ liệu khảo sát.</li>
+            <li><code>TOM_TAT_DU_AN_1_ZENTECH_TEAM.pdf</code>: Tệp tóm tắt này dành cho toàn đội.</li>
+          </ul>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-box-title">⚡ 3 Bước chạy thử Website trên máy cá nhân</div>
+          <ol style="margin-left: 16px; font-size: 11px; color: #334155; line-height: 1.45;">
+            <li>
+              <strong>Bước 1: Khởi động XAMPP / MAMP</strong><br>
+              Khởi động <strong>Apache</strong> và <strong>MySQL</strong>. Truy cập <code>http://localhost/phpmyadmin</code>, tạo database tên <code>zentech_db</code> và import file <code>07_zentech_schema.sql</code> (Nếu máy bạn đã import rồi thì bỏ qua bước này).
+            </li>
+            <li>
+              <strong>Bước 2: Mở Terminal tại thư mục dự án</strong><br>
+              Di chuyển vào thư mục dự án và chạy máy chủ PHP:<br>
+              <code>cd "dự án 1 - lập trình website"</code><br>
+              <code>php -S localhost:8000 -t public/</code>
+            </li>
+            <li>
+              <strong>Bước 3: Mở trình duyệt trải nghiệm</strong><br>
+              • Khách mua hàng: <code>http://localhost:8000</code><br>
+              • Bảng quản trị Admin: <code>http://localhost:8000/admin</code><br>
+              <em>Tài khoản Admin:</em> <code>admin@zentech.vn</code> / <code>admin@123</code><br>
+              <em>Tài khoản Khách:</em> <code>khachhang@gmail.com</code> / <code>123456</code>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">🖥️ Cách xem nhanh mẫu thiết kế UI/UX mà không cần cài phần mềm</div>
+        Nếu bạn chỉ muốn xem mẫu thiết kế giao diện: Chỉ cần nhấp đúp chuột mở trực tiếp file <code>03_Ban_Mau_Giao_Dien_Tuong_Tac_UIUX.html</code> bằng trình duyệt Chrome, Cốc Cốc hoặc Edge. Bạn có thể nhấp chuột qua lại giữa 6 màn hình mẫu và trò chuyện thử với AI Assistant ngay lập tức!
+      </div>
+
+      <h3>Cơ chế Trợ lý ảo AI ZenBot (Tích hợp Gemini API)</h3>
+      <p>
+        Khách hàng bấm vào biểu tượng robot ở góc màn hình &rarr; Nhập câu hỏi (Ví dụ: <em>"Tư vấn bàn phím cơ gõ êm văn phòng tầm 1.5 triệu"</em>) &rarr; JavaScript gửi tin nhắn qua Fetch API đến endpoint <code>api/ai-assistant.php</code> &rarr; Backend PHP gắn kèm System Prompt định danh <em>"Chuyên gia công nghệ ZenTech"</em> rồi gọi Gemini API &rarr; Trả lời phản hồi về giao diện trong vòng chưa đầy 1.5 giây. Nếu mất mạng, hệ thống tự động kích hoạt bộ Smart Fallback trả lời các câu hỏi phổ biến.
+      </p>
+    </div>
+
+    <div class="doc-footer">
+      <div>Dự án 1: Website Gaming Gear ZenTech • Tài liệu Onboarding nhóm</div>
+      <div>Trang 5 / 6</div>
+    </div>
+  </div>
+
+  <!-- ==================== TRANG 6 ==================== -->
+  <div class="sheet">
+    <div class="sheet-content">
+      <div class="section-header">
+        <span class="section-tag">PHẦN V</span>
+        <span class="section-title">KẾ HOẠCH GIAI ĐOẠN 2 (TUẦN 2) & PHÂN CÔNG CÔNG VIỆC NHÓM</span>
+      </div>
+
+      <p>
+        Sau khi hoàn thành vượt tiến độ Giai đoạn 1 với nền móng Database và MVC vững chắc, ở Giai đoạn 2 nhóm chúng ta sẽ tập trung hoàn thiện trải nghiệm giao diện chi tiết, hoàn tất các module quản trị và chuẩn bị bài thuyết trình thật chỉn chu.
+      </p>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-role">🎨 1. Phụ trách Giao diện (Frontend Dev)</div>
+          <ul class="team-tasks">
+            <li>Hoàn thiện các trang con: Tin tức công nghệ, Tra cứu đơn hàng, Trang Đánh giá & Review sản phẩm.</li>
+            <li>Tối ưu hiển thị responsive mượt mà trên điện thoại di động (Mobile First).</li>
+            <li>Lắp ráp hiệu ứng thông báo Toast (Thêm vào giỏ thành công, Thông báo hết hàng, Báo lỗi).</li>
+          </ul>
+        </div>
+
+        <div class="team-card">
+          <div class="team-role">⚙️ 2. Phụ trách Nghiệp vụ (Backend Dev)</div>
+          <ul class="team-tasks">
+            <li>Hoàn thiện các trang CRUD Admin: Quản lý danh mục, Quản lý thương hiệu, Quản lý mã giảm giá Coupon.</li>
+            <li>Hoàn thiện bộ lọc đa tiêu chí linh hoạt kết nối với CSDL sống (khoảng giá, brand, switch).</li>
+            <li>Tích hợp cơ chế gửi Email hóa đơn đơn hàng mô phỏng (PHP Mailer / Notification).</li>
+          </ul>
+        </div>
+
+        <div class="team-card">
+          <div class="team-role">🧪 3. Phụ trách Kiểm thử & Dữ liệu (Tester & Data)</div>
+          <ul class="team-tasks">
+            <li>Đã có 330 sản phẩm (34 thương hiệu) kèm hình ảnh, giá và biến thể trong database.</li>
+            <li>Kiểm thử các tình huống biên: Đặt hàng khi tồn kho bằng 0, nhập sai form thanh toán, mã coupon hết hạn.</li>
+            <li>Lập bảng kịch bản kiểm thử Test Cases (Pass/Fail) để đưa vào phụ lục báo cáo tốt nghiệp.</li>
+          </ul>
+        </div>
+
+        <div class="team-card">
+          <div class="team-role">📊 4. Phụ trách Báo cáo & Thuyết trình</div>
+          <ul class="team-tasks">
+            <li>Theo dõi cập nhật Báo cáo tổng kết Giai đoạn 2 (Word đầy đủ các chương).</li>
+            <li>Thiết kế Slide thuyết trình bảo vệ đề tài (Canva / PowerPoint tông sáng, tối giản, cùng bảng màu với website).</li>
+            <li>Chuẩn bị kịch bản thuyết trình và kịch bản Live Demo các tính năng trước hội đồng chấm thi.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top: 14px;">
+        <div class="callout-title">🤝 Lời nhắn gửi tới toàn thể thành viên nhóm ZenTech</div>
+        Giai đoạn 1 chúng ta đã đạt được những kết quả rất ấn tượng, vượt xa yêu cầu ban đầu của đề tài môn học. Nền móng CSDL đã nạp xong, khung code MVC đã chạy tốt, tài liệu nộp đã đầy đủ. Mọi người hãy tự tin bám sát tài liệu này để cùng nhau hoàn thiện Giai đoạn 2 và giành điểm A+ cho môn Dự án 1!
+      </div>
+
+      <div class="feature-box" style="margin-top: 14px; background: #0f172a; color: #f8fafc; border-color: #334155;">
+        <div style="font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">📋 Tóm tắt các mốc thời gian quan trọng</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 11.5px;">
+          <div>
+            <div style="color: #94a3b8; font-size: 10px; text-transform: uppercase;">Giai đoạn 1 (Tuần 1)</div>
+            <div style="font-weight: 700; color: #4ade80;">Deadline: 13/11 (Hoàn tất 100%)</div>
+            <div style="color: #cbd5e1; font-size: 10.5px;">Đề tài, Khảo sát, UI/UX, Database, MVC</div>
+          </div>
+          <div>
+            <div style="color: #94a3b8; font-size: 10px; text-transform: uppercase;">Giai đoạn 2 (Tuần 2)</div>
+            <div style="font-weight: 700; color: #facc15;">Deadline: 20/11</div>
+            <div style="color: #cbd5e1; font-size: 10.5px;">Hoàn thiện CRUD Admin, Test Cases, Responsive</div>
+          </div>
+          <div>
+            <div style="color: #94a3b8; font-size: 10px; text-transform: uppercase;">Nghiệm thu & Thuyết trình</div>
+            <div style="font-weight: 700; color: #38bdf8;">Bảo vệ Dự án 1</div>
+            <div style="color: #cbd5e1; font-size: 10.5px;">Slide thuyết trình & Live Demo sản phẩm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-footer">
+      <div>Dự án 1: Website Gaming Gear ZenTech • Tài liệu Onboarding nhóm</div>
+      <div>Trang 6 / 6</div>
+    </div>
+  </div>
+
+</body>
+</html>

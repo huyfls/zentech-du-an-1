@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZenTech - Bài Test Đọc Hiểu & Check Tiến Độ Nhóm</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cyan: '#06b6d4',
+              purple: '#8b5cf6',
+              dark: '#090d16',
+              surface: '#0f172a',
+              card: '#1e293b',
+              border: '#334155'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-8 px-4 sm:px-6 lg:px-8 selection:bg-cyan-500 selection:text-black">
+
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden mb-6">
+      <div class="absolute -right-10 -top-10 w-44 h-44 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+          <i class="fa-solid fa-clipboard-check"></i> Onboarding Checkpoint
+        </div>
+        <div class="flex items-center gap-2 text-xs font-medium text-slate-400 mono bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+          <i class="fa-regular fa-clock text-cyan-400"></i>
+          <span>Bắt đầu lúc: </span>
+          <span id="start-time" class="text-white font-bold">--:--:--</span>
+        </div>
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
+        Bài Test Đọc Hiểu Toàn Cảnh Dự Án 1
+      </h1>
+      <p class="text-sm sm:text-base text-slate-400 leading-relaxed">
+        Dựa trên tài liệu <span class="text-cyan-400 font-semibold">TOM_TAT_DU_AN_1_ZENTECH_TEAM.pdf</span>. Bài test này giúp Trưởng nhóm và bạn kiểm tra mức độ nắm bắt kiến trúc CSDL, mô hình MVC, tiến độ Giai đoạn 1 và kế hoạch phối hợp Giai đoạn 2.
+      </p>
+
+      <!-- Progress Bar -->
+      <div class="mt-6 pt-5 border-t border-slate-800/80">
+        <div class="flex justify-between items-center text-xs font-semibold mb-2">
+          <span class="text-slate-400">Tiến độ trả lời câu hỏi</span>
+          <span id="progress-text" class="text-cyan-400 mono">0 / 11 câu (0%)</span>
+        </div>
+        <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+          <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 to-indigo-500 h-2.5 rounded-full transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Member Info Form -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 mb-6 shadow-lg backdrop-blur">
+      <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-user-astronaut text-cyan-400"></i> 1. Thông Tin Thành Viên Nhóm
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            Họ và Tên <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="member-name" placeholder="Ví dụ: Nguyễn Văn A" 
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            Vai trò chính trong nhóm <span class="text-rose-500">*</span>
+          </label>
+          <select id="member-role" 
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
+            <option value="">-- Chọn vai trò trong dự án --</option>
+            <option value="Frontend Developer">🎨 Frontend Developer (Giao diện & Trải nghiệm)</option>
+            <option value="Backend Developer">⚙️ Backend Developer (Xử lý nghiệp vụ & CSDL)</option>
+            <option value="Tester & Data Specialist">🧪 Tester & Quản lý Dữ liệu sản phẩm</option>
+            <option value="Report & Presentation Lead">📊 Báo cáo Word & Thiết kế Slide thuyết trình</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Container -->
+    <form id="quiz-form" onsubmit="event.preventDefault(); submitQuiz();" class="space-y-6">
+      
+      <!-- Questions will be dynamically rendered or static for ultra-clean rendering -->
+      <div id="questions-list" class="space-y-6"></div>
+
+      <!-- Submit Button Container -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 text-center shadow-lg">
+        <p class="text-xs text-slate-400 mb-4">
+          Hãy chắc chắn bạn đã đọc qua tài liệu tóm tắt trước khi bấm nộp bài để đạt kết quả tốt nhất!
+        </p>
+        <button type="button" onclick="submitQuiz()" 
+          class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-500 via-sky-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 shadow-lg shadow-cyan-500/20 active:scale-95 transition-all">
+          <i class="fa-solid fa-paper-plane"></i> NỘP BÀI KIỂM TRA & XEM KẾT QUẢ
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Result Modal / Card (Hidden until submitted) -->
+    <div id="result-box" class="hidden mt-8 bg-slate-900 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div class="text-center">
+        <div id="result-badge-icon" class="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center text-3xl"></div>
+        <h2 id="result-title" class="text-2xl font-black text-white mb-1"></h2>
+        <p id="result-subtitle" class="text-sm text-slate-400 mb-6"></p>
+
+        <!-- Score metric -->
+        <div class="inline-grid grid-cols-2 gap-4 bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6 text-left">
+          <div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Điểm số đạt được</div>
+            <div id="result-score" class="text-2xl font-extrabold text-cyan-400 mono">0 / 100</div>
+          </div>
+          <div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Thời gian hoàn thành</div>
+            <div id="result-timestamp" class="text-xs font-semibold text-slate-300 mono mt-1">--:--:--</div>
+          </div>
+        </div>
+
+        <!-- Action Box: Copy text to Zalo -->
+        <div class="bg-slate-950/80 border border-cyan-500/30 rounded-xl p-4 mb-6 text-left">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-regular fa-copy"></i> Báo cáo kết quả gửi nhóm Zalo / Trưởng nhóm:
+            </span>
+            <button onclick="copyReport()" class="text-xs bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3 py-1 rounded-lg transition-colors flex items-center gap-1">
+              <i class="fa-solid fa-copy"></i> Sao chép
+            </button>
+          </div>
+          <textarea id="report-text" readonly rows="5" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-300 mono focus:outline-none resize-none"></textarea>
+          <div id="copy-toast" class="hidden text-xs text-emerald-400 font-semibold mt-1 flex items-center gap-1">
+            <i class="fa-solid fa-check"></i> Đã sao chép! Hãy dán (Ctrl+V) vào nhóm Zalo để thông báo cho Trưởng nhóm.
+          </div>
+        </div>
+
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-xs text-slate-400 hover:text-white underline">
+          <i class="fa-solid fa-arrow-up"></i> Cuộn lên xem lại đáp án và lời giải chi tiết
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-12 text-center text-xs text-slate-500 border-t border-slate-900 pt-6">
+      Dự án 1: Website Gaming Gear ZenTech • Hệ thống Đánh giá & Onboarding Thành viên Nhóm
+    </div>
+  </div>
+
+  <script>
+    // Timestamp
+    const now = new Date();
+    const startTimeStr = now.toLocaleTimeString('vi-VN') + ' - ' + now.toLocaleDateString('vi-VN');
+    document.getElementById('start-time').innerText = startTimeStr;
+
+    // Questions Data
+    const quizData = [
+      {
+        id: 1,
+        part: "PHẦN I: TỔNG QUAN ĐỀ TÀI",
+        question: "Đề tài môn Dự án 1 của chúng ta là gì và phong cách thiết kế UI/UX chủ đạo là gì?",
+        options: [
+          "Website bán quần áo phong cách Vintage cổ điển",
+          "Website kinh doanh Gaming Gear & Phụ kiện máy tính - ZenTech, giao diện sáng tối giản (lấy cảm hứng từ CellphoneS và Apple Store)",
+          "Website tin tức bóng đá giao diện sáng màu",
+          "Website tuyển dụng sinh viên dùng Bootstrap mặc định"
+        ],
+        correct: 1,
+        explain: "Dự án mang tên ZenTech, bán Gaming Gear (chuột, phím cơ, tai nghe, setup) với giao diện nền sáng, tối giản, ảnh sản phẩm làm trung tâm, kết hợp trải nghiệm thực dụng của CellphoneS."
+      },
+      {
+        id: 2,
+        part: "PHẦN I: TÍNH NĂNG CỐT LÕI",
+        question: "Hai tính năng nổi bật nào sau đây thuộc Phân hệ Khách hàng (Client) giúp ZenTech khác biệt với web thông thường?",
+        options: [
+          "Chỉ xem ảnh tĩnh và phải gọi điện đặt hàng thủ công",
+          "Trình chọn biến thể (Variant Matrix) đổi giá/ảnh realtime không reload trang và Trợ lý ảo AI ZenBot tư vấn gear",
+          "Bắt buộc người mua phải nạp tiền trước mới được xem danh mục sản phẩm",
+          "Giao diện hoàn toàn bằng tiếng Anh và chỉ thanh toán bằng Bitcoin"
+        ],
+        correct: 1,
+        explain: "Điểm nhấn đặc biệt của ZenTech là Variant Selector đổi giá/tồn kho tức thì và Trợ lý ảo AI ZenBot tích hợp Gemini API hỗ trợ tư vấn gear theo nhu cầu khách hàng."
+      },
+      {
+        id: 3,
+        part: "PHẦN II: KHẢO SÁT THỊ TRƯỜNG",
+        question: "Nhóm chúng ta đã thu thập được bao nhiêu mẫu trả lời khảo sát thực tế (Google Form) cho Giai đoạn 1?",
+        options: [
+          "50 mẫu (Chưa đạt yêu cầu của giảng viên)",
+          "80 mẫu (Vừa đủ trung bình)",
+          "139 mẫu (Vượt chỉ tiêu tối thiểu 100 mẫu của giảng viên, lưu trong file Excel/CSV)",
+          "500 mẫu"
+        ],
+        correct: 2,
+        explain: "Yêu cầu của Giảng viên là ít nhất 100 biểu mẫu trả lời. Nhóm chúng ta đã có bộ dữ liệu 139 mẫu và đã phân tích, lưu trong tệp zentech_survey_139.xlsx."
+      },
+      {
+        id: 4,
+        part: "PHẦN II: DỮ LIỆU KHẢO SÁT",
+        question: "Theo khảo sát 139 phản hồi, tỷ lệ người mua từ 18 đến 28 tuổi và tỷ lệ chi tối đa 1 triệu đồng cho một món gear lần lượt là bao nhiêu?",
+        options: [
+          "40% từ 18 đến 28 tuổi và 20% chi tối đa 1 triệu",
+          "50% từ 18 đến 28 tuổi và 50% chi tối đa 1 triệu",
+          "82,7% từ 18 đến 28 tuổi và 59,7% chi tối đa 1 triệu",
+          "95% trên 28 tuổi và 5% chi tối đa 1 triệu"
+        ],
+        correct: 2,
+        explain: "Tính từ 139 dòng dữ liệu: 82.7% từ 18 đến 28 tuổi và 59.7% chi tối đa 1 triệu đồng. Vì vậy giao diện hướng tới người trẻ và có bộ lọc khoảng giá với nút chọn nhanh."
+      },
+      {
+        id: 5,
+        part: "PHẦN II: CƠ SỞ DỮ LIỆU",
+        question: "Kiến trúc CSDL `zentech_db` gồm bao nhiêu bảng quan hệ, và trạng thái hiện tại trên máy chủ là gì?",
+        options: [
+          "10 bảng, mới chỉ phác thảo trên giấy chưa chạy được",
+          "24 bảng chuẩn 3NF (quản lý biến thể, EAV specs, orders, coupons...), ĐÃ IMPORT THÀNH CÔNG VÀO PHPMYADMIN/MYSQL XAMPP",
+          "5 bảng đơn giản chỉ gồm users và products",
+          "CSDL NoSQL MongoDB không dùng bảng"
+        ],
+        correct: 1,
+        explain: "CSDL zentech_db gồm 24 bảng chuẩn hóa 3NF, có đầy đủ khóa ngoại, index tối ưu và đã được nạp thành công vào MySQL local của XAMPP."
+      },
+      {
+        id: 6,
+        part: "PHẦN III: KIẾN TRÚC MVC",
+        question: "Trong cấu trúc MVC PHP thuần của dự án, khi khách truy cập `/index.php?url=product/detail&id=1`, thứ tự luân chuyển dữ liệu đúng là:",
+        options: [
+          "View -> Model -> Controller -> Database",
+          "Front Controller (public/index.php) -> Controller (ProductController) -> Model (ProductModel lấy SQL PDO) -> View (detail.php hiển thị)",
+          "Controller -> phpMyAdmin -> View -> Router",
+          "Model trực tiếp xuất mã HTML ra trình duyệt không cần Controller"
+        ],
+        correct: 1,
+        explain: "Router (index.php) tiếp nhận URL -> gọi ProductController -> Controller gọi ProductModel truy vấn PDO từ MySQL -> Controller nạp View để render giao diện."
+      },
+      {
+        id: 7,
+        part: "PHẦN III: KỸ THUẬT VARIANT MATRIX",
+        question: "Tại sao khi bấm chọn màu hoặc switch trên trang chi tiết sản phẩm ZenTech, trang web KHÔNG hề bị chớp giật hay reload lại?",
+        options: [
+          "Do web sử dụng iframe ẩn để tải ngầm",
+          "Do Backend PHP nhúng sẵn mảng JSON biến thể trong thuộc tính HTML data-variants, Vanilla JS bắt sự kiện click để tra cứu và cập nhật ngay lập tức DOM giá/ảnh/kho",
+          "Do web không hỗ trợ nhiều màu sắc, tất cả màu đều chung 1 giá",
+          "Do trình duyệt tự đoán giá tiền"
+        ],
+        correct: 1,
+        explain: "Đây là kỹ thuật Variant Matrix phía Client. JS bắt sự kiện trên các pill tag, tra cứu mảng JSON ẩn có sẵn để đổi giá và báo tồn kho ngay trong 1 mili-giây."
+      },
+      {
+        id: 8,
+        part: "PHẦN III: ĐẶT HÀNG AN TOÀN (ACID)",
+        question: "Để ngăn ngừa lỗi Race Condition (2 người cùng bấm mua sản phẩm cuối cùng tại 1 thời điểm gây âm tồn kho), Backend áp dụng cơ chế nào?",
+        options: [
+          "Không cần xử lý, ai mạng nhanh hơn người đó được",
+          "Dùng Database Transaction (BEGIN TRANSACTION, COMMIT, ROLLBACK) kết hợp câu lệnh khóa dòng `SELECT ... FOR UPDATE`",
+          "Tắt website mỗi khi có người đang thanh toán",
+          "Chỉ cho phép thanh toán bằng tiền mặt khi giao hàng"
+        ],
+        correct: 1,
+        explain: "SELECT ... FOR UPDATE khóa tạm bản ghi để kiểm tra stock >= buyQty trong Transaction. Nếu không đủ hàng sẽ Rollback ngay, đảm bảo kho không bao giờ bị âm."
+      },
+      {
+        id: 9,
+        part: "PHẦN IV: HƯỚNG DẪN CHẠY THỬ",
+        question: "Sau khi bật Apache và MySQL trên XAMPP, lệnh terminal nào dùng để chạy máy chủ PHP cục bộ mở website ZenTech?",
+        options: [
+          "npm run dev",
+          "php -S localhost:8000 -t public/",
+          "python app.py",
+          "dotnet run --port 8000"
+        ],
+        correct: 1,
+        explain: "Chạy `php -S localhost:8000 -t public/` tại thư mục dự án sẽ trỏ thẳng document root vào thư mục public/, sau đó truy cập http://localhost:8000 trên trình duyệt."
+      },
+      {
+        id: 10,
+        part: "PHẦN IV: TÀI KHOẢN QUẢN TRỊ",
+        question: "Tài khoản và mật khẩu Quản trị viên (Admin) mặc định có sẵn trong CSDL zentech_db là gì?",
+        options: [
+          "root / không có mật khẩu",
+          "admin / 123456",
+          "admin@zentech.vn / admin@123 (Đăng nhập tại /admin)",
+          "superadmin@gmail.com / password"
+        ],
+        correct: 2,
+        explain: "Tài khoản Quản trị mẫu trong CSDL là admin@zentech.vn với mật khẩu admin@123 để truy cập Dashboard tại URL http://localhost:8000/admin."
+      },
+      {
+        id: 11,
+        part: "PHẦN V: KẾ HOẠCH GIAI ĐOẠN 2",
+        question: "Nhiệm vụ trọng tâm của toàn nhóm trong Giai đoạn 2 (Tuần 2) là gì?",
+        options: [
+          "Đổi sang một đề tài website khác",
+          "Hoàn thiện các trang CRUD Admin, tích hợp bộ lọc đa tiêu chí, tối ưu responsive di động, lập bảng test cases kiểm thử và chuẩn bị Slide thuyết trình bảo vệ",
+          "Chỉ cần nộp lại file Word của Tuần 1",
+          "Dừng lại không làm tiếp vì Tuần 1 đã xong CSDL"
+        ],
+        correct: 1,
+        explain: "Giai đoạn 2 nhóm sẽ hoàn thiện các module quản trị còn lại, tối ưu mobile, viết bảng kiểm thử (Tester) và chuẩn bị slide bảo vệ trước hội đồng chấm thi."
+      }
+    ];
+
+    // Render questions
+    const container = document.getElementById('questions-list');
+    quizData.forEach((q, qIndex) => {
+      const qDiv = document.createElement('div');
+      qDiv.className = "bg-slate-900/90 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-md transition-all";
+      qDiv.id = `q-card-${q.id}`;
+
+      let optionsHtml = '';
+      q.options.forEach((opt, optIndex) => {
+        optionsHtml += `
+          <label class="option-label flex items-start gap-3 p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-800/60 hover:border-slate-700 cursor-pointer transition-all">
+            <input type="radio" name="question_${q.id}" value="${optIndex}" onchange="updateProgress()" class="mt-1 w-4 h-4 text-cyan-500 bg-slate-900 border-slate-700 focus:ring-cyan-500">
+            <span class="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">${String.fromCharCode(65 + optIndex)}. ${opt}</span>
+          </label>
+        `;
+      });
+
+      qDiv.innerHTML = `
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/40 px-2.5 py-0.5 rounded-md border border-cyan-800/40 mono">${q.part}</span>
+          <span class="text-xs font-semibold text-slate-500 mono">Câu ${q.id} / ${quizData.length}</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-bold text-white mb-4 leading-snug">
+          ${q.id}. ${q.question}
+        </h3>
+        <div class="space-y-2.5">
+          ${optionsHtml}
+        </div>
+        <div id="explain-${q.id}" class="hidden mt-4 pt-3 border-t border-slate-800/80 text-xs leading-relaxed"></div>
+      `;
+      container.appendChild(qDiv);
+    });
+
+    // Update Progress
+    function updateProgress() {
+      let answeredCount = 0;
+      quizData.forEach(q => {
+        const checked = document.querySelector(`input[name="question_${q.id}"]:checked`);
+        if (checked) answeredCount++;
+      });
+      const pct = Math.round((answeredCount / quizData.length) * 100);
+      document.getElementById('progress-bar').style.width = pct + '%';
+      document.getElementById('progress-text').innerText = `${answeredCount} / ${quizData.length} câu (${pct}%)`;
+    }
+
+    // Submit Quiz
+    function submitQuiz() {
+      const name = document.getElementById('member-name').value.trim();
+      const role = document.getElementById('member-role').value;
+
+      if (!name) {
+        alert("Vui lòng nhập Họ và Tên của bạn trước khi nộp bài!");
+        document.getElementById('member-name').focus();
+        return;
+      }
+      if (!role) {
+        alert("Vui lòng chọn Vai trò của bạn trong nhóm!");
+        document.getElementById('member-role').focus();
+        return;
+      }
+
+      let correctCount = 0;
+      let unanswered = 0;
+
+      quizData.forEach(q => {
+        const checked = document.querySelector(`input[name="question_${q.id}"]:checked`);
+        const card = document.getElementById(`q-card-${q.id}`);
+        const explainBox = document.getElementById(`explain-${q.id}`);
+
+        explainBox.classList.remove('hidden');
+
+        if (!checked) {
+          unanswered++;
+          card.classList.add('border-amber-500/50');
+          explainBox.innerHTML = `<span class="text-amber-400 font-bold">⚠️ Chưa chọn đáp án.</span> <span class="text-slate-400">Đáp án đúng là <strong>${String.fromCharCode(65 + q.correct)}</strong>: ${q.explain}</span>`;
+        } else {
+          const userAns = parseInt(checked.value);
+          if (userAns === q.correct) {
+            correctCount++;
+            card.classList.remove('border-slate-800', 'border-rose-500/50');
+            card.classList.add('border-emerald-500/50', 'bg-emerald-950/10');
+            explainBox.innerHTML = `<span class="text-emerald-400 font-bold">✓ Chính xác!</span> <span class="text-slate-400">${q.explain}</span>`;
+          } else {
+            card.classList.remove('border-slate-800', 'border-emerald-500/50');
+            card.classList.add('border-rose-500/50', 'bg-rose-950/10');
+            explainBox.innerHTML = `<span class="text-rose-400 font-bold">✗ Chưa đúng.</span> <span class="text-slate-400">Bạn chọn (${String.fromCharCode(65 + userAns)}). Đáp án đúng là <strong>${String.fromCharCode(65 + q.correct)}</strong>: ${q.explain}</span>`;
+          }
+        }
+      });
+
+      if (unanswered > 0) {
+        if (!confirm(`Bạn còn ${unanswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài luôn không?`)) {
+          return;
+        }
+      }
+
+      // Calculate score out of 100
+      const score = Math.round((correctCount / quizData.length) * 100);
+      const finishTime = new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN');
+
+      // Show result box
+      const resultBox = document.getElementById('result-box');
+      resultBox.classList.remove('hidden');
+
+      document.getElementById('result-score').innerText = `${score} / 100 (${correctCount}/${quizData.length} câu)`;
+      document.getElementById('result-timestamp').innerText = finishTime;
+
+      let badgeIcon = '';
+      let title = '';
+      let subtitle = '';
+      let ratingText = '';
+
+      if (score >= 90) {
+        badgeIcon = '<div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-2 border border-emerald-500/40"><i class="fa-solid fa-medal"></i></div>';
+        title = 'XUẤT SẮC! BẠN ĐÃ NẮM RẤT VỮNG DỰ ÁN';
+        subtitle = 'Bạn đã đọc kỹ tài liệu tóm tắt và hiểu rõ toàn bộ kiến trúc MVC, CSDL cũng như kế hoạch của nhóm.';
+        ratingText = 'ĐÃ ĐỌC KỸ TOÀN BỘ TÀI LIỆU (Xuất sắc - Đạt yêu cầu 100%)';
+      } else if (score >= 70) {
+        badgeIcon = '<div class="w-16 h-16 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-3xl mx-auto mb-2 border border-cyan-500/40"><i class="fa-solid fa-thumbs-up"></i></div>';
+        title = 'KẾT QUẢ TỐT! ĐÃ NẮM ĐƯỢC CÁC PHẦN CHÍNH';
+        subtitle = 'Bạn đã hiểu hầu hết các luồng quan trọng của dự án. Hãy xem lại các câu sai để chuẩn bị tốt cho GĐ 2.';
+        ratingText = 'ĐÃ NẮM RÕ CÁC LUỒNG CỐT LÕI (Khá tốt - Đạt yêu cầu)';
+      } else {
+        badgeIcon = '<div class="w-16 h-16 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl mx-auto mb-2 border border-amber-500/40"><i class="fa-solid fa-book-open"></i></div>';
+        title = 'CẦN ĐỌC THÊM TÀI LIỆU TÓM TẮT';
+        subtitle = 'Bạn cần xem kỹ lại file TOM_TAT_DU_AN_1_ZENTECH_TEAM.pdf để hiểu rõ hơn về CSDL và cơ chế hoạt động.';
+        ratingText = 'CẦN ĐỌC LẠI TÀI LIỆU (Chưa đạt mức khuyến nghị)';
+      }
+
+      document.getElementById('result-badge-icon').innerHTML = badgeIcon;
+      document.getElementById('result-title').innerText = title;
+      document.getElementById('result-subtitle').innerText = subtitle;
+
+      // Prepare Zalo Report Text
+      const reportMsg = 
+`🚀 [BÁO CÁO ĐỌC HIỂU DỰ ÁN 1 - ZENTECH]
+👤 Thành viên: ${name}
+🎯 Vai trò GĐ 2: ${role}
+⏰ Thời gian nộp bài: ${finishTime}
+🏆 Điểm số: ${score}/100 (Đúng ${correctCount}/${quizData.length} câu)
+📊 Đánh giá: ${ratingText}
+📌 Cam kết: Đã nắm bắt cấu trúc dự án và sẵn sàng phối hợp thực hiện Giai đoạn 2!`;
+
+      document.getElementById('report-text').value = reportMsg;
+
+      // Smooth scroll to result
+      resultBox.scrollIntoView({ behavior: 'smooth' });
+
+      // Save to localStorage as proof
+      localStorage.setItem('zentech_quiz_result', JSON.stringify({
+        name: name,
+        role: role,
+        score: score,
+        correctCount: correctCount,
+        total: quizData.length,
+        timestamp: finishTime
+      }));
+    }
+
+    // Copy report
+    function copyReport() {
+      const copyText = document.getElementById("report-text");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(copyText.value).then(() => {
+        const toast = document.getElementById('copy-toast');
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 4000);
+      });
+    }
+
+    // Auto-restore if previously answered
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('zentech_quiz_result');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          document.getElementById('member-name').value = data.name || '';
+          document.getElementById('member-role').value = data.role || '';
+        } catch(e) {}
+      }
+    });
+  </script>
+</body>
+</html>
