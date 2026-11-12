@@ -50,6 +50,32 @@ check("Thanh toán", "Đặt hàng thành công, hiện thông báo", "Đặt h�
 check("Thanh toán", "Trừ tồn kho đúng số lượng đặt", int(sql(f"select stock_qty from product_variants where id={vid}")) == stock0 - 2)
 t = tok(c, f"/orders/{oid}"); s, b = follow(c, "POST", f"/orders/cancel/{oid}", {"csrf_token": t})
 check("Đơn hàng", "Hủy đơn đang chờ: đổi trạng thái và có thông báo", sql(f"select status from orders where id={oid}") == "cancelled" and "hủy thành công" in b)
+# --- Mã giảm giá
+cp = '["is_active"=>1,"starts_at"=>null,"expires_at"=>null,"max_uses"=>null,"used_count"=>0,"min_order_value"=>500000]'
+php = ('class BaseModel{} require "app/models/OrderModel.php";'
+       f'$p=array_merge({cp},["discount_type"=>"percent","discount_value"=>10]);$f=array_merge({cp},["discount_type"=>"fixed","discount_value"=>200000]);'
+       'echo json_encode([OrderModel::couponDiscount($p,1000000),OrderModel::couponDiscount($f,1000000),OrderModel::couponDiscount($p,400000)[1]!==null,'
+       'OrderModel::couponDiscount(array_merge($f,["discount_value"=>900000,"min_order_value"=>0]),500000)[0],'
+       'OrderModel::couponDiscount(array_merge($p,["expires_at"=>"2000-01-01 00:00:00"]),1000000)[1]!==null,'
+       'OrderModel::couponDiscount(array_merge($p,["max_uses"=>5,"used_count"=>5]),1000000)[1]!==null,OrderModel::couponDiscount(null,1000000)[1]!==null]);')
+out = subprocess.run([PHP, "-r", php], capture_output=True, text=True, cwd=__file__.rsplit("/scratch", 1)[0]).stdout
+check("Mã giảm giá", "Tính đúng: 10% của 1 triệu, giảm cố định, dưới mức tối thiểu bị từ chối", out == '[[100000,null],[200000,null],true,500000,true,true,true]')
+vid2 = sql("select id from product_variants where is_active=1 and stock_qty>=5 and price>=300000 and sale_price is null limit 1")
+H = {"X-CSRF-Token": tok(c, "/"), "X-Requested-With": "XMLHttpRequest"}
+req(c, "POST", "/cart/add", {"variant_id": vid2, "quantity": 2}, H)
+sub = int(sql(f"select price*2 from product_variants where id={vid2}"))
+used0 = int(sql("select used_count from coupons where code='ZENTECH10'"))
+n0 = sql(f"select count(*) from orders where user_id=(select id from users where email='{em}')")
+t = tok(c, "/checkout"); s, b = follow(c, "POST", "/order/place", {"csrf_token": t, "receiver_name": "Flow", "receiver_phone": "0912345678", "shipping_address": "1 Test", "payment_method": "cod", "coupon_code": "SAIMA"})
+check("Mã giảm giá", "Mã sai: báo lỗi, không tạo đơn, giữ giỏ hàng", "không tồn tại" in b and sql(f"select count(*) from orders where user_id=(select id from users where email='{em}')") == n0)
+t = tok(c, "/checkout"); s, b = follow(c, "POST", "/order/place", {"csrf_token": t, "receiver_name": "Flow", "receiver_phone": "0912345678", "shipping_address": "1 Test", "payment_method": "cod", "coupon_code": "zentech10"})
+oid2 = sql(f"select max(id) from orders where user_id=(select id from users where email='{em}')")
+disc = sub // 10
+check("Mã giảm giá", "Dùng ZENTECH10: lưu đúng số tiền giảm, tổng = tạm tính + ship - giảm", sql(f"select discount_amount from orders where id={oid2}") == str(disc) and sql(f"select total_amount from orders where id={oid2}") == str(sub - disc))
+check("Mã giảm giá", "Tăng số lượt đã dùng của mã", int(sql("select used_count from coupons where code='ZENTECH10'")) == used0 + 1)
+check("Mã giảm giá", "Trang chi tiết đơn hiện dòng mã giảm giá", "Mã giảm giá" in follow(c, "GET", f"/orders/{oid2}")[1])
+t = tok(c, f"/orders/{oid2}"); follow(c, "POST", f"/orders/cancel/{oid2}", {"csrf_token": t})
+sql("update coupons set used_count = used_count - 1 where code='ZENTECH10'")
 check("Đơn hàng", "Hủy đơn hoàn lại tồn kho", int(sql(f"select stock_qty from product_variants where id={vid}")) == stock0)
 t = tok(c, f"/orders/{oid}"); follow(c, "POST", f"/orders/cancel/{oid}", {"csrf_token": t})
 check("Đơn hàng", "Hủy lần hai không cộng kho thêm", int(sql(f"select stock_qty from product_variants where id={vid}")) == stock0)

@@ -73,6 +73,7 @@ class OrderController extends BaseController
         $shippingAddress = trim($this->getPost('shipping_address', ''));
         $paymentMethod   = $this->getPost('payment_method', 'cod');
         $note            = trim($this->getPost('note', ''));
+        $couponCode      = strtoupper(trim($this->getPost('coupon_code', '')));
 
         // Validate dữ liệu đầu vào
         $errors = [];
@@ -91,7 +92,7 @@ class OrderController extends BaseController
 
         if (!empty($errors)) {
             $this->setFlash('errors', $errors);
-            $this->setFlash('old', ['receiver_name' => $receiverName, 'receiver_phone' => $receiverPhone, 'shipping_address' => $shippingAddress, 'note' => $note, 'payment_method' => $paymentMethod]);
+            $this->setFlash('old', ['receiver_name' => $receiverName, 'receiver_phone' => $receiverPhone, 'shipping_address' => $shippingAddress, 'note' => $note, 'payment_method' => $paymentMethod, 'coupon_code' => $couponCode]);
             $this->redirect('/checkout');
             return;
         }
@@ -108,7 +109,8 @@ class OrderController extends BaseController
             (int) $_SESSION['user_id'],
             $addressInfo,
             $_SESSION['cart'],
-            $paymentMethod
+            $paymentMethod,
+            $couponCode
         );
 
         if ($result['success']) {
@@ -119,6 +121,7 @@ class OrderController extends BaseController
             $this->redirect('/orders/' . $result['order_id']);
         } else {
             $this->setFlash('error', $result['message'] ?? 'Đặt hàng thất bại, vui lòng thử lại.');
+            $this->setFlash('old', ['receiver_name' => $receiverName, 'receiver_phone' => $receiverPhone, 'shipping_address' => $shippingAddress, 'note' => $note, 'payment_method' => $paymentMethod, 'coupon_code' => $couponCode]);
             $this->redirect('/checkout');
         }
     }

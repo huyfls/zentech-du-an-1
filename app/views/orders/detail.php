@@ -119,6 +119,12 @@ $statusMap = [
                 <span>Phí vận chuyển:</span>
                 <span class="text-zinc-200 font-bold"><?= number_format($order['shipping_fee'], 0, ',', '.') ?>₫</span>
             </div>
+            <?php if (!empty($order['discount_amount'])): ?>
+            <div class="flex justify-between text-zinc-400">
+                <span>Mã giảm giá:</span>
+                <span class="font-bold text-green-400">-<?= number_format($order['discount_amount'], 0, ',', '.') ?>₫</span>
+            </div>
+            <?php endif; ?>
             <div class="flex justify-between text-base font-bold pt-2 border-t border-zinc-800 text-white">
                 <span>Tổng cộng:</span>
                 <span class="text-accent-400"><?= number_format($order['total_amount'], 0, ',', '.') ?>₫</span>

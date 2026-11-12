@@ -175,6 +175,15 @@ unset($_SESSION['flash']);
                     <?php endforeach; ?>
                 </div>
 
+                <!-- Mã giảm giá -->
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-300 mb-1.5" for="coupon_code">Mã giảm giá (nếu có)</label>
+                    <input type="text" id="coupon_code" name="coupon_code" form="checkout-form" maxlength="50"
+                           value="<?= e($flash['old']['coupon_code'] ?? '') ?>" placeholder="VD: ZENTECH10"
+                           class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none uppercase">
+                    <p class="text-[11px] text-zinc-500 mt-1">Giảm tiền được tính khi bấm hoàn tất đặt hàng.</p>
+                </div>
+
                 <!-- Price Breakdown -->
                 <div class="pt-4 border-t border-zinc-800 space-y-2 text-xs">
                     <div class="flex justify-between text-zinc-400">

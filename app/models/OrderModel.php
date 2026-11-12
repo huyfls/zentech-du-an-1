@@ -15,6 +15,24 @@ class OrderModel extends BaseModel
     }
 
     /**
+     * Tính tiền giảm của mã giảm giá. Trả về [số tiền giảm, lỗi|null].
+     * $c là dòng bảng coupons (hoặc null nếu không có mã).
+     */
+    public static function couponDiscount(?array $c, float $subtotal, ?int $now = null): array
+    {
+        $now = $now ?? time();
+        if (!$c || !(int) $c['is_active']) return [0, 'Mã giảm giá không tồn tại hoặc đã ngừng.'];
+        if ($c['starts_at'] && strtotime($c['starts_at']) > $now) return [0, 'Mã giảm giá chưa đến ngày áp dụng.'];
+        if ($c['expires_at'] && strtotime($c['expires_at']) < $now) return [0, 'Mã giảm giá đã hết hạn.'];
+        if ($c['max_uses'] !== null && (int) $c['used_count'] >= (int) $c['max_uses']) return [0, 'Mã giảm giá đã hết lượt dùng.'];
+        if ($subtotal < (float) $c['min_order_value']) {
+            return [0, 'Đơn hàng cần từ ' . number_format((float) $c['min_order_value'], 0, ',', '.') . '₫ để dùng mã này.'];
+        }
+        $d = $c['discount_type'] === 'percent' ? (int) floor($subtotal * (float) $c['discount_value'] / 100) : (int) $c['discount_value'];
+        return [min($d, (int) $subtotal), null];
+    }
+
+    /**
      * Quy trình đặt hàng an toàn (Database Transaction với FOR UPDATE lock)
      *
      * @param int   $userId
@@ -27,7 +45,8 @@ class OrderModel extends BaseModel
         int    $userId,
         array  $addressInfo,
         array  $cartItems,
-        string $paymentMethod = 'cod'
+        string $paymentMethod = 'cod',
+        string $couponCode = ''
     ): array {
         if (empty($cartItems)) {
             return ['success' => false, 'message' => 'Giỏ hàng đang trống.'];
@@ -89,7 +108,18 @@ class OrderModel extends BaseModel
 
             // Phí ship tính từ giá lấy lại trong database, không tin giá cũ lưu trong giỏ
             $shippingFee = self::shippingFee($subtotal);
-            $totalAmount = $subtotal + $shippingFee;
+            // Mã giảm giá: khóa dòng coupon để hai đơn cùng lúc không vượt max_uses
+            $discount = 0;
+            $couponId = null;
+            if ($couponCode !== '') {
+                $cs = $this->pdo->prepare('SELECT * FROM coupons WHERE code = ? FOR UPDATE');
+                $cs->execute([strtoupper($couponCode)]);
+                $coupon = $cs->fetch() ?: null;
+                [$discount, $couponErr] = self::couponDiscount($coupon, $subtotal);
+                if ($couponErr) throw new RuntimeException($couponErr);
+                $couponId = (int) $coupon['id'];
+            }
+            $totalAmount = $subtotal + $shippingFee - $discount;
 
             // ── BƯỚC 2: Tạo đơn hàng mới ──
             $orderCode = 'ZT' . date('Ymd') . strtoupper(substr(uniqid(), -4));
@@ -103,7 +133,7 @@ class OrderModel extends BaseModel
                 ) VALUES (
                     :user_id, :order_code, :receiver_name, :receiver_phone,
                     :shipping_address, :payment_method, 'unpaid',
-                    :subtotal, :shipping_fee, 0, :total_amount,
+                    :subtotal, :shipping_fee, :discount, :total_amount,
                     'pending', :note, NOW()
                 )
             ";
@@ -118,11 +148,15 @@ class OrderModel extends BaseModel
                 ':payment_method'   => $paymentMethod,
                 ':subtotal'         => $subtotal,
                 ':shipping_fee'     => $shippingFee,
+                ':discount'         => $discount,
                 ':total_amount'     => $totalAmount,
                 ':note'             => $addressInfo['note'] ?? '',
             ]);
 
             $orderId = (int) $this->pdo->lastInsertId();
+            if ($couponId) {
+                $this->pdo->prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ?')->execute([$couponId]);
+            }
 
             // ── BƯỚC 3: Lưu chi tiết đơn hàng (Snapshot tên & giá) ──
             $itemSql = "
