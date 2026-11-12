@@ -94,6 +94,8 @@
                                 'shipping'   => ['Đang giao',     'bg-accent-500/10 text-accent-400 border-accent-500/20'],
                                 'delivered'  => ['Đã giao',       'bg-green-500/10 text-green-400 border-green-500/20'],
                                 'cancelled'  => ['Đã hủy',        'bg-red-500/10 text-red-400 border-red-500/20'],
+                                'processing' => ['Đang xử lý',   'bg-accent-500/10 text-accent-400 border-accent-500/20'],
+                                'returned'   => ['Đã trả hàng',   'bg-zinc-800 text-zinc-300 border-zinc-700'],
                             ];
                             [$stText, $stClass] = $statusMap[$ro['status']] ?? [$ro['status'], 'bg-zinc-800 text-zinc-300 border-zinc-700'];
                         ?>

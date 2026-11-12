@@ -1,0 +1,3 @@
+Figma (thiết kế giao diện đầy đủ): https://www.figma.com/design/JLOm8i1pUHyVNPohO07eqZ
+GitHub (mã nguồn): https://github.com/huyfls/zentech-du-an-1
+Bản mẫu giao diện tĩnh: https://zentech-du-an-1.thanhhuyfls.workers.dev

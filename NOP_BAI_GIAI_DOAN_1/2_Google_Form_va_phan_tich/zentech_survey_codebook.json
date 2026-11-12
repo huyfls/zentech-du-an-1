@@ -1,0 +1,18 @@
+{
+  "_ghi_chu": "Bảng mã hóa ĐỀ XUẤT cho zentech_survey_139.csv (file gốc chỉ có số, không có nhãn). Đối chiếu với câu hỏi trong Google Form thật; sửa nhãn ở đây rồi chạy lại scratch/analyze_survey.py để cập nhật toàn bộ số liệu và biểu đồ.",
+  "questions": {
+    "AGE":        {"title": "Độ tuổi", "type": "single", "labels": {"1": "Dưới 18", "2": "18 - 22", "3": "23 - 28", "4": "Trên 28"}},
+    "JOB":        {"title": "Nghề nghiệp", "type": "single", "labels": {"1": "Học sinh, sinh viên", "2": "Nhân viên văn phòng, IT", "3": "Thiết kế, sáng tạo", "4": "Streamer, game thủ chuyên", "5": "Kinh doanh tự do", "6": "Khác"}},
+    "PURPOSE":    {"title": "Mục đích sử dụng gear", "type": "single", "labels": {"1": "Chơi game", "2": "Làm việc, học tập", "3": "Sáng tạo nội dung", "4": "Cả chơi game và làm việc"}},
+    "GEAR_FOCUS": {"title": "Loại gear quan tâm nhất", "type": "single", "labels": {"1": "Chuột", "2": "Bàn phím", "3": "Tai nghe", "4": "Lót chuột", "5": "Ghế, bàn gaming", "6": "Khác"}},
+    "BUDGET":     {"title": "Ngân sách cho một món gear", "type": "single", "labels": {"1": "Dưới 500.000đ", "2": "500.000đ - 1 triệu", "3": "1 - 2 triệu", "4": "Trên 2 triệu"}},
+    "CONNECT":    {"title": "Kiểu kết nối ưa thích", "type": "single", "labels": {"1": "Có dây", "2": "Bluetooth", "3": "Không dây 2.4GHz", "4": "Đa chế độ (có dây, Bluetooth, 2.4GHz)"}},
+    "PAIN_POINT": {"title": "Khó khăn lớn nhất khi mua gear online", "type": "single", "labels": {"1": "Khó biết thông số có hợp nhu cầu", "2": "Khó so sánh các phiên bản, màu sắc", "3": "Lo hàng không chính hãng", "4": "Bảo hành, đổi trả rắc rối", "5": "Giá cao, ít ưu đãi"}},
+    "AI_FEATURE": {"title": "Mức hứng thú với trợ lý AI tư vấn gear", "type": "single", "labels": {"1": "Rất hào hứng", "2": "Hào hứng", "3": "Bình thường", "4": "Không quan tâm"}},
+    "F_PRICE":    {"title": "Mức quan trọng: Giá bán", "type": "scale5"},
+    "F_BRAND":    {"title": "Mức quan trọng: Thương hiệu", "type": "scale5"},
+    "F_DESIGN":   {"title": "Mức quan trọng: Kiểu dáng, thiết kế", "type": "scale5"},
+    "F_SPEC":     {"title": "Mức quan trọng: Thông số kỹ thuật", "type": "scale5"},
+    "F_WARRANTY": {"title": "Mức quan trọng: Bảo hành", "type": "scale5"}
+  }
+}

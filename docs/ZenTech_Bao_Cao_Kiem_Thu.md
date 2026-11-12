@@ -1,6 +1,6 @@
 # Báo Cáo Kiểm Thử Hệ Thống ZenTech
 
-> **Ngày kiểm thử:** 11/11/2026  
+> **Ngày kiểm thử:** 12/11/2026  
 > **Môi trường:** PHP 8.2 (máy chủ tích hợp), MariaDB (XAMPP), Chrome; chạy tại `localhost:8001`  
 > **Kết quả tự động:** 86 trên 86 ca đạt
 
@@ -26,8 +26,8 @@
 | Hình ảnh sản phẩm | 1827 |
 | Thông số kỹ thuật (EAV) | 1834 |
 | Thương hiệu | 34 |
-| Người dùng | 4 |
-| Đơn hàng | 8 |
+| Người dùng | 9 |
+| Đơn hàng | 16 |
 
 Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm dữ liệu mẫu. Tồn kho, lượt bán và lượt xem là số giả lập.
 

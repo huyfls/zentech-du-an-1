@@ -14,6 +14,7 @@ OUT.mkdir(exist_ok=True)
 import os
 PW = "Password@123"
 ADMIN_PW = os.environ.get("ZENTECH_ADMIN_PW", PW)
+ADMIN_EMAIL = os.environ.get("ZENTECH_ADMIN_EMAIL", "admin@zentech.vn")
 SLUG = "chuot-gaming-khong-day-logitech-g304-lightspeed"
 
 def shot(pg, name, full=False):
@@ -22,7 +23,7 @@ def shot(pg, name, full=False):
     print("  ", name)
 
 def login(pg, email):
-    pw = ADMIN_PW if email.startswith('admin@') else PW
+    pw = ADMIN_PW if email == ADMIN_EMAIL else PW
     pg.goto(B + "/dang-nhap"); pg.fill('input[name=email]', email); pg.fill('input[name=password]', pw)
     pg.click('button[type=submit]'); pg.wait_for_load_state("networkidle")
 
@@ -39,7 +40,7 @@ with sync_playwright() as p:
     pg.goto(B + "/san-pham"); shot(pg, "02_danh_sach_san_pham")
     pg.click("#open-filter"); pg.wait_for_timeout(400)
     pg.click('#filter-dialog label:has-text("Logitech")'); pg.click('#filter-dialog label:has-text("Razer")')
-    pg.click('#filter-dialog label:has-text("Chuột Gaming")'); pg.click('#filter-dialog label:has-text("500K - 1 triệu")')
+    pg.click('#filter-dialog label:has-text("Chuột Không Dây")'); pg.click('#filter-dialog label:has-text("500K - 1 triệu")')
     shot(pg, "03_bo_loc_dang_cua_so")
     pg.click('#filter-dialog button[type=submit]'); pg.wait_for_load_state("networkidle"); shot(pg, "04_ket_qua_loc_nhieu_gia_tri")
     pg.goto(B + "/san-pham/" + SLUG); pg.click('#color-options button:has-text("Đen")'); shot(pg, "05_chi_tiet_san_pham")
@@ -63,7 +64,7 @@ with sync_playwright() as p:
 
     # ---- Quản trị
     ctx = br.new_context(viewport={"width": 1440, "height": 900}); pg = ctx.new_page()
-    login(pg, "admin@zentech.vn")
+    login(pg, ADMIN_EMAIL)
     pg.goto(B + "/admin"); shot(pg, "18_admin_tong_quan")
     pg.goto(B + "/admin/products"); shot(pg, "19_admin_san_pham")
     pg.goto(B + "/admin/products/create"); shot(pg, "20_admin_them_san_pham", full=True)
