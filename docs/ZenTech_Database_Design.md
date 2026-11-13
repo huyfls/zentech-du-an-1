@@ -137,7 +137,6 @@ stateDiagram-v2
     pending     --> cancelled  : Khách / Admin huỷ
     confirmed   --> cancelled  : Khách / Admin huỷ
     processing  --> cancelled  : Admin huỷ
-    delivered   --> returned   : Khiếu nại / hoàn trả
 ```
 
 ### 3.2 Mô hình Biến thể Sản phẩm

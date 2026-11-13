@@ -92,7 +92,11 @@ for st in ["confirmed","processing","shipping"]:
 check("Chuỗi trạng thái hợp lệ đến đang giao",sql(f"select status from orders where id={oid2}")=="shipping")
 s0=int(sql(f"select stock_qty from product_variants where id={vid}"))
 req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"returned"})
-check("Trả hàng hoàn kho +1",int(sql(f"select stock_qty from product_variants where id={vid}"))==s0+1)
+check("Không còn chuyển đơn sang hoàn hàng",sql(f"select status from orders where id={oid2}")=="shipping" and int(sql(f"select stock_qty from product_variants where id={vid}"))==s0)
+req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"delivered"})
+check("Đang giao chuyển sang đã giao",sql(f"select status from orders where id={oid2}")=="delivered")
+req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"returned"})
+check("Đơn đã giao là trạng thái cuối, không đổi tiếp",sql(f"select status from orders where id={oid2}")=="delivered")
 # non-admin can't access admin
 s,_,h=req(c,"GET","/admin"); check("Khách hàng không vào được khu quản trị",s in(302,403),s)
 # cleanup

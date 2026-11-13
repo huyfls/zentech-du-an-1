@@ -1,0 +1,76 @@
+flowchart TB
+  subgraph G0["Tài khoản"]
+    direction TB
+    roles[roles]:::a
+    users[users]:::a
+    addresses[addresses]:::a
+    password_resets[password_resets]:::a
+  end
+  subgraph G1["Danh mục và thương hiệu"]
+    direction TB
+    categories[categories]:::b
+    brands[brands]:::b
+  end
+  subgraph G2["Sản phẩm, biến thể, thông số"]
+    direction TB
+    products[products]:::c
+    product_images[product_images]:::c
+    product_variants[product_variants]:::c
+    attribute_groups[attribute_groups]:::c
+    attributes[attributes]:::c
+    product_attributes[product_attributes]:::c
+    variant_options[variant_options]:::c
+    variant_option_values[variant_option_values]:::c
+    variant_attribute_values[variant_attribute_values]:::c
+  end
+  subgraph G3["Giỏ hàng, đơn hàng, khuyến mãi"]
+    direction TB
+    carts[carts]:::d
+    cart_items[cart_items]:::d
+    orders[orders]:::d
+    order_items[order_items]:::d
+    order_status_logs[order_status_logs]:::d
+    coupons[coupons]:::d
+    order_coupons[order_coupons]:::d
+  end
+  subgraph G4["Đánh giá và trợ lý AI"]
+    direction TB
+    reviews[reviews]:::e
+    review_images[review_images]:::e
+    ai_conversations[ai_conversations]:::e
+    ai_messages[ai_messages]:::e
+  end
+  users -- "user_id" --> addresses
+  users -- "user_id" --> ai_conversations
+  ai_conversations -- "conversation_id" --> ai_messages
+  attribute_groups -- "group_id" --> attributes
+  users -- "user_id" --> carts
+  carts -- "cart_id" --> cart_items
+  product_variants -- "variant_id" --> cart_items
+  categories -- "parent_id" --> categories
+  users -- "user_id" --> orders
+  coupons -- "coupon_id" --> order_coupons
+  orders -- "order_id" --> order_coupons
+  orders -- "order_id" --> order_items
+  product_variants -- "variant_id" --> order_items
+  orders -- "order_id" --> order_status_logs
+  users -- "user_id" --> password_resets
+  brands -- "brand_id" --> products
+  categories -- "category_id" --> products
+  attributes -- "attribute_id" --> product_attributes
+  products -- "product_id" --> product_attributes
+  products -- "product_id" --> product_images
+  products -- "product_id" --> product_variants
+  orders -- "order_id" --> reviews
+  products -- "product_id" --> reviews
+  users -- "user_id" --> reviews
+  reviews -- "review_id" --> review_images
+  roles -- "role_id" --> users
+  variant_option_values -- "option_value_id" --> variant_attribute_values
+  product_variants -- "variant_id" --> variant_attribute_values
+  variant_options -- "option_id" --> variant_option_values
+  classDef a fill:#E8F0FE,stroke:#0F5DE0,color:#1D1D1F
+  classDef b fill:#FFF4E5,stroke:#CC730D,color:#1D1D1F
+  classDef c fill:#E6F4EA,stroke:#097A3C,color:#1D1D1F
+  classDef d fill:#F3E8FD,stroke:#7846C8,color:#1D1D1F
+  classDef e fill:#FDE8E6,stroke:#D1281C,color:#1D1D1F

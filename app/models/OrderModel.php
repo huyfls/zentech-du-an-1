@@ -361,10 +361,10 @@ class OrderModel extends BaseModel
         'pending'    => ['confirmed', 'cancelled'],
         'confirmed'  => ['processing', 'cancelled'],
         'processing' => ['shipping', 'cancelled'],
-        'shipping'   => ['delivered', 'returned'],
-        'delivered'  => ['returned'],
+        'shipping'   => ['delivered'],
+        'delivered'  => [],
         'cancelled'  => [],
-        'returned'   => [],
+        'returned'   => [], // trạng thái cũ, chỉ còn để hiển thị đơn đã tạo trước đây; không còn chuyển tới được
     ];
 
     /**

@@ -11,7 +11,8 @@ define('APP_NAME',     'ZenTech');
 // Tự động phát hiện APP_URL theo môi trường chạy (PHP dev server hoặc Apache XAMPP)
 $baseDir = isset($_SERVER['SCRIPT_NAME']) ? str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])) : '';
 $baseDir = ($baseDir === '/' || $baseDir === '.') ? '' : $baseDir;
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+// Sau tunnel/proxy (Cloudflare) trình duyệt dùng HTTPS nhưng PHP chỉ thấy HTTP nội bộ nên đọc thêm X-Forwarded-Proto
+$scheme = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') ? 'https://' : 'http://';
 $httpHost = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
 // Trên máy chủ thật nên đặt biến APP_URL để không phụ thuộc vào header Host do người dùng gửi
 define('APP_URL', rtrim(getenv('APP_URL') ?: $scheme . $httpHost . $baseDir, '/'));
