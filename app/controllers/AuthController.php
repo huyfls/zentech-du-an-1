@@ -74,6 +74,7 @@ class AuthController extends BaseController
         @unlink($throttle);
         // Đăng nhập thành công -> chống session fixation, rồi lưu session
         session_regenerate_id(true);
+        $_SESSION['last_activity'] = time();
         $_SESSION['user_id']    = (int) $user['id'];
         $_SESSION['user_name']  = $user['full_name'];
         $_SESSION['user_email'] = $user['email'];
@@ -155,6 +156,7 @@ class AuthController extends BaseController
         if ($userId) {
             // Tự động đăng nhập (đổi session id chống fixation)
             session_regenerate_id(true);
+            $_SESSION['last_activity'] = time();
             $_SESSION['user_id']    = $userId;
             $_SESSION['user_name']  = $fullName;
             $_SESSION['user_email'] = $email;

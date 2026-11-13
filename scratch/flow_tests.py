@@ -162,6 +162,24 @@ if m:
     c4 = cli(); follow(c4, "POST", "/auth/login", {"csrf_token": tok(c4), "email": em, "password": "Reset#Pass9"})
     check("Quên mật khẩu", "Đặt lại xong đăng nhập được bằng mật khẩu mới", "Flow Moi" in req(c4, "GET", "/tai-khoan")[1])
     check("Quên mật khẩu", "Token dùng một lần: dùng lại bị từ chối", "không hợp lệ" in req(cli(), "GET", f"/dat-lai-mat-khau/{tk}")[1])
+# Hết phiên do không thao tác: khách 2 giờ, admin 30 phút
+import glob, os
+def age_session(cl, seconds):
+    sid = [ck.value for ck in cl.handlers[[type(h).__name__ for h in cl.handlers].index("HTTPCookieProcessor")].cookiejar if ck.name == "PHPSESSID"][0]
+    f = f"/Applications/XAMPP/xamppfiles/temp/sess_{sid}"
+    d = open(f).read(); d = re.sub(r"last_activity\|i:\d+;", f"last_activity|i:{int(time.time()) - seconds};", d); open(f, "w").write(d)
+ci = cli(); follow(ci, "POST", "/auth/login", {"csrf_token": tok(ci), "email": em, "password": "Reset#Pass9"})
+age_session(ci, 7000)
+check("Hết phiên", "Khách 117 phút không thao tác vẫn còn đăng nhập", "Flow Moi" in req(ci, "GET", "/tai-khoan")[1])
+age_session(ci, 7300)
+s, b = follow(ci, "GET", "/tai-khoan")
+check("Hết phiên", "Khách quá 2 giờ không thao tác bị đăng xuất, có thông báo", "đã hết hạn" in b and "Flow Moi" not in b)
+ca = cli(); follow(ca, "POST", "/auth/login", {"csrf_token": tok(ca), "email": ae, "password": "Adm1nTest!"})
+age_session(ca, 1700)
+check("Hết phiên", "Admin 28 phút không thao tác vẫn vào được", req(ca, "GET", "/admin")[0] == 200)
+age_session(ca, 1900)
+s, b = follow(ca, "GET", "/admin")
+check("Hết phiên", "Admin quá 30 phút không thao tác bị đăng xuất, có thông báo", "đã hết hạn" in b and "Tổng Quan" not in b)
 # Admin: quản lý mã giảm giá
 s, b, _ = req(ad, "GET", "/admin/coupons"); check("Admin mã giảm giá", "Xem danh sách mã", s == 200 and "ZENTECH10" in b)
 t = tok(ad, "/admin/coupons")

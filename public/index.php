@@ -4,15 +4,34 @@
  * Điểm vào duy nhất của ứng dụng (single entry point)
  */
 
-// Khởi động session với cài đặt bảo mật
+// Thời gian không thao tác tối đa trước khi tự đăng xuất (giây): khách 2 giờ, admin 30 phút.
+const SESSION_IDLE_CUSTOMER = 7200;
+const SESSION_IDLE_ADMIN    = 1800;
+
+// Khởi động session với cài đặt bảo mật. gc_maxlifetime phải >= mức dài nhất để PHP không dọn phiên sớm.
+ini_set('session.gc_maxlifetime', (string) SESSION_IDLE_CUSTOMER);
 session_set_cookie_params([
-    'lifetime' => 86400,
+    'lifetime' => 0,         // cookie hết khi đóng trình duyệt; hạn thật do kiểm tra không thao tác bên dưới
     'path'     => '/',
     'secure'   => false,     // Đổi true khi deploy HTTPS
     'httponly' => true,
     'samesite' => 'Lax',
 ]);
 session_start();
+
+// Hết hạn do không thao tác: hủy phiên cũ (kể cả giỏ hàng), báo lý do ở trang tiếp theo.
+if (isset($_SESSION['user_id'])) {
+    $idleLimit = ($_SESSION['user_role'] ?? '') === 'admin' ? SESSION_IDLE_ADMIN : SESSION_IDLE_CUSTOMER;
+    if (time() - ($_SESSION['last_activity'] ?? time()) > $idleLimit) {
+        session_destroy();
+        session_start();
+        session_regenerate_id(true);
+        $_SESSION['flash'] = ['error' => 'Phiên đăng nhập đã hết hạn do bạn không thao tác quá lâu. Vui lòng đăng nhập lại.'];
+    }
+}
+if (isset($_SESSION['user_id'])) {
+    $_SESSION['last_activity'] = time();
+}
 
 // Header bảo mật. CSP cho phép inline script/style vì giao diện dùng Tailwind và script nhúng trong trang.
 header_remove('X-Powered-By');
