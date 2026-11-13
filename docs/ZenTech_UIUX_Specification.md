@@ -107,6 +107,7 @@ Giữ nguyên giao diện sáng, tối giản và thêm lớp chuyển động n
 | Hiệu ứng | Kích hoạt bởi |
 |---|---|
 | Nền có các khối màu mờ trôi, đổi màu dần | Cuộn chuột và di chuyển con trỏ |
+| Bong bóng xà phòng lượn lờ, đổi màu óng ánh; né con trỏ; click vào bóng thì vỡ thành giọt | Cuộn chuột, di chuyển con trỏ, click |
 | Thanh tiến độ cuộn ở đầu trang, header đổ bóng | Cuộn chuột |
 | Các khối nội dung và thẻ sản phẩm hiện dần, lần lượt từng thẻ | Cuộn tới vị trí đó |
 | Ảnh chính trang chủ dịch chuyển chậm hơn nội dung (parallax) | Cuộn chuột |

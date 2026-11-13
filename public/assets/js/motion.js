@@ -11,6 +11,58 @@
     bg.innerHTML = '<i class="zt-blob b1"></i><i class="zt-blob b2"></i><i class="zt-blob b3"></i><i class="zt-blob b4"></i><i class="zt-ring r1"></i><i class="zt-ring r2"></i>';
     document.body.prepend(bg);
     var bar = document.createElement('div'); bar.id = 'zt-progress'; document.body.appendChild(bar);
+
+    // ---- Bong bóng xà phòng: lượn lờ, trôi theo cuộn, né con trỏ, click vào thì vỡ ----
+    var cv = document.createElement('canvas'); bg.appendChild(cv); cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
+    var cx = cv.getContext('2d'), W = 0, H = 0, dpr = Math.min(2, window.devicePixelRatio || 1), bubbles = [], drops = [], lastY = window.scrollY, lastT = 0;
+    function size() { W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    function spawn(b, anywhere) {
+        var r = 16 + Math.pow(Math.random(), 1.8) * 70;
+        b = b || {}; b.r = r; b.z = r / 86;                        // z: bóng to ở "gần" nên trôi theo cuộn nhiều hơn
+        b.x = Math.random() * W; b.y = anywhere ? Math.random() * H : H + r + Math.random() * 200;
+        b.vx = 0; b.vy = -(10 + Math.random() * 22) * (.5 + b.z); b.ph = Math.random() * 6.28; b.sw = 14 + Math.random() * 26; b.hue = Math.random() * 360; b.wob = Math.random() * 6.28;
+        return b;
+    }
+    function init() { size(); var n = Math.round(Math.min(34, Math.max(14, W / 48))); bubbles = []; for (var i = 0; i < n; i++) bubbles.push(spawn(null, true)); }
+    function draw(b, t) {
+        var wob = 1 + Math.sin(t / 700 + b.wob) * .05, rx = b.r * wob, ry = b.r / wob, h = (b.hue + t / 40) % 360;
+        cx.save(); cx.translate(b.x, b.y);
+        var g = cx.createRadialGradient(0, 0, b.r * .15, 0, 0, b.r);
+        g.addColorStop(0, 'hsla(' + h + ',90%,85%,0)'); g.addColorStop(.72, 'hsla(' + h + ',90%,80%,.10)');
+        g.addColorStop(.92, 'hsla(' + (h + 70) % 360 + ',95%,72%,.34)'); g.addColorStop(1, 'hsla(' + (h + 150) % 360 + ',95%,70%,.55)');
+        cx.beginPath(); cx.ellipse(0, 0, rx, ry, 0, 0, 6.2832); cx.fillStyle = g; cx.fill();
+        cx.lineWidth = 1.2; cx.strokeStyle = 'hsla(' + (h + 200) % 360 + ',80%,65%,.45)'; cx.stroke();
+        cx.beginPath(); cx.ellipse(-rx * .38, -ry * .42, rx * .22, ry * .12, -.7, 0, 6.2832); cx.fillStyle = 'rgba(255,255,255,.95)'; cx.fill();
+        cx.beginPath(); cx.ellipse(-rx * .38, -ry * .42, rx * .22, ry * .12, -.7, 0, 6.2832); cx.strokeStyle = 'rgba(120,150,255,.35)'; cx.lineWidth = 1; cx.stroke();
+        cx.beginPath(); cx.arc(0, 0, rx * .78, .35, 1.25); cx.strokeStyle = 'hsla(' + (h + 100) % 360 + ',90%,70%,.45)'; cx.lineWidth = 2; cx.stroke();
+        cx.restore();
+    }
+    function pop(b) {
+        for (var i = 0; i < 12; i++) { var a = i / 12 * 6.2832 + Math.random() * .5; drops.push({ x: b.x + Math.cos(a) * b.r, y: b.y + Math.sin(a) * b.r, vx: Math.cos(a) * (60 + Math.random() * 80), vy: Math.sin(a) * (60 + Math.random() * 80), life: 1, h: b.hue }); }
+        spawn(b, false);
+    }
+    function stepBubbles(t) {
+        var dt = Math.min(.05, (t - lastT) / 1000 || .016); lastT = t;
+        var dy = window.scrollY - lastY; lastY = window.scrollY;
+        cx.clearRect(0, 0, W, H);
+        bubbles.forEach(function (b) {
+            b.y += b.vy * dt - dy * (.25 + b.z * .6);                // cuộn xuống thì bóng trôi lên nhanh hơn
+            b.x += (Math.cos(t / 1800 + b.ph) * b.sw) * dt + b.vx * dt;
+            b.vx *= .94;
+            if (fine) {                                              // né con trỏ
+                var px = (tmx + .5) * W, py = (tmy + .5) * H, ddx = b.x - px, ddy = b.y - py, d = Math.hypot(ddx, ddy), lim = b.r + 110;
+                if (d < lim && d > 1) { var f = (1 - d / lim) * 520 * dt; b.vx += ddx / d * f * 8; b.y += ddy / d * f; }
+            }
+            if (b.y < -b.r - 40 || b.y > H + b.r + 600 || b.x < -b.r - 120 || b.x > W + b.r + 120) spawn(b, false);
+            draw(b, t);
+        });
+        drops = drops.filter(function (p) { return p.life > 0; });
+        drops.forEach(function (p) { p.x += p.vx * dt; p.y += p.vy * dt + 40 * dt; p.vx *= .96; p.vy *= .96; p.life -= dt * 1.8; cx.beginPath(); cx.arc(p.x, p.y, 2.6 * p.life + .4, 0, 6.2832); cx.fillStyle = 'hsla(' + (p.h + 60) % 360 + ',90%,70%,' + (p.life * .7).toFixed(2) + ')'; cx.fill(); });
+    }
+    addEventListener('resize', init); init();
+    document.addEventListener('pointerdown', function (e) {
+        for (var i = 0; i < bubbles.length; i++) { var b = bubbles[i]; if (Math.hypot(e.clientX - b.x, e.clientY - b.y) < b.r) { pop(b); break; } }
+    });
     var blobs = $('.zt-blob, .zt-ring', bg), speed = [.22, -.16, .3, -.12, -.35, .28];
     var header = document.getElementById('main-header');
     var target = 0, cur = 0, mx = 0, my = 0, tmx = 0, tmy = 0, ticking = false;
@@ -29,6 +81,7 @@
             if (r.bottom < -200 || r.top > innerHeight + 200) return;
             el.style.transform = 'translate3d(0,' + (((r.top + r.height / 2 - innerHeight / 2) * parseFloat(el.dataset.par)) * -1).toFixed(1) + 'px,0)';
         });
+        stepBubbles(t);
         if (!document.hidden) requestAnimationFrame(frame);
     }
     addEventListener('scroll', function () { target = window.scrollY; if (header) header.classList.toggle('zt-scrolled', target > 8); }, { passive: true });
