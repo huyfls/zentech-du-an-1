@@ -510,7 +510,20 @@ class ProductModel extends BaseModel
     /**
      * Lấy danh sách sản phẩm cho trang quản trị (Admin)
      */
-    public function getAllAdmin(int $page = 1, int $perPage = 10, string $search = ''): array
+    public const LOW_STOCK = 5; // cùng ngưỡng với cảnh báo ở trang Tổng quan
+
+    /** Số sản phẩm có ít nhất một biến thể đang bán tồn kho <= ngưỡng (kể cả hết hàng). */
+    public function countLowStock(): int
+    {
+        $r = $this->rawQueryOne('SELECT COUNT(DISTINCT p.id) AS n FROM products p JOIN product_variants pv ON pv.product_id = p.id WHERE p.is_active = 1 AND pv.is_active = 1 AND pv.stock_qty <= ?', [self::LOW_STOCK]);
+        return (int) ($r['n'] ?? 0);
+    }
+
+    /**
+     * $sort: '' (mới nhất) | stock_low (biến thể ít hàng nhất lên trước) | stock_asc | stock_desc (tổng tồn kho)
+     * $stock: '' | low (có biến thể sắp hết) | out (có biến thể hết hàng) | ok (mọi biến thể còn đủ)
+     */
+    public function getAllAdmin(int $page = 1, int $perPage = 10, string $search = '', string $sort = '', string $stock = ''): array
     {
         $params = [];
         $where = ['1=1'];
@@ -521,6 +534,13 @@ class ProductModel extends BaseModel
         }
 
         $whereClause = implode(' AND ', $where);
+        $low = self::LOW_STOCK;
+        $having = ['low' => 'HAVING low_variants > 0', 'out' => 'HAVING out_variants > 0', 'ok' => 'HAVING low_variants = 0'][$stock] ?? '';
+        $order = [
+            'stock_low'  => 'ISNULL(MIN(CASE WHEN pv.is_active = 1 THEN pv.stock_qty END)), min_stock ASC, p.id DESC',
+            'stock_asc'  => 'total_stock ASC, p.id DESC',
+            'stock_desc' => 'total_stock DESC, p.id DESC',
+        ][$sort] ?? 'p.id DESC';
 
         $sql = "
             SELECT 
@@ -537,14 +557,18 @@ class ProductModel extends BaseModel
                 COUNT(pv.id) AS variant_count,
                 MIN(COALESCE(pv.sale_price, pv.price)) AS min_price,
                 MAX(COALESCE(pv.sale_price, pv.price)) AS max_price,
-                COALESCE(SUM(pv.stock_qty), 0) AS total_stock
+                COALESCE(SUM(CASE WHEN pv.is_active = 1 THEN pv.stock_qty END), 0) AS total_stock,
+                MIN(CASE WHEN pv.is_active = 1 THEN pv.stock_qty END) AS min_stock,
+                COALESCE(SUM(pv.is_active = 1 AND pv.stock_qty <= {$low}), 0) AS low_variants,
+                COALESCE(SUM(pv.is_active = 1 AND pv.stock_qty = 0), 0) AS out_variants
             FROM products p
             INNER JOIN brands b ON b.id = p.brand_id
             INNER JOIN categories c ON c.id = p.category_id
             LEFT JOIN product_variants pv ON pv.product_id = p.id
             WHERE {$whereClause}
             GROUP BY p.id, p.name, p.slug, p.sku, p.thumbnail_url, p.is_featured, p.is_active, p.created_at, b.name, c.name
-            ORDER BY p.id DESC
+            {$having}
+            ORDER BY {$order}
         ";
 
         return $this->paginate($sql, $params, $page, $perPage);

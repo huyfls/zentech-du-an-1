@@ -27,12 +27,16 @@ class AdminProductController extends BaseController
         $search  = trim($this->getGet('q', ''));
         $perPage = 10;
 
-        $result   = $this->productModel->getAllAdmin($page, $perPage, $search);
+        $sort  = in_array($this->getGet('sort', ''), ['stock_low', 'stock_asc', 'stock_desc'], true) ? $this->getGet('sort') : '';
+        $stock = in_array($this->getGet('stock', ''), ['low', 'out', 'ok'], true) ? $this->getGet('stock') : '';
+
+        $result   = $this->productModel->getAllAdmin($page, $perPage, $search, $sort, $stock);
         $products = $result['items'];
         $total    = $result['total'];
         $pages    = $result['total_pages'];
+        $lowCount = $this->productModel->countLowStock();
 
-        $this->render('admin/products/index', compact('products', 'page', 'pages', 'total', 'search'), 'admin');
+        $this->render('admin/products/index', compact('products', 'page', 'pages', 'total', 'search', 'sort', 'stock', 'lowCount'), 'admin');
     }
 
     /**

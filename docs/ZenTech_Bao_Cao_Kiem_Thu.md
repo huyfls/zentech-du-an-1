@@ -2,7 +2,7 @@
 
 > **Ngày kiểm thử:** 13/11/2026  
 > **Môi trường:** PHP 8.2 (máy chủ tích hợp), MariaDB (XAMPP), Chrome; chạy tại `localhost:8001`  
-> **Kết quả tự động:** 123 trên 123 ca đạt
+> **Kết quả tự động:** 128 trên 128 ca đạt
 
 ---
 
@@ -11,7 +11,7 @@
 | Chỉ số | Kết quả |
 |---|---|
 | Ca kiểm thử tự động: kiểm tra trang, bảo mật, đơn hàng, quản trị | 59 / 59 đạt |
-| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 64 / 64 đạt |
+| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 69 / 69 đạt |
 | Kiểm thử logic JavaScript: bộ chọn biến thể (Node, `scratch/variant_picker_test.js`) | Đạt |
 | Kiểm thử thủ công trên trình duyệt | Máy tính (khoảng 800px) và điện thoại giả lập (375px); không có thanh cuộn ngang |
 | Rà soát theo checklist thiết kế | 8 checklist: giỏ hàng, thanh toán, đăng nhập, đăng ký, tìm kiếm, 404, báo lỗi nhập liệu, gửi biểu mẫu |
@@ -85,8 +85,8 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E44 | không có cảnh báo PHP tại /admin/products | Đạt |
 | E45 | Truy cập /admin/orders trả về 200 | Đạt |
 | E46 | không có cảnh báo PHP tại /admin/orders | Đạt |
-| E47 | Truy cập /admin/orders/detail/159 trả về 200 | Đạt |
-| E48 | không có cảnh báo PHP tại /admin/orders/detail/159 | Đạt |
+| E47 | Truy cập /admin/orders/detail/187 trả về 200 | Đạt |
+| E48 | không có cảnh báo PHP tại /admin/orders/detail/187 | Đạt |
 | E49 | Truy cập /admin/products/create trả về 200 | Đạt |
 | E50 | không có cảnh báo PHP tại /admin/products/create | Đạt |
 | E51 | Trang đơn hàng admin không có cảnh báo PHP | Đạt |
@@ -99,7 +99,7 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E58 | Đơn đã giao là trạng thái cuối, không đổi tiếp | Đạt |
 | E59 | Khách hàng không vào được khu quản trị | Đạt |
 
-### 2.2 Luồng nghiệp vụ (64 ca)
+### 2.2 Luồng nghiệp vụ (69 ca)
 
 | Mã | Khu vực | Nội dung kiểm tra | Kết quả |
 |---|---|---|---|
@@ -158,15 +158,20 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | F53 | Hết phiên | Khách quá 2 giờ không thao tác bị đăng xuất, có thông báo | Đạt |
 | F54 | Hết phiên | Admin 28 phút không thao tác vẫn vào được | Đạt |
 | F55 | Hết phiên | Admin quá 30 phút không thao tác bị đăng xuất, có thông báo | Đạt |
-| F56 | Admin mã giảm giá | Xem danh sách mã | Đạt |
-| F57 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
-| F58 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
-| F59 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
-| F60 | Admin mã giảm giá | Bật/tắt mã | Đạt |
-| F61 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
-| F62 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
-| F63 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
-| F64 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
+| F56 | Admin tồn kho | Có banner cảnh báo sản phẩm sắp hết hàng | Đạt |
+| F57 | Admin tồn kho | Lọc 'Có biến thể sắp hết': hiện huy hiệu, sản phẩm ít hàng nhất đứng đầu | Đạt |
+| F58 | Admin tồn kho | Lọc 'Còn đủ hàng': không có huy hiệu sắp hết/hết hàng | Đạt |
+| F59 | Admin tồn kho | Lọc 'Có biến thể hết hàng': số sản phẩm khớp database | Đạt |
+| F60 | Admin tồn kho | Tham số lạ không gây lỗi | Đạt |
+| F61 | Admin mã giảm giá | Xem danh sách mã | Đạt |
+| F62 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
+| F63 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
+| F64 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
+| F65 | Admin mã giảm giá | Bật/tắt mã | Đạt |
+| F66 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
+| F67 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
+| F68 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
+| F69 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
 
 ---
 
