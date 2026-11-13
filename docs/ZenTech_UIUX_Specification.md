@@ -100,6 +100,23 @@ Nút tròn cố định góc dưới bên phải, mở cửa sổ chat. Có ba c
 
 ---
 
+### 3.7 Chuyển động
+
+Giữ nguyên giao diện sáng, tối giản và thêm lớp chuyển động nhẹ, phản hồi theo hành động của người dùng:
+
+| Hiệu ứng | Kích hoạt bởi |
+|---|---|
+| Nền có các khối màu mờ trôi, đổi màu dần | Cuộn chuột và di chuyển con trỏ |
+| Thanh tiến độ cuộn ở đầu trang, header đổ bóng | Cuộn chuột |
+| Các khối nội dung và thẻ sản phẩm hiện dần, lần lượt từng thẻ | Cuộn tới vị trí đó |
+| Ảnh chính trang chủ dịch chuyển chậm hơn nội dung (parallax) | Cuộn chuột |
+| Thẻ sản phẩm nghiêng 3D theo con trỏ | Di chuột lên thẻ |
+| Vòng tròn lan ra và các chấm bắn ra | Click |
+| Ảnh sản phẩm bay vào biểu tượng giỏ hàng, số trên giỏ nảy lên | Bấm Thêm vào giỏ hàng |
+| Chuyển trang mượt (mờ dần và trượt nhẹ) | Chuyển giữa các trang |
+
+Chỉ dùng `transform` và `opacity` để mượt. Tự tắt khi người dùng bật "giảm chuyển động" trong hệ điều hành.
+
 ## 4. Luồng người dùng
 
 ### 4.1 Khám phá đến đặt hàng

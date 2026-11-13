@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZenTech: thêm 5 ý tưởng giao diện</title>
+<style>
+@import url('../public/assets/css/fonts.css');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',Arial,sans-serif;background:#000;color:#fff;overflow-x:hidden}
+.switch{position:fixed;z-index:99;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;background:rgba(20,20,28,.8);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.14);padding:5px;border-radius:999px}
+.switch button{border:0;background:transparent;color:#d4d7e8;font:600 12px 'Be Vietnam Pro',Arial,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer}.switch button.on{background:#fff;color:#111}
+.page{display:none;min-height:100vh;position:relative;overflow:hidden}.page.on{display:block}
+img{display:block}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes pop{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes grow{to{width:var(--w)}}@keyframes marquee{to{transform:translateX(-50%)}}@keyframes spin{to{transform:rotate(360deg)}}
+.top{display:flex;align-items:center;gap:22px;padding:62px 48px 0;font-size:13px}.top .sp{flex:1}.logo{font-weight:800;letter-spacing:.04em}
+/* ===== F. VS arena ===== */
+#F{background:#0d0f14}
+#F .arena{display:grid;grid-template-columns:1fr 150px 1fr;gap:10px;padding:34px 48px;align-items:start}
+#F .fighter{text-align:center}.fighter .im{height:300px;border-radius:24px;overflow:hidden;background:#fff;margin-bottom:14px;position:relative}.fighter .im img{width:100%;height:100%;object-fit:contain}
+.fighter.dk .im{background:#000}.fighter.dk .im img{object-fit:cover}
+.fighter h3{font-size:20px}.fighter .pr{font-weight:800;font-size:24px;margin-top:4px}
+.vs{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px}.vs b{font-size:78px;font-weight:900;color:#ff3b5c;letter-spacing:-.04em;line-height:1}.vs span{font-size:12px;color:#c4c8dc;letter-spacing:.2em}
+.rows{grid-column:1/4;margin-top:8px}.rw{display:grid;grid-template-columns:1fr 150px 1fr;align-items:center;gap:10px;margin:12px 0}
+.rw .lab{text-align:center;font-size:12px;letter-spacing:.14em;color:#9aa0b4;text-transform:uppercase}
+.bk{height:14px;background:#1c202b;border-radius:99px;overflow:hidden;position:relative}.bk i{position:absolute;top:0;bottom:0;border-radius:99px;width:0;animation:grow 1s forwards;background:#4b5163}
+.bk.l i{right:0}.bk.r i{left:0}.bk i.win{background:#3dff8a}
+.val{font-size:12px;margin-top:4px;color:#c8ccdc}.rw>div:first-child{text-align:right}
+.pick{display:flex;gap:10px;justify-content:center;padding:6px 0 30px}.pick button{background:#171a22;border:1px solid #2b3040;color:#d4d7e8;border-radius:999px;padding:9px 16px;font:600 12px 'Be Vietnam Pro',Arial,sans-serif;cursor:pointer}.pick button.on{background:#fff;color:#111}
+.crown{position:absolute;top:12px;left:12px;background:#3dff8a;color:#06210f;font-weight:800;font-size:12px;padding:8px 14px;border-radius:99px}
+/* ===== G. Reels ===== */
+#G.on{display:flex}#G{background:#101014;gap:60px;justify-content:center;align-items:center;padding:70px 40px 30px}
+.phone{width:390px;height:770px;border-radius:44px;border:10px solid #2a2a31;background:#000;overflow:hidden;position:relative;flex:none}
+.feed{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}.feed::-webkit-scrollbar{display:none}
+.reel{height:100%;scroll-snap-align:start;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:22px}
+.reel .bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}.reel .bg img{width:100%;height:60%;object-fit:contain;animation:float 6s ease-in-out infinite}
+.reel .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),transparent 30%,rgba(0,0,0,.85))}
+.reel .inf{position:relative;z-index:2;padding-right:70px}.reel .tag{font-size:12px;font-weight:700;background:#ff3b5c;display:inline-block;padding:7px 12px;border-radius:6px;margin-bottom:10px}
+.reel h3{font-size:22px;line-height:1.15}.reel .pr{font-size:28px;font-weight:800;margin:8px 0}.reel .sp{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.reel .sp span{font-size:12px;background:rgba(255,255,255,.18);padding:7px 12px;border-radius:99px}
+.buy{display:block;text-align:center;background:#fff;color:#111;font-weight:800;padding:15px;border-radius:16px;font-size:15px}
+.side{position:absolute;right:14px;bottom:130px;z-index:3;display:flex;flex-direction:column;gap:18px;align-items:center;font-size:11px}
+.side .ic{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:3px;text-align:center}
+.prog{position:absolute;top:14px;left:18px;right:18px;display:flex;gap:5px;z-index:4}.prog i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.3)}.prog i.on{background:#fff}
+.note{max-width:420px;font-size:15px;line-height:1.7;color:#c4c7d6}.note h2{font-size:34px;color:#fff;margin-bottom:12px;line-height:1.1}.note li{margin:8px 0 8px 18px}
+/* ===== H. Isometric desk ===== */
+#H{background:#e8ecf5;color:#17203a}
+#H .top .logo{color:#17203a}
+.hwrap{display:grid;grid-template-columns:1fr 360px;gap:20px;padding:20px 48px}
+.scene{position:relative;height:560px;perspective:1400px;display:flex;align-items:center;justify-content:center}
+.desk{width:640px;height:360px;background:#d9b98b;border-radius:18px;transform:rotateX(62deg) rotateZ(-38deg);box-shadow:20px 30px 0 #b9966a,0 40px 60px rgba(0,0,0,.25);position:relative;transform-style:preserve-3d}
+.item{position:absolute;transform:rotateZ(38deg) rotateX(-62deg) translateZ(1px);transform-origin:50% 100%;width:150px;transition:.35s cubic-bezier(.2,.9,.3,1);opacity:0;filter:drop-shadow(0 14px 10px rgba(0,0,0,.25))}
+.item.on{opacity:1;animation:pop .5s}.item img{width:100%;height:150px;object-fit:contain;border-radius:14px;background:#fff}
+.panelH{background:#fff;border-radius:24px;padding:22px;box-shadow:0 10px 30px rgba(23,32,58,.12);align-self:start;margin-top:30px}
+.panelH h2{font-size:22px;margin-bottom:4px}.panelH p{font-size:13px;color:#46506f;margin-bottom:14px}
+.gi{display:flex;align-items:center;gap:12px;padding:10px;border-radius:16px;border:2px solid #e4e8f4;margin-bottom:10px;cursor:pointer;transition:.2s}.gi.on{border-color:#2f5cff;background:#eef2ff}
+.gi img{width:54px;height:54px;object-fit:contain;border-radius:10px;background:#fff}.gi b{font-size:13px;display:block}.gi span{font-size:12px;color:#46506f}.gi .chk{margin-left:auto;width:24px;height:24px;border-radius:50%;border:2px solid #c5cce4;display:flex;align-items:center;justify-content:center;font-size:13px}.gi.on .chk{background:#2f5cff;border-color:#2f5cff;color:#fff}
+.tot{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 12px;font-size:13px;color:#46506f}.tot b{font-size:26px;color:#17203a}
+.cta{display:block;text-align:center;background:#17203a;color:#fff;font-weight:700;padding:14px;border-radius:14px;font-size:14px}
+/* ===== I. Kinetic type ===== */
+#I{background:#f2ede4;color:#111;min-height:200vh}
+#I .giant{position:absolute;top:120px;left:0;white-space:nowrap;font-size:260px;font-weight:900;letter-spacing:-.05em;line-height:1;transition:transform .1s linear}
+#I .giant.o{-webkit-text-stroke:3px #111;color:transparent;top:360px}
+#I .rail{position:absolute;top:610px;left:0;display:flex;gap:20px;padding:0 48px;transition:transform .1s linear}
+#I .sc{width:320px;flex:none;background:#fff;border:2px solid #111;border-radius:20px;padding:16px}.sc img{width:100%;height:200px;object-fit:contain}.sc b{font-size:15px;display:block;margin-top:8px}.sc .n{font-size:30px;font-weight:900;margin-top:6px}.sc span{font-size:12px;color:#555}
+.cur{position:fixed;width:96px;height:96px;border-radius:50%;background:#ff4b1f;color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:50;transform:translate(-50%,-50%);transition:transform .08s}
+#I .top{color:#111}#I .hint{position:absolute;top:96px;right:48px;font-size:12px;letter-spacing:.14em;color:#555}
+/* ===== J. Orbit wheel ===== */
+#J{background:radial-gradient(circle at 50% 55%,#2b2f55 0%,#0d0f1c 70%)}
+.orb{position:relative;width:760px;height:600px;margin:10px auto 0}
+.orb .center{position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;background:#fff;overflow:hidden;border:10px solid rgba(255,255,255,.1)}.orb .center img{width:100%;height:100%;object-fit:contain;transition:opacity .3s}
+.orb .ringl{position:absolute;left:50%;top:50%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;border:1px dashed rgba(255,255,255,.25);animation:spin 60s linear infinite}
+.bub{position:absolute;left:50%;top:50%;width:104px;height:104px;margin:-52px 0 0 -52px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:700;cursor:pointer;transition:transform .7s cubic-bezier(.2,.9,.3,1),background .3s}
+.bub.on{background:#ffd23f;color:#111;border-color:#ffd23f}
+.ocap{text-align:center;margin-top:6px}.ocap h2{font-size:32px}.ocap p{color:#b6bbdc;font-size:14px;margin:6px 0 14px}.ocap .go{display:inline-block;background:#ffd23f;color:#111;font-weight:800;padding:13px 26px;border-radius:999px;font-size:14px}
+</style></head><body>
+<div class="switch" id="sw"><button class="on" data-t="F">6 Đấu trường so sánh</button><button data-t="G">7 Lướt như video</button><button data-t="H">8 Dựng góc setup</button><button data-t="I">9 Chữ khổng lồ</button><button data-t="J">10 Vòng quay danh mục</button></div>
+
+<!-- F -->
+<section class="page on" id="F"><nav class="top"><span class="logo">ZENTECH</span><span style="color:#c4c8dc">So sánh · Chọn 2 món để đấu</span><span class="sp"></span><span style="color:#c4c8dc">Giỏ 2</span></nav>
+<div class="arena"><div class="fighter" id="fl"></div><div class="vs"><b>VS</b><span>ĐẤU TRƯỜNG</span></div><div class="fighter" id="fr"></div><div class="rows" id="rows"></div></div>
+<div class="pick" id="pick"></div></section>
+
+<!-- G -->
+<section class="page" id="G"><div class="phone"><div class="prog" id="prog"><i class="on"></i><i></i><i></i></div><div class="feed" id="feed">
+ <div class="reel" style="background:#0c0c10"><div class="bg"><img src="../public/uploads/products/81ea560d06fe21de.jpg" alt=""></div><div class="shade"></div><div class="inf"><span class="tag">Mới về</span><h3>Logitech G Pro X Superlight 2</h3><div class="pr">1.750.000₫</div><div class="sp"><span>60 g</span><span>25.6K DPI</span><span>95 giờ pin</span></div><a class="buy">Thêm vào giỏ</a></div></div>
+ <div class="reel" style="background:#e9eefc;color:#111"><div class="bg"><img src="../public/uploads/products/09b4a226a16fdfdd.webp" alt=""></div><div class="shade" style="background:linear-gradient(180deg,transparent 40%,rgba(233,238,252,.95))"></div><div class="inf"><span class="tag">-24%</span><h3>Logitech G304 Lightspeed</h3><div class="pr">725.000₫</div><div class="sp"><span style="background:rgba(0,0,0,.1)">99 g</span><span style="background:rgba(0,0,0,.1)">12K DPI</span><span style="background:rgba(0,0,0,.1)">250 giờ pin</span></div><a class="buy" style="background:#111;color:#fff">Thêm vào giỏ</a></div></div>
+ <div class="reel" style="background:#16243a"><div class="bg"><img src="../public/uploads/products/c6e47b22c18fee2c.webp" alt=""></div><div class="shade"></div><div class="inf"><span class="tag">Bán chạy</span><h3>Dareu Flex 75 RGB</h3><div class="pr">699.000₫</div><div class="sp"><span>75%</span><span>Hot-swap</span><span>3 chế độ</span></div><a class="buy">Thêm vào giỏ</a></div></div>
+</div><div class="side"><div><div class="ic">♥</div>2,1K</div><div><div class="ic">AI</div>Hỏi</div><div><div class="ic">⇪</div>Chia sẻ</div></div></div>
+<div class="note"><h2>Mua sắm như lướt video</h2><p>Mỗi sản phẩm là một màn hình đầy đủ. Vuốt dọc để xem món tiếp theo, một chạm để thêm vào giỏ.</p><ul><li>Thiết kế ưu tiên điện thoại</li><li>Giá, thông số và nút mua luôn trong tầm ngón cái</li><li>Nút AI hỏi ZenBot ngay trên sản phẩm đang xem</li></ul><p style="margin-top:14px;font-size:13px;color:#a9aec6">Thử cuộn trong khung điện thoại bên trái.</p></div></section>
+
+<!-- H -->
+<section class="page" id="H"><nav class="top"><span class="logo">ZENTECH</span><span style="color:#46506f">Dựng góc setup của bạn</span><span class="sp"></span><span>Giỏ 2</span></nav>
+<div class="hwrap"><div class="scene"><div class="desk" id="desk">
+ <div class="item" data-i="0" style="left:330px;top:170px;width:130px"><img src="../public/uploads/products/09b4a226a16fdfdd.webp" alt=""></div>
+ <div class="item" data-i="1" style="left:10px;top:120px;width:190px"><img src="../public/uploads/products/c6e47b22c18fee2c.webp" alt="" style="height:190px"></div>
+ <div class="item" data-i="2" style="left:420px;top:10px;width:130px"><img src="../public/uploads/products/fffff4b20bff16a9.webp" alt=""></div></div></div>
+<div class="panelH"><h2>Chọn đồ cho góc máy</h2><p>Bấm để thêm hoặc bớt, bàn tự cập nhật.</p><div id="gear"></div><div class="tot"><span>Tổng cộng</span><b id="tot">0₫</b></div><a class="cta">Thêm cả bộ vào giỏ</a></div></div></section>
+
+<!-- I -->
+<section class="page" id="I"><nav class="top"><span class="logo">ZENTECH</span><span class="sp"></span><span>Cuộn xuống</span></nav><div class="hint">CUỘN ĐỂ CHẠY CHỮ ↓</div>
+<div class="giant" id="g1">CHỌN GEAR THEO THÔNG SỐ CHỌN GEAR THEO THÔNG SỐ</div><div class="giant o" id="g2">DPI · GRAM · GIỜ PIN · DPI · GRAM · GIỜ PIN · DPI</div>
+<div class="rail" id="rail"><div class="sc"><img src="../public/uploads/products/09b4a226a16fdfdd.webp" alt=""><b>Logitech G304</b><div class="n">12.000 DPI</div><span>99 g · 250 giờ pin · 725.000₫</span></div><div class="sc"><img src="../public/uploads/products/c6e47b22c18fee2c.webp" alt=""><b>Dareu Flex 75</b><div class="n">75% · hot-swap</div><span>3 chế độ · 699.000₫</span></div><div class="sc"><img src="../public/uploads/products/fffff4b20bff16a9.webp" alt=""><b>Sony MDR-EX155AP</b><div class="n">9 mm driver</div><span>Jack 3.5 · 285.000₫</span></div><div class="sc"><img src="../public/uploads/products/81ea560d06fe21de.jpg" alt=""><b>Superlight 2</b><div class="n">60 g</div><span>25.6K DPI · 1.750.000₫</span></div></div><div class="cur" id="cur">XEM</div></section>
+
+<!-- J -->
+<section class="page" id="J"><nav class="top"><span class="logo">ZENTECH</span><span class="sp"></span><span style="color:#b6bbdc">Bấm một bong bóng để quay vòng</span></nav>
+<div class="orb"><div class="ringl"></div><div class="center"><img id="oimg" src="../public/uploads/products/09b4a226a16fdfdd.webp" alt=""></div><div id="bubs"></div></div>
+<div class="ocap"><h2 id="otitle">Chuột</h2><p id="osub">Logitech G304 Lightspeed · 725.000₫</p><a class="go">Xem tất cả chuột →</a></div></section>
+
+<script>
+const q=(s,r=document)=>[...r.querySelectorAll(s)];
+q('#sw button').forEach(b=>b.onclick=()=>{q('#sw button').forEach(x=>x.classList.toggle('on',x===b));q('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.t));scrollTo(0,0)});
+/* F: VS */
+const P=[{n:'Logitech G Pro X Superlight 2',p:'1.750.000₫',img:'81ea560d06fe21de.jpg',dk:1,s:[25600,60,95,1]},{n:'Logitech G304 Lightspeed',p:'725.000₫',img:'09b4a226a16fdfdd.webp',s:[12000,99,250,1]},{n:'Razer DeathAdder V2',p:'1.199.000₫',img:'8e5878bd9cb67d56.webp',s:[20000,82,0,6]}];
+const ST=[['DPI',0,true,'25.600'],['Trọng lượng (g)',1,false],['Pin (giờ)',2,true],['Độ trễ (ms)',3,false]];let L=0,R=1;
+function fight(){const f=(id,i,w)=>{const x=P[i];q('#'+id)[0].className='fighter '+(x.dk?'dk':'');q('#'+id)[0].innerHTML=`<div class="im">${w?'<span class="crown">Thắng '+w+'/4</span>':''}<img src="../public/uploads/products/${x.img}" alt=""></div><h3>${x.n}</h3><div class="pr">${x.p}</div>`};
+ let wl=0,wr=0,h='';ST.forEach(([n,k,hi])=>{const a=P[L].s[k],b=P[R].s[k],mx=Math.max(a,b,1),la=hi?a>b:a<b,lb=hi?b>a:b<a;if(la)wl++;if(lb)wr++;const wa=hi?a/mx*100:(mx?(1-a/mx)*60+40:100),wb=hi?b/mx*100:(mx?(1-b/mx)*60+40:100);
+ h+=`<div class="rw"><div><div class="bk l"><i class="${la?'win':''}" style="--w:${wa}%"></i></div><div class="val">${a}</div></div><div class="lab">${n}</div><div><div class="bk r"><i class="${lb?'win':''}" style="--w:${wb}%"></i></div><div class="val">${b}</div></div></div>`});
+ q('#rows')[0].innerHTML=h;f('fl',L,wl);f('fr',R,wr)}
+q('#pick')[0].innerHTML=P.map((x,i)=>`<button data-i="${i}">${x.n}</button>`).join('');
+q('#pick button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(i===R)R=L;L=i;fight();mark()});function mark(){q('#pick button').forEach(b=>b.classList.toggle('on',+b.dataset.i===L||+b.dataset.i===R))}fight();mark();
+/* G: reels progress */
+const feed=q('#feed')[0];feed.addEventListener('scroll',()=>{const i=Math.round(feed.scrollTop/feed.clientHeight);q('#prog i').forEach((x,k)=>x.classList.toggle('on',k===i))});
+/* H: desk */
+const G=[{n:'Chuột Logitech G304',p:725000,img:'09b4a226a16fdfdd.webp'},{n:'Bàn phím Dareu Flex 75',p:699000,img:'c6e47b22c18fee2c.webp'},{n:'Tai nghe Sony MDR-EX155AP',p:285000,img:'fffff4b20bff16a9.webp'}];
+q('#gear')[0].innerHTML=G.map((g,i)=>`<div class="gi" data-i="${i}"><img src="../public/uploads/products/${g.img}" alt=""><div><b>${g.n}</b><span>${g.p.toLocaleString('vi-VN')}₫</span></div><i class="chk">✓</i></div>`).join('');
+const sel=new Set();function upd(){q('.item').forEach(e=>e.classList.toggle('on',sel.has(+e.dataset.i)));q('.gi').forEach(e=>e.classList.toggle('on',sel.has(+e.dataset.i)));q('#tot')[0].textContent=[...sel].reduce((s,i)=>s+G[i].p,0).toLocaleString('vi-VN')+'₫'}
+q('.gi').forEach(e=>e.onclick=()=>{const i=+e.dataset.i;sel.has(i)?sel.delete(i):sel.add(i);upd()});sel.add(0);sel.add(1);upd();
+/* I: kinetic */
+const g1=q('#g1')[0],g2=q('#g2')[0],rail=q('#rail')[0],cur=q('#cur')[0];
+function kin(){const y=scrollY;g1.style.transform=`translateX(${-y*1.1}px)`;g2.style.transform=`translateX(${-1600+y*1.1}px)`;rail.style.transform=`translateX(${-y*.6}px)`}addEventListener('scroll',kin);kin();
+addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+/* J: orbit */
+const C=[{n:'Chuột',s:'Logitech G304 Lightspeed · 725.000₫',img:'09b4a226a16fdfdd.webp'},{n:'Bàn phím',s:'Dareu Flex 75 RGB · 699.000₫',img:'c6e47b22c18fee2c.webp'},{n:'Tai nghe',s:'Sony MDR-EX155AP · 285.000₫',img:'fffff4b20bff16a9.webp'},{n:'Lót chuột',s:'Hyperwork Core Pad XXL · 399.000₫',img:'500205193ff17f7f.webp'},{n:'Thương hiệu',s:'34 hãng, từ Logitech đến Sony',img:'81ea560d06fe21de.jpg'}];
+let cur_=0;q('#bubs')[0].innerHTML=C.map((c,i)=>`<div class="bub" data-i="${i}">${c.n}</div>`).join('');
+function orb(){q('.bub').forEach((b,i)=>{const a=((i-cur_)*72-90)*Math.PI/180,r=260;b.style.transform=`translate(${Math.cos(a)*r}px,${Math.sin(a)*r}px)`;b.classList.toggle('on',i===cur_)});q('#otitle')[0].textContent=C[cur_].n;q('#osub')[0].textContent=C[cur_].s;q('#oimg')[0].src='../public/uploads/products/'+C[cur_].img}
+q('.bub').forEach(b=>b.onclick=()=>{cur_=+b.dataset.i;orb()});orb();
+if(location.hash)q('#sw button[data-t="'+location.hash.slice(1)+'"]')[0]?.click();
+</script></body></html>

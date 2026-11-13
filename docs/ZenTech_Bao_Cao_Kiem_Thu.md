@@ -2,7 +2,7 @@
 
 > **Ngày kiểm thử:** 13/11/2026  
 > **Môi trường:** PHP 8.2 (máy chủ tích hợp), MariaDB (XAMPP), Chrome; chạy tại `localhost:8001`  
-> **Kết quả tự động:** 128 trên 128 ca đạt
+> **Kết quả tự động:** 132 trên 132 ca đạt
 
 ---
 
@@ -11,7 +11,7 @@
 | Chỉ số | Kết quả |
 |---|---|
 | Ca kiểm thử tự động: kiểm tra trang, bảo mật, đơn hàng, quản trị | 59 / 59 đạt |
-| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 69 / 69 đạt |
+| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 73 / 73 đạt |
 | Kiểm thử logic JavaScript: bộ chọn biến thể (Node, `scratch/variant_picker_test.js`) | Đạt |
 | Kiểm thử thủ công trên trình duyệt | Máy tính (khoảng 800px) và điện thoại giả lập (375px); không có thanh cuộn ngang |
 | Rà soát theo checklist thiết kế | 8 checklist: giỏ hàng, thanh toán, đăng nhập, đăng ký, tìm kiếm, 404, báo lỗi nhập liệu, gửi biểu mẫu |
@@ -26,8 +26,8 @@
 | Hình ảnh sản phẩm | 1848 |
 | Thông số kỹ thuật (EAV) | 1834 |
 | Thương hiệu | 34 |
-| Người dùng | 13 |
-| Đơn hàng | 24 |
+| Người dùng | 14 |
+| Đơn hàng | 25 |
 
 Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm dữ liệu mẫu. Tồn kho, lượt bán và lượt xem là số giả lập.
 
@@ -85,8 +85,8 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E44 | không có cảnh báo PHP tại /admin/products | Đạt |
 | E45 | Truy cập /admin/orders trả về 200 | Đạt |
 | E46 | không có cảnh báo PHP tại /admin/orders | Đạt |
-| E47 | Truy cập /admin/orders/detail/187 trả về 200 | Đạt |
-| E48 | không có cảnh báo PHP tại /admin/orders/detail/187 | Đạt |
+| E47 | Truy cập /admin/orders/detail/202 trả về 200 | Đạt |
+| E48 | không có cảnh báo PHP tại /admin/orders/detail/202 | Đạt |
 | E49 | Truy cập /admin/products/create trả về 200 | Đạt |
 | E50 | không có cảnh báo PHP tại /admin/products/create | Đạt |
 | E51 | Trang đơn hàng admin không có cảnh báo PHP | Đạt |
@@ -99,7 +99,7 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E58 | Đơn đã giao là trạng thái cuối, không đổi tiếp | Đạt |
 | E59 | Khách hàng không vào được khu quản trị | Đạt |
 
-### 2.2 Luồng nghiệp vụ (69 ca)
+### 2.2 Luồng nghiệp vụ (73 ca)
 
 | Mã | Khu vực | Nội dung kiểm tra | Kết quả |
 |---|---|---|---|
@@ -163,15 +163,19 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | F58 | Admin tồn kho | Lọc 'Còn đủ hàng': không có huy hiệu sắp hết/hết hàng | Đạt |
 | F59 | Admin tồn kho | Lọc 'Có biến thể hết hàng': số sản phẩm khớp database | Đạt |
 | F60 | Admin tồn kho | Tham số lạ không gây lỗi | Đạt |
-| F61 | Admin mã giảm giá | Xem danh sách mã | Đạt |
-| F62 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
-| F63 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
-| F64 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
-| F65 | Admin mã giảm giá | Bật/tắt mã | Đạt |
-| F66 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
-| F67 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
-| F68 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
-| F69 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
+| F61 | Chuyển động | Trang khách nạp motion.css và motion.js | Đạt |
+| F62 | Chuyển động | Tệp motion được phục vụ (200) | Đạt |
+| F63 | Chuyển động | Hỗ trợ giảm chuyển động (prefers-reduced-motion) | Đạt |
+| F64 | Chuyển động | Trang admin không nạp hiệu ứng nền | Đạt |
+| F65 | Admin mã giảm giá | Xem danh sách mã | Đạt |
+| F66 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
+| F67 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
+| F68 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
+| F69 | Admin mã giảm giá | Bật/tắt mã | Đạt |
+| F70 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
+| F71 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
+| F72 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
+| F73 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
 
 ---
 

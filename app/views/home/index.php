@@ -33,7 +33,7 @@ $heroDisc = $hero ? (int) ($hero['max_discount_pct'] ?? 0) : 0;
         </div>
 
         <?php if ($hero): ?>
-        <a href="/san-pham/<?= e($hero['slug']) ?>" class="stage group lg:col-span-7 block rise" style="animation-delay:.08s">
+        <a href="/san-pham/<?= e($hero['slug']) ?>" class="stage group lg:col-span-7 block rise" data-par="0.08" style="animation-delay:.08s">
             <div class="aspect-[16/10] flex items-center justify-center px-8 pt-8 sm:px-12 sm:pt-12">
                 <img src="<?= e($heroImg) ?>" alt="<?= e($hero['name']) ?>"
                      class="max-h-full max-w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.04]">

@@ -735,6 +735,7 @@ document.getElementById('add-to-cart-form').addEventListener('submit', async fun
         if (buyNow) { window.location.href = '/thanh-toan'; return; }
         toast(data.message || 'Đã thêm vào giỏ hàng!', 'success');
         if (window.ZenTechApp) ZenTechApp.updateCartBadge();
+        if (window.ztFly) ztFly(document.getElementById('main-image'));
     } catch (err) {
         toast('Lỗi kết nối máy chủ, vui lòng thử lại.', 'error');
     } finally {

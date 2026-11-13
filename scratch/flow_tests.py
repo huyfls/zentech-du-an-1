@@ -194,6 +194,12 @@ s_, b_, _ = req(ad, "GET", "/admin/products?stock=out")
 check("Admin tồn kho", "Lọc 'Có biến thể hết hàng': số sản phẩm khớp database", s_ == 200 and len(re.findall(r"Hết hàng \d+/\d+ biến thể", b_)) == min(n_out, 10))
 s_, b_, _ = req(ad, "GET", "/admin/products?sort=stock_desc&stock=x&page=999")
 check("Admin tồn kho", "Tham số lạ không gây lỗi", s_ == 200)
+# Chuyển động giao diện: tệp có mặt và được nạp ở trang khách, không nạp ở admin
+b_ = req(cli(), "GET", "/")[1]
+check("Chuyển động", "Trang khách nạp motion.css và motion.js", "/assets/css/motion.css" in b_ and "/assets/js/motion.js" in b_)
+check("Chuyển động", "Tệp motion được phục vụ (200)", req(cli(), "GET", "/assets/js/motion.js")[0] == 200 and req(cli(), "GET", "/assets/css/motion.css")[0] == 200)
+check("Chuyển động", "Hỗ trợ giảm chuyển động (prefers-reduced-motion)", "prefers-reduced-motion" in req(cli(), "GET", "/assets/css/motion.css")[1] and "prefers-reduced-motion" in req(cli(), "GET", "/assets/js/motion.js")[1])
+check("Chuyển động", "Trang admin không nạp hiệu ứng nền", "motion.js" not in req(ad, "GET", "/admin")[1])
 # Admin: quản lý mã giảm giá
 s, b, _ = req(ad, "GET", "/admin/coupons"); check("Admin mã giảm giá", "Xem danh sách mã", s == 200 and "ZENTECH10" in b)
 t = tok(ad, "/admin/coupons")

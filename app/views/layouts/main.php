@@ -29,6 +29,7 @@
 
     <!-- ===== Custom CSS ===== -->
     <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="/assets/css/motion.css">
 
 <script>
 // Tự động gắn CSRF token cho mọi fetch ghi dữ liệu cùng origin
@@ -618,6 +619,7 @@ if (file_exists(VIEW_PATH . '/partials/ai-widget.php')) {
 <!-- ===== Global Client JS ===== -->
 <script src="/assets/js/app.js"></script>
 <script src="/assets/js/form-loading.js"></script>
+<script src="/assets/js/motion.js"></script>
 <?php
 // Thông báo sau hành động (đăng ký, đặt hàng, hủy đơn, đăng xuất...) hiển thị dạng toast
 $flashToasts = [];

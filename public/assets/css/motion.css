@@ -1,0 +1,53 @@
+/**
+ * ZenTech — lớp chuyển động: nền chuyển động theo cuộn chuột, hiện dần khi cuộn,
+ * vòng tròn khi click, chuyển trang mượt, thẻ nghiêng theo chuột, bay vào giỏ hàng.
+ * Chỉ dùng transform và opacity. Tắt hoàn toàn khi người dùng chọn "giảm chuyển động".
+ */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: zt-out .22s ease both; }
+::view-transition-new(root) { animation: zt-in .5s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes zt-out { to { opacity: 0; transform: translateY(-10px) scale(.995); } }
+@keyframes zt-in  { from { opacity: 0; transform: translateY(18px) scale(.995); } }
+
+/* Nền: các khối màu mờ trôi theo cuộn và theo con trỏ. Màu đổi dần theo vị trí cuộn (--p từ 0 đến 1). */
+.zt-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; filter: hue-rotate(calc(var(--p, 0) * 70deg)); }
+.zt-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; will-change: transform; }
+.zt-blob.b1 { width: 46vmax; height: 46vmax; left: -12vmax; top: -14vmax; background: #bcd3ff; }
+.zt-blob.b2 { width: 38vmax; height: 38vmax; right: -10vmax; top: 18vh; background: #e3d4ff; }
+.zt-blob.b3 { width: 34vmax; height: 34vmax; left: 20vw; bottom: -16vmax; background: #ffd6ea; }
+.zt-blob.b4 { width: 26vmax; height: 26vmax; right: 18vw; bottom: 8vh; background: #c9f3ff; opacity: .5; }
+.zt-ring { position: absolute; border: 1.5px solid rgba(15, 93, 224, .18); border-radius: 50%; will-change: transform; }
+.zt-ring.r1 { width: 260px; height: 260px; left: 8vw; top: 42vh; }
+.zt-ring.r2 { width: 150px; height: 150px; right: 12vw; top: 14vh; border-color: rgba(160, 80, 220, .2); }
+
+/* Thanh tiến độ cuộn */
+#zt-progress { position: fixed; left: 0; top: 0; height: 3px; width: 100%; z-index: 90; background: var(--accent, #0f5de0); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+
+/* Header khi cuộn */
+#main-header.zt-scrolled { box-shadow: 0 8px 28px rgba(0, 0, 0, .07); }
+
+/* Hiện dần khi cuộn tới (chỉ áp dụng khi JS chạy) */
+html.zt-js .zt-rv { opacity: 0; transform: translateY(32px) scale(.98); transition: opacity .8s var(--ease, ease), transform .8s var(--ease, ease); transition-delay: var(--d, 0ms); }
+html.zt-js .zt-rv.in { opacity: 1; transform: none; }
+
+/* Thẻ sản phẩm nghiêng 3D theo con trỏ */
+.zt-tilt { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out; will-change: transform; }
+
+/* Click: vòng tròn lan ra và các chấm bắn ra */
+.zt-burst { position: fixed; z-index: 120; pointer-events: none; width: 0; height: 0; }
+.zt-burst i { position: absolute; left: 0; top: 0; width: 8px; height: 8px; margin: -4px; border-radius: 50%; background: var(--c, #0f5de0); animation: zt-dot .7s cubic-bezier(.2, .8, .3, 1) forwards; }
+.zt-burst b { position: absolute; left: 0; top: 0; width: 20px; height: 20px; margin: -10px; border-radius: 50%; border: 2px solid #0f5de0; animation: zt-ring .6s ease-out forwards; }
+@keyframes zt-dot { to { transform: translate(var(--x), var(--y)) scale(.2); opacity: 0; } }
+@keyframes zt-ring { to { transform: scale(5); opacity: 0; } }
+
+/* Bay vào giỏ hàng */
+.zt-fly { position: fixed; z-index: 130; pointer-events: none; border-radius: 18px; object-fit: contain; background: #fff; box-shadow: 0 12px 30px rgba(0, 0, 0, .18); }
+#cart-badge.zt-bump { animation: zt-bump .5s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes zt-bump { 40% { transform: scale(1.7); } }
+
+@media (prefers-reduced-motion: reduce) {
+    .zt-bg, #zt-progress { display: none; }
+    html.zt-js .zt-rv { opacity: 1; transform: none; transition: none; }
+    .zt-tilt { transform: none; }
+    ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}
