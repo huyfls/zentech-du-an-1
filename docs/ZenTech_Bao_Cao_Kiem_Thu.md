@@ -85,8 +85,8 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E44 | không có cảnh báo PHP tại /admin/products | Đạt |
 | E45 | Truy cập /admin/orders trả về 200 | Đạt |
 | E46 | không có cảnh báo PHP tại /admin/orders | Đạt |
-| E47 | Truy cập /admin/orders/detail/256 trả về 200 | Đạt |
-| E48 | không có cảnh báo PHP tại /admin/orders/detail/256 | Đạt |
+| E47 | Truy cập /admin/orders/detail/262 trả về 200 | Đạt |
+| E48 | không có cảnh báo PHP tại /admin/orders/detail/262 | Đạt |
 | E49 | Truy cập /admin/products/create trả về 200 | Đạt |
 | E50 | không có cảnh báo PHP tại /admin/products/create | Đạt |
 | E51 | Trang đơn hàng admin không có cảnh báo PHP | Đạt |
