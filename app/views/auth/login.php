@@ -16,8 +16,10 @@ unset($_SESSION['flash']);
     <script src="/assets/js/tailwind-theme.js"></script>
     <link rel="stylesheet" href="/assets/css/custom.css">
     
+    <meta name="description" content="Đăng nhập – ZenTech, gaming gear chính hãng.">
 </head>
 <body class="min-h-full flex items-center justify-center p-4">
+    <h1 class="sr-only">Đăng nhập</h1>
 
     <div class="w-full max-w-md">
         <!-- Logo -->
@@ -62,7 +64,7 @@ unset($_SESSION['flash']);
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
                         <label class="text-xs font-semibold text-zinc-300">Mật khẩu</label>
-                        <a href="/quen-mat-khau" class="text-[11px] text-accent-400 hover:underline">Quên mật khẩu?</a>
+                        <a href="/quen-mat-khau" class="text-xs py-2 text-accent-400 hover:underline">Quên mật khẩu?</a>
                     </div>
                     <div class="relative">
                         <input type="password" 
@@ -73,7 +75,7 @@ unset($_SESSION['flash']);
                                class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-4 py-3 text-xs text-white outline-none pr-10">
                         <button type="button" 
                                 onclick="togglePass()"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white text-xs">
+                                class="absolute right-1 top-1/2 -translate-y-1/2 p-2.5 text-zinc-400 hover:text-white text-xs" aria-label="Hiện hoặc ẩn mật khẩu">
                             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
                         </button>
                     </div>

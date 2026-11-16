@@ -104,7 +104,7 @@
                                 <td class="py-3 text-zinc-300"><?= htmlspecialchars($ro['receiver_name']) ?></td>
                                 <td class="py-3 font-bold text-accent-400"><?= number_format($ro['total_amount'], 0, ',', '.') ?>₫</td>
                                 <td class="py-3">
-                                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border <?= $stClass ?>">
+                                    <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full border <?= $stClass ?>">
                                         <?= $stText ?>
                                     </span>
                                 </td>

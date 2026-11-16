@@ -214,6 +214,33 @@ check("Thêm nhanh", "Sản phẩm hết hàng: báo lỗi, không thêm", "hế
 b_ = req(cli(), "GET", "/san-pham")[1]
 check("Thêm nhanh", "Thẻ sản phẩm có nút thêm vào giỏ kèm nhãn cho trình đọc màn hình", b_.count("data-quick-add=") >= 12 and 'aria-label="Thêm ' in b_)
 check("Thêm nhanh", "Trang chi tiết có thanh mua hàng cho điện thoại", 'id="buybar"' in req(cli(), "GET", f"/san-pham/{slug3}")[1])
+# Yêu thích, so sánh, khả năng tiếp cận
+cw = cli(); Hw = {"X-CSRF-Token": tok(cw, "/"), "X-Requested-With": "XMLHttpRequest", "Content-Type": "application/json"}
+ids3 = sql("select group_concat(id) from (select id from products where is_active=1 order by id desc limit 3) t")
+a_, b_, c_ = ids3.split(",")
+s_, b1, _ = req(cw, "GET", "/yeu-thich")
+check("Yêu thích", "Chưa lưu gì: hiện trạng thái trống có nút xem sản phẩm", s_ == 200 and "chưa lưu sản phẩm nào" in b1)
+r1 = urllib.request.Request(B + "/wishlist/toggle", data=json.dumps({"product_id": int(a_)}).encode(), method="POST", headers=Hw)
+tg = json.loads(cw.open(r1).read().decode())
+check("Yêu thích", "Bấm tim: lưu sản phẩm, trả về số lượng", tg["success"] and tg["wished"] and tg["count"] == 1)
+nm = sql(f"select name from products where id={a_}").replace("&", "&amp;")
+b1 = req(cw, "GET", "/yeu-thich")[1]
+check("Yêu thích", "Trang Yêu thích liệt kê sản phẩm đã lưu và hiện số trên header", nm[:25] in b1 and "1 sản phẩm đã lưu" in b1 and 'id="wish-badge"' in b1)
+check("Yêu thích", "Thẻ sản phẩm có nút tim kèm nhãn và trạng thái", 'data-wish="' in req(cli(), "GET", "/san-pham")[1] and 'aria-pressed=' in b1)
+tg = json.loads(cw.open(urllib.request.Request(B + "/wishlist/toggle", data=json.dumps({"product_id": int(a_)}).encode(), method="POST", headers=Hw)).read().decode())
+check("Yêu thích", "Bấm lần hai: bỏ khỏi danh sách", tg["wished"] is False and "chưa lưu sản phẩm nào" in req(cw, "GET", "/yeu-thich")[1])
+s_, bc, _ = req(cli(), "GET", f"/so-sanh?ids={a_},{b_},{c_}")
+nms = [sql(f"select name from products where id={i}").replace("&", "&amp;")[:25] for i in (a_, b_, c_)]
+check("So sánh", "So sánh 3 sản phẩm: có đủ tên cả ba, bảng có tiêu đề cột/hàng", s_ == 200 and all(n_ in bc for n_ in nms) and 'scope="col"' in bc and 'scope="row"' in bc)
+check("So sánh", "Hàng khác nhau được đánh dấu, có ô lọc điểm khác biệt", "cmp-diff" in bc and 'id="only-diff"' in bc)
+bc4 = req(cli(), "GET", f"/so-sanh?ids={a_},{b_},{c_},{sql('select min(id) from products')}")[1]
+check("So sánh", "Quá 3 sản phẩm: chỉ lấy 3 đầu", bc4.count('data-quick-add="') == 3)
+check("So sánh", "Chỉ 1 sản phẩm hoặc id sai: báo cần ít nhất 2, không lỗi", "ít nhất 2" in req(cli(), "GET", f"/so-sanh?ids={a_}")[1] and "Chưa có sản phẩm nào" in req(cli(), "GET", "/so-sanh?ids=abc,0,-5")[1])
+check("So sánh", "Thẻ sản phẩm có nút So sánh", 'data-compare="' in req(cli(), "GET", "/san-pham")[1])
+pg_ = req(cli(), "GET", f"/san-pham/{slug3}")[1]
+check("Tiếp cận", "Ô số lượng, ô tìm kiếm, ô ZenBot và nút gửi đều có nhãn", 'aria-label="Số lượng"' in pg_ and 'aria-label="Tìm sản phẩm' in pg_ and 'aria-label="Câu hỏi cho ZenBot"' in pg_ and 'aria-label="Gửi câu hỏi"' in pg_)
+ok_ = all('<h1' in req(cli(), "GET", u)[1] and 'name="description"' in req(cli(), "GET", u)[1] for u in ["/dang-nhap", "/dang-ky", "/quen-mat-khau", "/khong-co-trang"])
+check("Tiếp cận", "Trang đăng nhập, đăng ký, quên mật khẩu, 404 có h1 và mô tả meta", ok_)
 # Admin: quản lý mã giảm giá
 s, b, _ = req(ad, "GET", "/admin/coupons"); check("Admin mã giảm giá", "Xem danh sách mã", s == 200 and "ZENTECH10" in b)
 t = tok(ad, "/admin/coupons")

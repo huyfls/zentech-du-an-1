@@ -116,3 +116,11 @@ input[type="range"]::-moz-range-track { height: 4px; background: #d2d2d7; border
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
 }
+
+/* Màn hình cảm ứng: đích chạm tối thiểu khoảng 40px cho liên kết văn bản nhỏ */
+@media (pointer: coarse) {
+    footer li a, footer p a { display: inline-block; padding: .6rem 0; }
+    header a[href="/"], main nav a { display: inline-flex; align-items: center; min-height: 40px; }
+    #only-diff { width: 20px; height: 20px; }
+    label:has(> #only-diff) { padding: .5rem 0; }
+}

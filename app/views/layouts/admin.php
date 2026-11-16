@@ -88,7 +88,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
                 <span>Mã giảm giá</span>
             </a>
 
-            <div class="pt-4 pb-2 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+            <div class="pt-4 pb-2 px-3 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
                 Hệ thống
             </div>
 
@@ -109,7 +109,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
                 </div>
                 <div class="text-left overflow-hidden">
                     <div class="text-xs font-bold text-white truncate max-w-[100px]"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Admin') ?></div>
-                    <div class="text-[10px] text-accent-400 font-mono">Administrator</div>
+                    <div class="text-[11px] text-accent-400 font-mono">Administrator</div>
                 </div>
             </div>
             <form action="/auth/logout" method="POST"><?= Csrf::field() ?><button type="submit" title="Đăng xuất" aria-label="Đăng xuất" class="text-zinc-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-zinc-800 transition">

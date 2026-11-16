@@ -14,6 +14,7 @@ $title  = $titles[$errorCode] ?? 'Có lỗi xảy ra';
     <script src="/assets/vendor/tailwind-3.4.0.js"></script>
     <script src="/assets/js/tailwind-theme.js"></script>
     <link rel="stylesheet" href="/assets/css/custom.css">
+    <meta name="description" content="Không tìm thấy trang – ZenTech, gaming gear chính hãng.">
 </head>
 <body class="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-4 font-sans antialiased">
     <main class="text-center max-w-md">

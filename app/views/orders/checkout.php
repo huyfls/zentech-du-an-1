@@ -150,10 +150,10 @@ unset($_SESSION['flash']);
                             </div>
                             <div>
                                 <div class="text-xs font-semibold text-zinc-300">Ví MoMo / VNPay</div>
-                                <div class="text-[10px] text-zinc-500">Cổng thanh toán tự động</div>
+                                <div class="text-[11px] text-zinc-500">Cổng thanh toán tự động</div>
                             </div>
                         </div>
-                        <span class="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">Sắp ra mắt</span>
+                        <span class="text-[11px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">Sắp ra mắt</span>
                     </div>
                 </div>
             </div>

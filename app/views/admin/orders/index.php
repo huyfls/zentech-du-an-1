@@ -33,7 +33,7 @@ $statusTabs = [
             <a href="/admin/orders?status=<?= $stKey ?>&q=<?= urlencode($search ?? '') ?>" 
                class="px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition flex items-center gap-2 <?= $status === $stKey ? 'bg-accent-500/20 text-accent-400 border border-accent-500/30' : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white' ?>">
                 <span><?= $stLabel ?></span>
-                <span class="px-1.5 py-0.2 rounded-full text-[10px] <?= $status === $stKey ? 'bg-accent-400 text-black font-bold' : 'bg-zinc-800 text-zinc-400' ?>">
+                <span class="px-1.5 py-0.2 rounded-full text-[11px] <?= $status === $stKey ? 'bg-accent-400 text-black font-bold' : 'bg-zinc-800 text-zinc-400' ?>">
                     <?= $stCount ?>
                 </span>
             </a>
@@ -104,12 +104,12 @@ $statusTabs = [
                                     <?= number_format($o['total_amount'], 0, ',', '.') ?>₫
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                                    <span class="text-[11px] uppercase font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">
                                         <?= strtoupper($o['payment_method']) ?>
                                     </span>
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full border <?= $stClass ?>">
+                                    <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border <?= $stClass ?>">
                                         <?= $stText ?>
                                     </span>
                                 </td>

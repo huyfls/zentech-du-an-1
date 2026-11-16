@@ -57,6 +57,29 @@ class ProductController extends BaseController
     }
 
     /**
+     * So sánh 2 đến 3 sản phẩm cạnh nhau: /so-sanh?ids=1,2,3
+     */
+    public function compare(): void
+    {
+        $raw = $this->getGet('ids', '');
+        $ids = array_slice(array_values(array_unique(array_filter(array_map('intval', explode(',', is_string($raw) ? $raw : '')), fn($i) => $i > 0))), 0, 3);
+        $products = $this->productModel->getByIds($ids);
+
+        // Thông số theo nhóm: gộp nhãn của mọi sản phẩm, giữ thứ tự xuất hiện đầu tiên
+        $groups = [];
+        foreach ($products as $i => $p) {
+            foreach ($this->productModel->getSpecs((int) $p['id']) as $g => $rows) {
+                foreach ($rows as $r) $groups[$g][$r['label']][$i] = $r['value'];
+            }
+        }
+        $this->render('products/compare', [
+            'products' => $products, 'groups' => $groups,
+            'pageTitle' => 'So sánh sản phẩm – ZenTech',
+            'pageDescription' => 'So sánh giá, thông số và đánh giá của 2 đến 3 sản phẩm cạnh nhau.',
+        ]);
+    }
+
+    /**
      * Chi tiết sản phẩm theo slug
      * Nhóm variants theo color và version_spec
      */

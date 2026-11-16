@@ -149,6 +149,17 @@
                     </svg>
                 </button>
 
+                <!-- Yêu thích -->
+                <a href="/yeu-thich"
+                   class="relative p-2 text-zinc-400 hover:text-accent-400 rounded-lg hover:bg-white/5 transition-colors duration-200"
+                   aria-label="Sản phẩm yêu thích">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <?php $wishN = count($_SESSION['wishlist'] ?? []); ?>
+                    <span id="wish-badge" class="<?= $wishN > 0 ? '' : 'hidden' ?> absolute -top-1 -right-1 min-w-[20px] h-5 flex items-center justify-center bg-accent-500 text-on text-[11px] font-bold rounded-full px-1 leading-none"><?= $wishN ?></span>
+                </a>
+
                 <!-- Giỏ hàng -->
                 <a href="/gio-hang"
                    class="relative p-2 text-zinc-400 hover:text-accent-400 rounded-lg hover:bg-white/5
@@ -161,9 +172,9 @@
                     <!-- Badge số lượng sản phẩm trong giỏ -->
                     <span id="cart-badge"
                           class="<?php echo ($cartBadgeCount > 0) ? '' : 'hidden'; ?>
-                                 absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center
+                                 absolute -top-1 -right-1 min-w-[20px] h-5 flex items-center justify-center
                                  bg-accent-500
-                                 text-on text-[10px] font-bold rounded-full px-1 leading-none">
+                                 text-on text-[11px] font-bold rounded-full px-1 leading-none">
                         <?php echo $cartBadgeCount; ?>
                     </span>
                 </a>
@@ -340,7 +351,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0Z"/>
             </svg>
-            <input id="spotlight-input"
+            <input id="spotlight-input" aria-label="Tìm sản phẩm, thương hiệu"
                    type="text"
                    placeholder="Tìm sản phẩm, thương hiệu..."
                    autocomplete="off"

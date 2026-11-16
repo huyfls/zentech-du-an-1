@@ -280,7 +280,7 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
                     <div class="flex items-center rounded-xl border border-zinc-700 bg-zinc-800 overflow-hidden h-12 w-fit">
                         <button type="button" onclick="changeQty(-1)"
                                 class="px-4 h-full text-zinc-400 hover:text-accent-400 hover:bg-zinc-700 transition-colors text-lg font-bold">−</button>
-                        <input type="number" name="quantity" id="qty-input"
+                        <input type="number" name="quantity" id="qty-input" aria-label="Số lượng"
                                value="1" min="1" max="<?= $firstVariant['stock_qty'] ?? 99 ?>"
                                class="w-14 h-full bg-transparent text-center text-white font-semibold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         <button type="button" onclick="changeQty(1)"
@@ -306,6 +306,12 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
                         </svg>
                     </button>
                 </div>
+
+                <!-- So sánh -->
+                <button type="button" data-compare="<?= (int) $product['id'] ?>" data-name="<?= e($product['name']) ?>" data-img="<?= e($mainImage ?? '') ?>" aria-pressed="false"
+                        class="mt-3 w-full h-11 rounded-xl border border-zinc-700 text-zinc-300 hover:border-accent-500/50 hover:text-accent-400 font-medium transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12M8 7l3-3M8 7l3 3M16 17H4m12 0l-3-3m3 3l-3 3"/></svg><span>So sánh</span>
+                </button>
 
                 <!-- Nút Mua ngay -->
                 <button type="submit" name="action" value="buy_now"
@@ -693,6 +699,7 @@ async function toggleWishlist() {
         const data = await res.json();
         if (!data.success) throw new Error(data.message);
         paintWishlist(data.wished);
+        if (window.ZenTechApp) ZenTechApp.setWishBadge(data.count);
         ZenTechApp.showToast(data.wished ? 'Đã thêm vào yêu thích' : 'Đã bỏ khỏi yêu thích', 'success');
     } catch (e) {
         ZenTechApp.showToast('Không cập nhật được yêu thích, vui lòng thử lại.', 'error');

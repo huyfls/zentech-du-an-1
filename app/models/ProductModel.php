@@ -52,6 +52,35 @@ class ProductModel extends BaseModel
         return $stmt->fetchAll();
     }
 
+    /** Sản phẩm theo danh sách id (cùng dạng dữ liệu với thẻ sản phẩm), giữ đúng thứ tự $ids. */
+    public function getByIds(array $ids): array
+    {
+        $ids = array_values(array_unique(array_filter(array_map('intval', $ids), fn($i) => $i > 0)));
+        if (!$ids) return [];
+        $in = implode(',', array_fill(0, count($ids), '?'));
+        $rows = $this->rawQuery("
+            SELECT p.id, p.name, p.slug, p.thumbnail_url AS thumbnail, p.short_desc,
+                   b.name AS brand_name, b.slug AS brand_slug, c.name AS category_name, c.id AS category_id,
+                   MIN(COALESCE(pv.sale_price, pv.price)) AS min_price,
+                   MIN(pv.price) AS original_price,
+                   MAX(CASE WHEN pv.sale_price IS NOT NULL AND pv.sale_price < pv.price THEN ROUND((1 - pv.sale_price / pv.price) * 100) ELSE 0 END) AS max_discount_pct,
+                   ROUND(COALESCE(AVG(r.rating), 5.0), 1) AS avg_rating,
+                   COUNT(DISTINCT r.id) AS review_count,
+                   COALESCE(SUM(CASE WHEN pv.is_active = 1 THEN pv.stock_qty END), 0) AS total_stock,
+                   GROUP_CONCAT(DISTINCT pv.color ORDER BY pv.color SEPARATOR ', ') AS colors
+            FROM products p
+            INNER JOIN brands b ON b.id = p.brand_id
+            INNER JOIN categories c ON c.id = p.category_id
+            LEFT JOIN product_variants pv ON pv.product_id = p.id AND pv.is_active = 1
+            LEFT JOIN reviews r ON r.product_id = p.id AND r.is_approved = 1
+            WHERE p.is_active = 1 AND p.id IN ($in)
+            GROUP BY p.id, p.name, p.slug, p.thumbnail_url, p.short_desc, b.name, b.slug, c.name, c.id
+        ", $ids);
+        $byId = [];
+        foreach ($rows as $r) $byId[(int) $r['id']] = $r;
+        return array_values(array_filter(array_map(fn($i) => $byId[$i] ?? null, $ids)));
+    }
+
     /**
      * Lấy danh sách sản phẩm mới nhất
      */

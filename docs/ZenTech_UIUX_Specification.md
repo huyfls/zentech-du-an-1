@@ -219,6 +219,8 @@ graph LR
 | Tài khoản | Sửa họ tên và số điện thoại, đổi mật khẩu, sổ địa chỉ (thêm, xóa, đặt mặc định); địa chỉ đã lưu chọn nhanh được ở trang thanh toán |
 | Thanh toán (mã giảm giá) | Ô nhập mã và nút "Áp dụng": xem tiền giảm và tổng mới trước khi đặt hàng; mã sai báo lỗi cụ thể |
 | Chi tiết sản phẩm (đánh giá) | Khách đã nhận hàng mới có form đánh giá (số sao, nhận xét), mỗi sản phẩm một lần; thanh phân bố sao tính từ đánh giá thật |
+| Yêu thích | Trang `/yeu-thich`: lưới sản phẩm đã lưu, bỏ tim thì thẻ biến mất; số lượng hiện trên biểu tượng tim ở header; dùng được cả khi chưa đăng nhập (lưu theo phiên) |
+| So sánh | Chọn tối đa 3 sản phẩm bằng nút "So sánh" trên thẻ hoặc trang chi tiết, thanh nổi ở đáy màn hình dẫn tới `/so-sanh`; bảng cạnh nhau gồm giá, hãng, đánh giá, màu, tồn kho và toàn bộ thông số; dòng khác nhau được tô nền, có ô "Chỉ hiện điểm khác biệt"; cột tên cố định khi cuộn ngang trên điện thoại |
 | Quản trị: mã giảm giá | Bảng mã kèm lượt đã dùng, form tạo mã, bật/tắt mã |
 | Quản trị | Tổng quan, bảng sản phẩm và đơn hàng, menu bên trái (thu thành ngăn kéo trên điện thoại) |
 
@@ -226,11 +228,14 @@ graph LR
 
 ## 6. Khả năng tiếp cận và đáp ứng thiết bị
 
-- Chữ và nút đạt tương phản AA; mọi phần tử tương tác có khung focus rõ.
+- Màu chữ phụ và màu nhấn được chỉnh theo mục tiêu tương phản AA (chưa chạy công cụ đo tự động); mọi phần tử tương tác có khung focus rõ.
 - Cửa sổ bộ lọc dùng thẻ `dialog` gốc của trình duyệt (Esc để đóng, giữ focus trong cửa sổ, trả focus khi đóng).
 - Nút bấm có nhãn đọc được cho trình đọc màn hình (nhãn nút yêu thích, đóng, bỏ lọc).
 - Bố cục kiểm tra ở 375px và 800px, không tràn ngang. Lưới sản phẩm đổi từ 4 cột xuống 2 cột.
 - Chế độ giảm chuyển động của hệ điều hành được tôn trọng.
+- Mọi ô nhập đều có nhãn (kể cả ô số lượng, ô tìm kiếm Ctrl K, ô hỏi ZenBot); mọi nút chỉ có biểu tượng đều có tên đọc được; các trang đăng nhập, đăng ký, quên mật khẩu, 404 có tiêu đề h1 và mô tả meta.
+- Không dùng chữ nhỏ hơn 11px; trên màn hình cảm ứng, liên kết văn bản nhỏ (chân trang, đường dẫn trang, logo) có vùng chạm khoảng 40px.
+- Bảng so sánh dùng `th` có `scope` theo hàng và cột để trình đọc màn hình đọc đúng tiêu đề.
 
 ---
 

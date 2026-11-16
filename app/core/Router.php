@@ -23,6 +23,10 @@ class Router {
         ['GET',  '/search',                    'HomeController',          'search'],
         ['GET',  '/cart/count',                'CartController',          'getCount'],
         ['POST', '/danh-gia',                  'ReviewController',        'add'],
+        ['GET',  '/yeu-thich',                 'WishlistController',      'index'],
+        ['GET',  '/wishlist',                  'WishlistController',      'index'],
+        ['GET',  '/so-sanh',                   'ProductController',       'compare'],
+        ['GET',  '/compare',                   'ProductController',       'compare'],
         ['POST', '/wishlist/toggle',           'WishlistController',      'toggle'],
 
         // Giỏ hàng

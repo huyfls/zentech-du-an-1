@@ -19,7 +19,7 @@
                 <div>
                     <div class="font-bold text-sm text-white flex items-center gap-1.5">
                         <span>ZenBot</span>
-                        <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-accent-500/20 text-accent-400 border border-accent-500/30">AI PRO</span>
+                        <span class="text-[11px] font-mono px-1.5 py-0.2 rounded bg-accent-500/20 text-accent-400 border border-accent-500/30">AI PRO</span>
                     </div>
                     <div class="text-[11px] text-zinc-400">Chuyên gia Gear & Setup</div>
                 </div>
@@ -65,13 +65,13 @@
         <!-- Input Box -->
         <form id="zenbot-form" onsubmit="window.ZenBotWidget.handleSubmit(event)" class="p-3 bg-zinc-950/80 border-t border-zinc-800 flex items-center gap-2 shrink-0">
             <input type="text" 
-                   id="zenbot-input"
+                   id="zenbot-input" aria-label="Câu hỏi cho ZenBot"
                    placeholder="Hỏi ZenBot về chuột, phím, tai nghe..." 
                    autocomplete="off"
                    class="flex-1 bg-zinc-900 border border-zinc-700 focus:border-accent-400 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
             
             <button type="submit" 
-                    id="zenbot-send-btn"
+                    id="zenbot-send-btn" aria-label="Gửi câu hỏi"
                     class="w-9 h-9 rounded-xl bg-accent-500 hover:bg-accent-600 text-on flex items-center justify-center shrink-0 transition shadow-md ">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>

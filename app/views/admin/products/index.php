@@ -99,7 +99,7 @@
                                 </td>
                                 <td class="py-3 px-4 text-zinc-300"><?= htmlspecialchars($p['category_name']) ?></td>
                                 <td class="py-3 px-4">
-                                    <span class="px-2 py-0.5 rounded-full bg-accent-500/10 text-accent-400 text-[10px] font-bold border border-accent-500/20">
+                                    <span class="px-2 py-0.5 rounded-full bg-accent-500/10 text-accent-400 text-[11px] font-bold border border-accent-500/20">
                                         <?= htmlspecialchars($p['brand_name']) ?>
                                     </span>
                                 </td>
@@ -114,16 +114,16 @@
                                         <?= (int)($p['total_stock'] ?? 0) ?>
                                     </span>
                                     <?php if ((int) $p['out_variants'] > 0): ?>
-                                        <div class="mt-1 whitespace-nowrap text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 inline-block">Hết hàng <?= (int) $p['out_variants'] ?>/<?= (int) $p['variant_count'] ?> biến thể</div>
+                                        <div class="mt-1 whitespace-nowrap text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 inline-block">Hết hàng <?= (int) $p['out_variants'] ?>/<?= (int) $p['variant_count'] ?> biến thể</div>
                                     <?php elseif ((int) $p['low_variants'] > 0): ?>
-                                        <div class="mt-1 whitespace-nowrap text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 inline-block">Sắp hết <?= (int) $p['low_variants'] ?>/<?= (int) $p['variant_count'] ?> biến thể</div>
+                                        <div class="mt-1 whitespace-nowrap text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 inline-block">Sắp hết <?= (int) $p['low_variants'] ?>/<?= (int) $p['variant_count'] ?> biến thể</div>
                                     <?php endif; ?>
                                 </td>
                                 <td class="py-3 px-4">
                                     <?php if ($p['is_active']): ?>
-                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">Đang bán</span>
+                                        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">Đang bán</span>
                                     <?php else: ?>
-                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-500 border border-zinc-700">Ngừng bán</span>
+                                        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-500 border border-zinc-700">Ngừng bán</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">

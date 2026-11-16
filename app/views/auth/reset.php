@@ -16,8 +16,10 @@ unset($_SESSION['flash']);
     <script src="/assets/js/tailwind-theme.js"></script>
     <link rel="stylesheet" href="/assets/css/custom.css">
     
+    <meta name="description" content="Đặt mật khẩu mới – ZenTech, gaming gear chính hãng.">
 </head>
 <body class="min-h-full flex items-center justify-center p-4">
+    <h1 class="sr-only">Đặt mật khẩu mới</h1>
 
     <div class="w-full max-w-md">
         <!-- Logo -->

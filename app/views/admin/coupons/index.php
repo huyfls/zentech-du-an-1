@@ -24,7 +24,7 @@ $in = 'w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded
 
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-x-auto">
         <table class="w-full text-xs">
-            <thead><tr class="text-left text-[10px] uppercase text-zinc-500">
+            <thead><tr class="text-left text-[11px] uppercase text-zinc-500">
                 <th class="px-5 py-3">Mã</th><th class="px-3">Giảm</th><th class="px-3">Đơn tối thiểu</th><th class="px-3">Đã dùng</th><th class="px-3">Hiệu lực</th><th class="px-3">Trạng thái</th><th class="px-5"></th>
             </tr></thead>
             <tbody>
