@@ -15,7 +15,7 @@
     </nav>
 
     <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-8">
-        Lịch Sử Mua Hàng
+        Lịch sử mua hàng
     </h1>
 
     <?php if (empty($orders)): ?>

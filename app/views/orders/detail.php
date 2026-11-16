@@ -81,7 +81,7 @@ $statusMap = [
 
     <!-- Items List -->
     <div class="bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-6">
-        <h2 class="text-sm font-bold text-white uppercase tracking-wider pb-4 border-b border-zinc-800 mb-4">
+        <h2 class="text-base font-semibold text-white pb-4 border-b border-zinc-800 mb-4">
             Danh Sách Sản Phẩm
         </h2>
 

@@ -1,14 +1,14 @@
 <?php
 /** VIEW: Tài khoản của tôi. Biến: $user, $addresses */
 $in = 'w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none';
-$lb = 'block text-xs font-semibold text-zinc-300 mb-1.5';
+$lb = 'block text-sm font-medium text-zinc-300 mb-1.5';
 $card = 'bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 space-y-4';
 ?>
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
     <h1 class="text-3xl font-black text-white">Tài khoản của tôi</h1>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <form action="/tai-khoan/thong-tin" method="POST" class="<?= $card ?>"><?= Csrf::field() ?>
-            <h2 class="text-sm font-bold text-white uppercase tracking-wider">Thông tin cá nhân</h2>
+            <h2 class="text-base font-semibold text-white">Thông tin cá nhân</h2>
             <div><label class="<?= $lb ?>">Email (không đổi được)</label><input value="<?= e($user['email'] ?? '') ?>" disabled class="<?= $in ?> opacity-60"></div>
             <div><label class="<?= $lb ?>" for="full_name">Họ và tên</label><input id="full_name" name="full_name" required minlength="2" value="<?= e($user['full_name'] ?? '') ?>" class="<?= $in ?>"></div>
             <div><label class="<?= $lb ?>" for="phone">Số điện thoại</label><input id="phone" name="phone" value="<?= e($user['phone'] ?? '') ?>" placeholder="0912345678" class="<?= $in ?>"></div>
@@ -16,7 +16,7 @@ $card = 'bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 space-y-4';
         </form>
 
         <form action="/tai-khoan/mat-khau" method="POST" class="<?= $card ?>"><?= Csrf::field() ?>
-            <h2 class="text-sm font-bold text-white uppercase tracking-wider">Đổi mật khẩu</h2>
+            <h2 class="text-base font-semibold text-white">Đổi mật khẩu</h2>
             <div><label class="<?= $lb ?>" for="cp">Mật khẩu hiện tại</label><input id="cp" type="password" name="current_password" required autocomplete="current-password" class="<?= $in ?>"></div>
             <div><label class="<?= $lb ?>" for="np">Mật khẩu mới (từ 8 ký tự)</label><input id="np" type="password" name="new_password" required minlength="8" autocomplete="new-password" class="<?= $in ?>"></div>
             <div><label class="<?= $lb ?>" for="cf">Nhập lại mật khẩu mới</label><input id="cf" type="password" name="confirm_password" required autocomplete="new-password" class="<?= $in ?>"></div>
@@ -25,7 +25,7 @@ $card = 'bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 space-y-4';
     </div>
 
     <div class="<?= $card ?>">
-        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Sổ địa chỉ</h2>
+        <h2 class="text-base font-semibold text-white">Sổ địa chỉ</h2>
         <?php if (!$addresses): ?><p class="text-sm text-zinc-500">Bạn chưa lưu địa chỉ nào. Địa chỉ lưu ở đây sẽ được chọn nhanh khi thanh toán.</p><?php endif; ?>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <?php foreach ($addresses as $a): ?>

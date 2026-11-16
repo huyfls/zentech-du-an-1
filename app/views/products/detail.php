@@ -157,10 +157,10 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
             </div>
 
             <!-- Dải thumbnail -->
-            <div class="grid grid-cols-5 gap-2">
+            <div class="flex gap-2 overflow-x-auto pb-1 snap-x">
                 <?php foreach ($images as $idx => $imgUrl): ?>
                 <button onclick="setMainImage('<?= htmlspecialchars($imgUrl) ?>', this)"
-                        class="thumb-btn overflow-hidden rounded-xl border border-zinc-700 bg-zinc-800 aspect-square transition-all hover:border-accent-500/50 <?= $idx === 0 ? 'thumb-active' : '' ?>">
+                        class="thumb-btn flex-none w-[18.5%] min-w-[64px] snap-start overflow-hidden rounded-xl border border-zinc-700 bg-zinc-800 aspect-square transition-all hover:border-accent-500/50 <?= $idx === 0 ? 'thumb-active' : '' ?>">
                     <img src="<?= htmlspecialchars($imgUrl) ?>"
                          alt="Ảnh <?= $idx + 1 ?>"
                          class="w-full h-full object-contain p-1">
@@ -184,6 +184,7 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
                 <?= htmlspecialchars($product['name']) ?>
             </h1>
 
+            <?php if ((int) ($product['review_count'] ?? 0) > 0): ?>
             <!-- Rating -->
             <div class="flex items-center gap-3">
                 <div class="flex items-center gap-0.5">
@@ -200,6 +201,9 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
                 <span class="text-accent-400 font-semibold"><?= number_format($product['avg_rating'] ?? 0, 1) ?></span>
                 <span class="text-zinc-500 text-sm">(<?= number_format($product['review_count'] ?? 0) ?> đánh giá)</span>
             </div>
+            <?php else: ?>
+            <a href="#reviews" class="text-sm text-zinc-500 hover:text-accent-400">Chưa có đánh giá</a>
+            <?php endif; ?>
 
             <!-- Giá -->
             <div class="flex items-end gap-3 flex-wrap">
@@ -355,7 +359,7 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
 
         <!-- Tab: Thông số kỹ thuật -->
         <div id="tab-specs" class="tab-panel active">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                 <?php if (empty($specs)): ?>
                 <p class="text-sm text-zinc-500 md:col-span-2 py-6 text-center">Thông số kỹ thuật đang được cập nhật.</p>
                 <?php endif; ?>
@@ -401,10 +405,10 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Tổng quan rating -->
                 <div class="bg-zinc-800/60 border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center gap-3">
-                    <div class="text-6xl font-extrabold text-accent-400"><?= number_format($product['avg_rating'] ?? 0, 1) ?></div>
+                    <div class="text-6xl font-extrabold text-accent-400"><?= (int) ($product['review_count'] ?? 0) > 0 ? number_format($product['avg_rating'] ?? 0, 1) : '–' ?></div>
                     <div class="flex gap-1">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <svg class="w-6 h-6 <?= $i <= round($product['avg_rating'] ?? 0) ? 'text-yellow-400' : 'text-zinc-600' ?>"
+                        <svg class="w-6 h-6 <?= $i <= ((int) ($product['review_count'] ?? 0) > 0 ? round($product['avg_rating'] ?? 0) : 0) ? 'text-yellow-400' : 'text-zinc-600' ?>"
                              fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                         </svg>

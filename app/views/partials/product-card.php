@@ -17,9 +17,6 @@ $thumbnail = !empty($product['thumbnail']) ? $product['thumbnail'] : (!empty($pr
     <a href="/san-pham/<?= e($product['slug'] ?? '') ?>" class="stage relative block aspect-square" tabindex="-1" aria-hidden="true">
         <img src="<?= e($thumbnail) ?>" alt="" loading="lazy"
              class="w-full h-full object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-[1.05]">
-        <?php if (!empty($discountPct) && $discountPct > 0): ?>
-            <span class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-red-500 text-on">Giảm <?= (int) $discountPct ?>%</span>
-        <?php endif; ?>
     </a>
 
     <div class="flex flex-1 flex-col pt-4 px-1">
@@ -31,6 +28,9 @@ $thumbnail = !empty($product['thumbnail']) ? $product['thumbnail'] : (!empty($pr
             <span class="text-[15px] font-semibold text-zinc-100 tabular-nums">Từ <?= number_format($minPrice, 0, ',', '.') ?>₫</span>
             <?php if (!empty($origPrice) && $origPrice > $minPrice): ?>
                 <span class="text-sm text-zinc-500 line-through tabular-nums"><?= number_format($origPrice, 0, ',', '.') ?>₫</span>
+            <?php endif; ?>
+            <?php if (!empty($discountPct) && $discountPct > 0): ?>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-500/10 text-red-500">Giảm <?= (int) $discountPct ?>%</span>
             <?php endif; ?>
         </div>
         <?php if (!empty($product['review_count'])): ?>

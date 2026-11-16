@@ -39,7 +39,7 @@ $heroDisc = $hero ? (int) ($hero['max_discount_pct'] ?? 0) : 0;
                      class="max-h-full max-w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.04]">
             </div>
             <div class="flex flex-wrap items-end justify-between gap-3 p-5 sm:p-7">
-                <div>
+                <div class="min-w-0 flex-1 basis-56">
                     <p class="text-sm text-zinc-400"><?= e($hero['brand_name']) ?></p>
                     <h2 class="text-lg sm:text-xl font-semibold text-zinc-100"><?= e($hero['name']) ?></h2>
                     <p class="mt-0.5 text-zinc-300 tabular-nums">

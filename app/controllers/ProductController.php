@@ -108,7 +108,7 @@ class ProductController extends BaseController
         $relatedProducts = $this->productModel->getRelated(
             $product['category_id'],
             $product['id'],
-            6
+            4
         );
 
         $this->render('products/detail', compact(

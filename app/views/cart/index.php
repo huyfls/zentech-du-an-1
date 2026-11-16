@@ -20,7 +20,7 @@ $total = $subtotal + $shippingFee;
     </nav>
 
     <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-8 flex items-center gap-3">
-        <span>Giỏ Hàng</span>
+        <span>Giỏ hàng</span>
         <span class="text-sm font-semibold px-2.5 py-0.5 rounded-full bg-accent-500/20 text-accent-400 border border-accent-500/30">
             <?= $itemCount ?> sản phẩm
         </span>
@@ -137,8 +137,8 @@ $total = $subtotal + $shippingFee;
             <!-- RIGHT: SUMMARY & CHECKOUT (4 cols) -->
             <div class="lg:col-span-4">
                 <div class="bg-zinc-900/70 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 sticky top-24 space-y-6">
-                    <h2 class="text-base font-bold text-white uppercase tracking-wider pb-3 border-b border-zinc-800">
-                        Tóm Tắt Đơn Hàng
+                    <h2 class="text-base font-semibold text-white pb-3 border-b border-zinc-800">
+                        Tóm tắt đơn hàng
                     </h2>
 
                     <div class="space-y-3 text-xs">

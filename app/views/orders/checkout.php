@@ -23,7 +23,7 @@ unset($_SESSION['flash']);
     </nav>
 
     <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-8">
-        Xác Nhận & Thanh Toán Đơn Hàng
+        Thanh toán
     </h1>
 
     <?php if (!empty($flash['errors'])): ?>
@@ -49,15 +49,15 @@ unset($_SESSION['flash']);
             
             <!-- 1. Thông tin người nhận -->
             <div class="bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 space-y-4">
-                <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-zinc-800">
+                <h2 class="text-base font-semibold text-white flex items-center gap-2 pb-3 border-b border-zinc-800">
                     <span class="w-5 h-5 rounded-full bg-accent-500/20 text-accent-400 flex items-center justify-center text-xs">1</span>
-                    Thông Tin Giao Hàng
+                    Thông tin giao hàng
                 </h2>
 
                 <?php if (!empty($addresses)): ?>
                 <div>
-                    <label class="block text-xs font-semibold text-zinc-300 mb-1.5" for="saved-address">Chọn nhanh địa chỉ đã lưu</label>
-                    <select id="saved-address" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-xs text-white">
+                    <label class="block text-sm font-medium text-zinc-300 mb-1.5" for="saved-address">Chọn nhanh địa chỉ đã lưu</label>
+                    <select id="saved-address" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-sm text-white">
                         <option value="">-- Nhập địa chỉ mới --</option>
                         <?php foreach ($addresses as $a): ?>
                         <option value="1" data-name="<?= e($a['receiver_name']) ?>" data-phone="<?= e($a['phone']) ?>" data-addr="<?= e($a['street'] . ', ' . $a['ward'] . ', ' . $a['district'] . ', ' . $a['province']) ?>"><?= e($a['receiver_name'] . ' – ' . $a['street'] . ', ' . $a['province']) ?></option>
@@ -68,18 +68,18 @@ unset($_SESSION['flash']);
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Họ và tên người nhận *</label>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1.5">Họ và tên người nhận *</label>
                         <input type="text" 
                                name="receiver_name" 
                                required 
                                placeholder="VD: Nguyễn Văn A"
                                autocomplete="name"
                                value="<?= e($flash['old']['receiver_name'] ?? ($_SESSION['user_name'] ?? '')) ?>"
-                               class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+                               class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Số điện thoại *</label>
+                        <label class="block text-sm font-medium text-zinc-300 mb-1.5">Số điện thoại *</label>
                         <input type="tel" 
                                name="receiver_phone" 
                                required 
@@ -87,34 +87,34 @@ unset($_SESSION['flash']);
                                pattern="0[0-9]{9}"
                                title="10 chữ số, bắt đầu bằng 0" autocomplete="tel" inputmode="numeric"
                                value="<?= e($flash['old']['receiver_phone'] ?? '') ?>"
-                               class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+                               class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Địa chỉ nhận hàng chi tiết *</label>
+                    <label class="block text-sm font-medium text-zinc-300 mb-1.5">Địa chỉ nhận hàng chi tiết *</label>
                     <input type="text" 
                            name="shipping_address" 
                            required autocomplete="street-address"
                            value="<?= e($flash['old']['shipping_address'] ?? '') ?>"
                            placeholder="Số nhà, tên đường, Phường/Xã, Quận/Huyện, Tỉnh/TP"
-                           class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+                           class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Ghi chú giao hàng (nếu có)</label>
+                    <label class="block text-sm font-medium text-zinc-300 mb-1.5">Ghi chú giao hàng (nếu có)</label>
                     <textarea name="note" 
                               rows="2" 
                               placeholder="Giao giờ hành chính, gọi trước khi giao..."
-                              class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2 text-xs text-white outline-none"><?= e($flash['old']['note'] ?? '') ?></textarea>
+                              class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2 text-sm text-white outline-none"><?= e($flash['old']['note'] ?? '') ?></textarea>
                 </div>
             </div>
 
             <!-- 2. Phương thức thanh toán -->
             <div class="bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 space-y-4">
-                <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2 pb-3 border-b border-zinc-800">
+                <h2 class="text-base font-semibold text-white flex items-center gap-2 pb-3 border-b border-zinc-800">
                     <span class="w-5 h-5 rounded-full bg-ember-500/20 text-ember-400 flex items-center justify-center text-xs">2</span>
-                    Phương Thức Thanh Toán
+                    Phương thức thanh toán
                 </h2>
 
                 <div class="space-y-3">
@@ -163,8 +163,8 @@ unset($_SESSION['flash']);
         <!-- RIGHT: TÓM TẮT ĐƠN HÀNG (5 cols) -->
         <div class="lg:col-span-5">
             <div class="bg-zinc-900/70 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 sticky top-24 space-y-6">
-                <h2 class="text-sm font-bold text-white uppercase tracking-wider pb-3 border-b border-zinc-800 flex justify-between items-center">
-                    <span>Đơn Hàng Của Bạn</span>
+                <h2 class="text-base font-semibold text-white pb-3 border-b border-zinc-800 flex justify-between items-center">
+                    <span>Đơn hàng của bạn</span>
                     <a href="/cart" class="text-xs text-accent-400 hover:underline">Sửa</a>
                 </h2>
 
@@ -189,11 +189,11 @@ unset($_SESSION['flash']);
 
                 <!-- Mã giảm giá -->
                 <div>
-                    <label class="block text-xs font-semibold text-zinc-300 mb-1.5" for="coupon_code">Mã giảm giá (nếu có)</label>
+                    <label class="block text-sm font-medium text-zinc-300 mb-1.5" for="coupon_code">Mã giảm giá (nếu có)</label>
                     <div class="flex gap-2">
                         <input type="text" id="coupon_code" name="coupon_code" form="checkout-form" maxlength="50"
                                value="<?= e($flash['old']['coupon_code'] ?? '') ?>" placeholder="VD: ZENTECH10"
-                               class="flex-1 min-w-0 bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none uppercase">
+                               class="flex-1 min-w-0 bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none uppercase">
                         <button type="button" id="coupon-apply" class="px-4 rounded-xl border border-zinc-700 text-xs font-semibold text-zinc-200 hover:border-accent-400">Áp dụng</button>
                     </div>
                     <p id="coupon-msg" class="text-[11px] text-zinc-500 mt-1" role="status">Bấm "Áp dụng" để xem số tiền giảm trước khi đặt hàng.</p>
