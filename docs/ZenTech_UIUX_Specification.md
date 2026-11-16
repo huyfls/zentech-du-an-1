@@ -76,6 +76,10 @@ Tiêu đề dùng khoảng cách chữ hẹp hơn (-0,025em) và tự cân bằn
 ### 3.1 Thẻ sản phẩm
 Vùng ảnh vuông nền `#f5f5f7`, ảnh trộn màu để nền trắng hòa vào. Bên dưới là tên hãng (chữ phụ), tên sản phẩm (tối đa 2 dòng), giá bắt đầu bằng "Từ" kèm giá gốc gạch ngang nếu đang giảm. Nhãn "Giảm N%" màu đỏ nằm góc ảnh. Cả thẻ là một liên kết duy nhất.
 
+Ảnh trên thẻ là ảnh sản phẩm trơn (nền trắng hoặc trong suốt), không dùng ảnh quảng cáo có sẵn logo và biểu tượng. Nhãn giảm giá nằm cạnh giá. Thẻ có nút tròn "+" để thêm nhanh phiên bản còn hàng rẻ nhất vào giỏ mà không rời trang (hiện khi rê chuột trên máy tính, luôn hiện trên điện thoại).
+
+Trên điện thoại, trang chi tiết có thanh cố định ở đáy màn hình với hai nút "Thêm vào giỏ" và "Mua ngay".
+
 ### 3.2 Bộ lọc dạng cửa sổ (pop-up)
 - Nút "Bộ lọc" đặt phía trên lưới sản phẩm, có số đếm bộ lọc đang bật.
 - Cửa sổ chứa ba nhóm: **Loại sản phẩm** và **Thương hiệu** (chọn nhiều cùng lúc, dạng nút bấm), **Khoảng giá** (5 nút chọn nhanh và hai ô nhập tay).

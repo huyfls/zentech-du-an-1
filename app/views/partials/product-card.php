@@ -14,10 +14,18 @@ $thumbnail = !empty($product['thumbnail']) ? $product['thumbnail'] : (!empty($pr
 ?>
 
 <article class="group relative flex flex-col">
+    <div class="relative">
     <a href="/san-pham/<?= e($product['slug'] ?? '') ?>" class="stage relative block aspect-square" tabindex="-1" aria-hidden="true">
         <img src="<?= e($thumbnail) ?>" alt="" loading="lazy"
              class="w-full h-full object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-[1.05]">
     </a>
+    <?php if (!empty($product['id'])): ?>
+    <button type="button" data-quick-add="<?= (int) $product['id'] ?>" aria-label="Thêm <?= e($product['name'] ?? 'sản phẩm') ?> vào giỏ hàng" title="Thêm vào giỏ hàng"
+            class="absolute bottom-3 right-3 z-10 w-11 h-11 rounded-full bg-accent-500 text-on flex items-center justify-center shadow-lg transition duration-200 hover:scale-110 active:scale-95 lg:opacity-0 lg:translate-y-1 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 focus-visible:opacity-100 focus-visible:translate-y-0">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <?php endif; ?>
+    </div>
 
     <div class="flex flex-1 flex-col pt-4 px-1">
         <p class="text-xs font-medium text-zinc-400"><?= e($product['brand_name'] ?? 'Gaming Gear') ?></p>

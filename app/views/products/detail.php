@@ -705,6 +705,17 @@ function formatPrice(price) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
 }
 
+</script>
+<div id="buybar" class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-zinc-950 border-t border-zinc-800 px-4 py-3 flex gap-3" style="padding-bottom:max(.75rem,env(safe-area-inset-bottom))">
+    <button type="button" data-buybar="add_cart" class="flex-1 h-12 rounded-xl bg-accent-500 text-on font-semibold">Thêm vào giỏ</button>
+    <button type="button" data-buybar="buy_now" class="flex-1 h-12 rounded-xl border border-accent-500/40 text-accent-400 font-semibold">Mua ngay</button>
+</div>
+<style>@media (max-width:1023px){body{padding-bottom:5rem}#zenbot-widget-container{bottom:5.75rem}}</style>
+<script>
+document.querySelectorAll('[data-buybar]').forEach(b => b.addEventListener('click', () => {
+    const f = document.getElementById('add-to-cart-form');
+    f.requestSubmit(f.querySelector('button[name="action"][value="' + b.dataset.buybar + '"]'));
+}));
 // ── Thêm vào giỏ / Mua ngay (AJAX, không rời trang) ──
 document.getElementById('add-to-cart-form').addEventListener('submit', async function (e) {
     e.preventDefault();

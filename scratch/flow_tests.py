@@ -200,6 +200,20 @@ check("Chuyển động", "Trang khách nạp motion.css và motion.js", "/asset
 check("Chuyển động", "Tệp motion được phục vụ (200)", req(cli(), "GET", "/assets/js/motion.js")[0] == 200 and req(cli(), "GET", "/assets/css/motion.css")[0] == 200)
 check("Chuyển động", "Hỗ trợ giảm chuyển động (prefers-reduced-motion)", "prefers-reduced-motion" in req(cli(), "GET", "/assets/css/motion.css")[1] and "prefers-reduced-motion" in req(cli(), "GET", "/assets/js/motion.js")[1])
 check("Chuyển động", "Trang admin không nạp hiệu ứng nền", "motion.js" not in req(ad, "GET", "/admin")[1])
+# Thêm nhanh vào giỏ từ thẻ sản phẩm, thanh mua hàng trên điện thoại
+cq = cli(); Hq = {"X-CSRF-Token": tok(cq, "/"), "X-Requested-With": "XMLHttpRequest"}
+qp = sql("select product_id from product_variants where is_active=1 and stock_qty>0 group by product_id having count(*)>1 limit 1")
+cheap = sql(f"select id from product_variants where product_id={qp} and is_active=1 and stock_qty>0 order by coalesce(sale_price,price), id limit 1")
+s_, b_, _ = req(cq, "POST", "/cart/add", {"product_id": qp, "quantity": 1}, Hq)
+check("Thêm nhanh", "Chỉ gửi product_id: thêm phiên bản còn hàng rẻ nhất", s_ == 200 and json.loads(b_)["success"] is True and f'id="cart-row-{cheap}"' in req(cq, "GET", "/gio-hang")[1])
+sql("insert into products(category_id,brand_id,name,slug,sku,base_price,is_active) values(6,1,'ZZ Flow Het','zz-flow-het','ZZH',100000,1)")
+hp = sql("select id from products where slug='zz-flow-het'")
+sql(f"insert into product_variants(product_id,sku,price,stock_qty,is_active) values({hp},'ZZH-1',100000,0,1)")
+s_, b_, _ = req(cq, "POST", "/cart/add", {"product_id": hp, "quantity": 1}, Hq)
+check("Thêm nhanh", "Sản phẩm hết hàng: báo lỗi, không thêm", "hết hàng" in json.loads(b_)["message"] and json.loads(b_)["success"] is False)
+b_ = req(cli(), "GET", "/san-pham")[1]
+check("Thêm nhanh", "Thẻ sản phẩm có nút thêm vào giỏ kèm nhãn cho trình đọc màn hình", b_.count("data-quick-add=") >= 12 and 'aria-label="Thêm ' in b_)
+check("Thêm nhanh", "Trang chi tiết có thanh mua hàng cho điện thoại", 'id="buybar"' in req(cli(), "GET", f"/san-pham/{slug3}")[1])
 # Admin: quản lý mã giảm giá
 s, b, _ = req(ad, "GET", "/admin/coupons"); check("Admin mã giảm giá", "Xem danh sách mã", s == 200 and "ZENTECH10" in b)
 t = tok(ad, "/admin/coupons")

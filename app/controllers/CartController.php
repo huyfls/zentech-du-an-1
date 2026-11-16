@@ -60,6 +60,18 @@ class CartController extends BaseController
         $variantId = (int) $this->getPost('variant_id', 0);
         $qty       = (int) $this->getPost('quantity', 1);
 
+        // Thêm nhanh từ thẻ sản phẩm: chỉ gửi product_id -> lấy phiên bản còn hàng rẻ nhất
+        $productId = (int) $this->getPost('product_id', 0);
+        if ($variantId <= 0 && $productId > 0) {
+            $st = $this->pdo->prepare('SELECT id FROM product_variants WHERE product_id = ? AND is_active = 1 AND stock_qty > 0 ORDER BY COALESCE(sale_price, price), id LIMIT 1');
+            $st->execute([$productId]);
+            $variantId = (int) $st->fetchColumn();
+            if ($variantId <= 0) {
+                $this->renderJson(['success' => false, 'message' => 'Sản phẩm đã hết hàng.']);
+                return;
+            }
+        }
+
         if ($variantId <= 0 || $qty <= 0) {
             $this->renderJson(['success' => false, 'message' => 'Dữ liệu không hợp lệ.']);
             return;

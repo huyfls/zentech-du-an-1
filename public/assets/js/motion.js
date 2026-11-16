@@ -17,13 +17,13 @@
     var cx = cv.getContext('2d'), W = 0, H = 0, dpr = Math.min(2, window.devicePixelRatio || 1), bubbles = [], drops = [], lastY = window.scrollY, lastT = 0;
     function size() { W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0); }
     function spawn(b, anywhere) {
-        var r = 16 + Math.pow(Math.random(), 1.8) * 70;
+        var r = (16 + Math.pow(Math.random(), 1.8) * 70) * (W < 640 ? .55 : 1);   // màn hình nhỏ: bóng nhỏ hơn để không che chữ
         b = b || {}; b.r = r; b.z = r / 86;                        // z: bóng to ở "gần" nên trôi theo cuộn nhiều hơn
         b.x = Math.random() * W; b.y = anywhere ? Math.random() * H : H + r + Math.random() * 200;
         b.vx = 0; b.vy = -(10 + Math.random() * 22) * (.5 + b.z); b.ph = Math.random() * 6.28; b.sw = 14 + Math.random() * 26; b.hue = Math.random() * 360; b.wob = Math.random() * 6.28;
         return b;
     }
-    function init() { size(); var n = Math.round(Math.min(34, Math.max(14, W / 48))); bubbles = []; for (var i = 0; i < n; i++) bubbles.push(spawn(null, true)); }
+    function init() { size(); var n = W < 640 ? 7 : Math.round(Math.min(34, Math.max(14, W / 48))); bubbles = []; for (var i = 0; i < n; i++) bubbles.push(spawn(null, true)); }
     function draw(b, t) {
         var wob = 1 + Math.sin(t / 700 + b.wob) * .05, rx = b.r * wob, ry = b.r / wob, h = (b.hue + t / 40) % 360;
         cx.save(); cx.translate(b.x, b.y);

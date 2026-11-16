@@ -88,6 +88,31 @@ const ZenTechApp = (function() {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     }
 
+    // Thêm nhanh vào giỏ từ thẻ sản phẩm (nút có data-quick-add="<product id>")
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-quick-add]');
+        if (!btn || btn.disabled) return;
+        e.preventDefault();
+        btn.disabled = true;
+        try {
+            const res = await fetch('/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ product_id: btn.dataset.quickAdd, quantity: 1 }),
+            });
+            const data = await res.json();
+            showToast(data.message || (data.success ? 'Đã thêm vào giỏ hàng!' : 'Không thể thêm vào giỏ hàng.'), data.success ? 'success' : 'error');
+            if (data.success) {
+                updateCartBadge();
+                if (window.ztFly) ztFly(btn.parentElement.querySelector('img'));
+            }
+        } catch (err) {
+            showToast('Lỗi kết nối máy chủ, vui lòng thử lại.', 'error');
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
     return {
         updateCartBadge,
         showToast,
