@@ -122,6 +122,19 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
         ::-webkit-scrollbar-track { background: #f5f5f7; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
     </style>
+<!-- Thanh con cố định: tên sản phẩm, đường tắt tới từng phần, nút Mua -->
+<div id="localnav" role="navigation" aria-label="Trong trang sản phẩm">
+    <div class="inner">
+        <span class="name"><?= e($product['name']) ?></span>
+        <div class="links">
+            <a href="#overview" data-spy="overview">Tổng quan</a>
+            <a href="#tabs" data-tab-go="specs" data-spy="tabs">Thông số</a>
+            <a href="#tabs" data-tab-go="reviews" data-spy="tabs-r">Đánh giá</a>
+            <?php if (!empty($relatedProducts)): ?><a href="#related" data-spy="related">Sản phẩm liên quan</a><?php endif; ?>
+        </div>
+        <a href="#add-to-cart-form" class="buy" data-buy>Mua</a>
+    </div>
+</div>
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- ── BREADCRUMB ───────────────────────────────────────── -->
@@ -138,7 +151,7 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
     <!-- ══════════════════════════════════════════════════════
          SECTION 1: 2 CỘT — ẢNH (TRÁI) + THÔNG TIN (PHẢI)
          ══════════════════════════════════════════════════════ -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14">
+    <div id="overview" class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14">
 
         <!-- ── CỘT TRÁI: GALLERY ÀNH ─────────────────────── -->
         <div class="space-y-4">
@@ -344,7 +357,7 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
     <!-- ══════════════════════════════════════════════════════
          SECTION 2: TABS — Thông số | Mô tả | Đánh giá
          ══════════════════════════════════════════════════════ -->
-    <div class="mb-14">
+    <div id="tabs" class="mb-14">
         <!-- Tab buttons -->
         <div class="flex gap-0 border-b border-zinc-700 mb-6">
             <?php
@@ -513,11 +526,8 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
     <!-- ══════════════════════════════════════════════════════
          SECTION 3: SẢN PHẨM LIÊN QUAN
          ══════════════════════════════════════════════════════ -->
-    <section>
-        <h2 class="text-xl font-bold text-white mb-5 flex items-center gap-2">
-            <span class="inline-block w-1 h-5 bg-gradient-to-b from-accent-400 to-ember-500 rounded-full"></span>
-            Sản phẩm liên quan
-        </h2>
+    <section id="related" class="pt-6 pb-4">
+        <h2 class="t-section text-zinc-100 mb-8">Sản phẩm liên quan.</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <?php foreach ($relatedProducts as $rp): ?>
             <?php
@@ -665,6 +675,19 @@ function setMainImage(src, btn) {
     document.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('thumb-active'));
     btn.classList.add('thumb-active');
 }
+
+// ── Thanh con: bấm "Thông số" hoặc "Đánh giá" thì mở đúng tab rồi cuộn tới; tô sáng mục đang xem ──
+document.querySelectorAll('#localnav [data-tab-go]').forEach(a => a.addEventListener('click', () => switchTab(a.dataset.tabGo)));
+(function () {
+    const spy = { overview: document.getElementById('overview'), tabs: document.getElementById('tabs'), related: document.getElementById('related') };
+    const links = document.querySelectorAll('#localnav .links a');
+    function mark() {
+        let on = 'overview', y = innerHeight * .35;
+        for (const k of ['overview', 'tabs', 'related']) { const el = spy[k]; if (el && el.getBoundingClientRect().top < y) on = k; }
+        links.forEach(l => l.classList.toggle('on', l.dataset.spy === on || (on === 'tabs' && l.dataset.spy === 'tabs' && !document.getElementById('tab-reviews').classList.contains('active'))));
+    }
+    addEventListener('scroll', mark, { passive: true }); mark();
+})();
 
 // ── Chuyển tab ──
 function switchTab(tabId) {

@@ -2,7 +2,7 @@
 
 > **Ngày kiểm thử:** 16/11/2026  
 > **Môi trường:** PHP 8.2 (máy chủ tích hợp), MariaDB (XAMPP), Chrome; chạy tại `localhost:8001`  
-> **Kết quả tự động:** 148 trên 148 ca đạt
+> **Kết quả tự động:** 152 trên 152 ca đạt
 
 ---
 
@@ -11,7 +11,7 @@
 | Chỉ số | Kết quả |
 |---|---|
 | Ca kiểm thử tự động: kiểm tra trang, bảo mật, đơn hàng, quản trị | 59 / 59 đạt |
-| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 89 / 89 đạt |
+| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 93 / 93 đạt |
 | Kiểm thử logic JavaScript: bộ chọn biến thể (Node, `scratch/variant_picker_test.js`) | Đạt |
 | Kiểm thử thủ công trên trình duyệt | Máy tính (khoảng 800px) và điện thoại giả lập (375px); không có thanh cuộn ngang |
 | Rà soát theo checklist thiết kế | 8 checklist: giỏ hàng, thanh toán, đăng nhập, đăng ký, tìm kiếm, 404, báo lỗi nhập liệu, gửi biểu mẫu |
@@ -85,8 +85,8 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E44 | không có cảnh báo PHP tại /admin/products | Đạt |
 | E45 | Truy cập /admin/orders trả về 200 | Đạt |
 | E46 | không có cảnh báo PHP tại /admin/orders | Đạt |
-| E47 | Truy cập /admin/orders/detail/244 trả về 200 | Đạt |
-| E48 | không có cảnh báo PHP tại /admin/orders/detail/244 | Đạt |
+| E47 | Truy cập /admin/orders/detail/256 trả về 200 | Đạt |
+| E48 | không có cảnh báo PHP tại /admin/orders/detail/256 | Đạt |
 | E49 | Truy cập /admin/products/create trả về 200 | Đạt |
 | E50 | không có cảnh báo PHP tại /admin/products/create | Đạt |
 | E51 | Trang đơn hàng admin không có cảnh báo PHP | Đạt |
@@ -99,7 +99,7 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E58 | Đơn đã giao là trạng thái cuối, không đổi tiếp | Đạt |
 | E59 | Khách hàng không vào được khu quản trị | Đạt |
 
-### 2.2 Luồng nghiệp vụ (89 ca)
+### 2.2 Luồng nghiệp vụ (93 ca)
 
 | Mã | Khu vực | Nội dung kiểm tra | Kết quả |
 |---|---|---|---|
@@ -183,15 +183,19 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | F78 | So sánh | Thẻ sản phẩm có nút So sánh | Đạt |
 | F79 | Tiếp cận | Ô số lượng, ô tìm kiếm, ô ZenBot và nút gửi đều có nhãn | Đạt |
 | F80 | Tiếp cận | Trang đăng nhập, đăng ký, quên mật khẩu, 404 có h1 và mô tả meta | Đạt |
-| F81 | Admin mã giảm giá | Xem danh sách mã | Đạt |
-| F82 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
-| F83 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
-| F84 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
-| F85 | Admin mã giảm giá | Bật/tắt mã | Đạt |
-| F86 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
-| F87 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
-| F88 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
-| F89 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
+| F81 | Giao diện | Trang chủ: tiêu đề lớn căn giữa và ô loại sản phẩm | Đạt |
+| F82 | Giao diện | Trang sản phẩm: thanh con cố định có tên, đường tắt và nút Mua | Đạt |
+| F83 | Giao diện | Các đích của đường tắt tồn tại (tổng quan, tab, liên quan) | Đạt |
+| F84 | Giao diện | Tệp apple.css được nạp và phục vụ | Đạt |
+| F85 | Admin mã giảm giá | Xem danh sách mã | Đạt |
+| F86 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
+| F87 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
+| F88 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
+| F89 | Admin mã giảm giá | Bật/tắt mã | Đạt |
+| F90 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
+| F91 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
+| F92 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
+| F93 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
 
 ---
 

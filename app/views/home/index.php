@@ -16,42 +16,25 @@ $heroImg = $hero ? ($hero['thumbnail'] ?? '') : '';
 $heroDisc = $hero ? (int) ($hero['max_discount_pct'] ?? 0) : 0;
 ?>
 
-<!-- 1. Màn hình đầu: luận điểm + sản phẩm nổi bật có giá và nút mua -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14 md:pt-16 md:pb-20">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-        <div class="lg:col-span-5 rise">
-            <h1 class="text-[2.6rem] sm:text-6xl lg:text-[3.8rem] font-bold leading-[1.04] text-zinc-100">
-                Chọn gear<br>theo thông số.
-            </h1>
-            <p class="mt-6 text-lg text-zinc-400 max-w-md leading-relaxed">
-                Chuột, bàn phím cơ và tai nghe chính hãng. Mỗi sản phẩm ghi rõ cảm biến, switch, trọng lượng và pin, để bạn so sánh trước khi mua.
-            </p>
-            <div class="mt-8 flex flex-wrap items-center gap-2">
-                <a href="/san-pham" class="btn-primary">Xem sản phẩm</a>
-                <button type="button" onclick="window.ZenBotWidget && window.ZenBotWidget.toggle()" class="btn-ghost">Hỏi ZenBot chọn giúp &rsaquo;</button>
-            </div>
+<!-- 1. Màn hình đầu: tiêu đề lớn căn giữa, sản phẩm nổi bật bên dưới -->
+<section class="hero-center max-w-5xl mx-auto px-4 sm:px-6 pt-12 pb-10 md:pt-20 md:pb-16">
+    <div class="rise">
+        <p class="t-eyebrow text-zinc-400">Gaming gear chính hãng</p>
+        <h1 class="t-marquee mt-2 text-zinc-100">Chọn gear<br>theo thông số.</h1>
+        <p class="t-lead mt-5 mx-auto max-w-2xl">Mỗi sản phẩm ghi rõ cảm biến, switch, trọng lượng và pin, để bạn so sánh trước khi mua.</p>
+        <div class="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+            <a href="/san-pham" class="btn-primary">Xem sản phẩm</a>
+            <button type="button" onclick="window.ZenBotWidget && window.ZenBotWidget.toggle()" class="link-more">Hỏi ZenBot chọn giúp</button>
         </div>
-
-        <?php if ($hero): ?>
-        <a href="/san-pham/<?= e($hero['slug']) ?>" class="stage group lg:col-span-7 block rise" data-par="0.08" style="animation-delay:.08s">
-            <div class="aspect-[16/10] flex items-center justify-center px-8 pt-8 sm:px-12 sm:pt-12">
-                <img src="<?= e($heroImg) ?>" alt="<?= e($hero['name']) ?>"
-                     class="max-h-full max-w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.04]">
-            </div>
-            <div class="flex flex-wrap items-end justify-between gap-3 p-5 sm:p-7">
-                <div class="min-w-0 flex-1 basis-56">
-                    <p class="text-sm text-zinc-400"><?= e($hero['brand_name']) ?></p>
-                    <h2 class="text-lg sm:text-xl font-semibold text-zinc-100"><?= e($hero['name']) ?></h2>
-                    <p class="mt-0.5 text-zinc-300 tabular-nums">
-                        Từ <?= number_format($hero['min_price'], 0, ',', '.') ?>₫
-                        <?php if ($heroDisc > 0): ?><span class="ml-1 text-red-500 font-medium">Giảm <?= $heroDisc ?>%</span><?php endif; ?>
-                    </p>
-                </div>
-                <span class="btn-primary pointer-events-none">Mua ngay</span>
-            </div>
-        </a>
-        <?php endif; ?>
     </div>
+    <?php if ($hero): ?>
+    <a href="/san-pham/<?= e($hero['slug']) ?>" class="group block rise" style="animation-delay:.1s" aria-label="<?= e($hero['name']) ?>">
+        <div class="hero-img" data-par="0.06"><img src="<?= e($heroImg) ?>" alt="<?= e($hero['name']) ?>" class="transition-transform duration-700 ease-out group-hover:scale-[1.04]"></div>
+        <p class="mt-6 t-eyebrow text-zinc-100"><?= e($hero['name']) ?></p>
+        <p class="mt-1 text-zinc-400 tabular-nums">Từ <?= number_format($hero['min_price'], 0, ',', '.') ?>₫<?php if ($heroDisc > 0): ?> <span class="text-red-500 font-medium">· giảm <?= $heroDisc ?>%</span><?php endif; ?></p>
+        <span class="link-more mt-2 inline-block">Mua ngay</span>
+    </a>
+    <?php endif; ?>
 </section>
 
 <!-- 2. Chính sách có thật -->
@@ -63,25 +46,31 @@ $heroDisc = $hero ? (int) ($hero['max_discount_pct'] ?? 0) : 0;
     </div>
 </section>
 
-<!-- 3. Danh mục -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl sm:text-4xl font-bold text-zinc-100">Mua theo loại.</h2>
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-        <?php foreach (array_slice(array_filter($categories ?? [], fn($c) => !$c['parent_id']), 0, 5) as $cat): ?>
-            <a href="/san-pham?category[]=<?= e($cat['slug']) ?>"
-               class="group flex flex-col justify-between min-h-[8.5rem] p-5 rounded-2xl bg-zinc-900 hover:bg-zinc-850 transition-colors">
-                <span class="text-lg font-semibold leading-snug text-zinc-100"><?= e($cat['name']) ?></span>
-                <span class="text-sm font-medium text-accent-400 group-hover:underline">Xem ngay &rsaquo;</span>
+<!-- 3. Danh mục: ô lớn trên dải nền xám -->
+<section class="band band-pad">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="t-section text-zinc-100">Mua theo loại.</h2>
+        <?php $tops = array_slice(array_filter($categories ?? [], fn($c) => !$c['parent_id']), 0, 4); ?>
+        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <?php foreach ($tops as $cat):
+                $ci = $catImages[$cat['id']] ?? ''; ?>
+            <a href="/san-pham?category[]=<?= e($cat['slug']) ?>" class="tile group">
+                <div class="relative z-10">
+                    <h3 class="t-eyebrow text-zinc-100"><?= e($cat['name']) ?></h3>
+                    <span class="link-more mt-2 inline-block">Xem sản phẩm</span>
+                </div>
+                <?php if ($ci): ?><img src="<?= e($ci) ?>" alt="" loading="lazy" class="tile-img"><?php endif; ?>
             </a>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
     </div>
 </section>
 
 <!-- 4. Nổi bật -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
     <div class="flex items-end justify-between gap-4">
-        <h2 class="text-3xl sm:text-4xl font-bold text-zinc-100">Đang được chọn nhiều.</h2>
-        <a href="/san-pham" class="hidden sm:inline text-sm font-medium text-accent-400 hover:underline">Xem tất cả &rsaquo;</a>
+        <h2 class="t-section text-zinc-100">Đang được chọn nhiều.</h2>
+        <a href="/san-pham" class="hidden sm:inline link-more">Xem tất cả</a>
     </div>
     <div class="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6">
         <?php foreach (($featuredProducts ?? []) as $product): include VIEW_PATH . '/partials/product-card.php'; endforeach; ?>
@@ -92,7 +81,7 @@ $heroDisc = $hero ? (int) ($hero['max_discount_pct'] ?? 0) : 0;
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
     <div class="rounded-3xl bg-zinc-900 px-6 py-12 sm:px-14 sm:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
         <div class="max-w-xl">
-            <h2 class="text-3xl sm:text-4xl font-bold text-zinc-100">Chưa biết chọn gì?</h2>
+            <h2 class="t-section text-zinc-100">Chưa biết chọn gì?</h2>
             <p class="mt-3 text-lg text-zinc-400">Nói ngân sách và game bạn chơi, ZenBot gợi ý vài mẫu phù hợp.</p>
         </div>
         <button type="button" onclick="window.ZenBotWidget && window.ZenBotWidget.toggle()" class="btn-primary shrink-0">Hỏi ZenBot</button>
@@ -101,7 +90,7 @@ $heroDisc = $hero ? (int) ($hero['max_discount_pct'] ?? 0) : 0;
 
 <!-- 6. Mới về -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-    <h2 class="text-3xl sm:text-4xl font-bold text-zinc-100">Mới về.</h2>
+    <h2 class="t-section text-zinc-100">Mới về.</h2>
     <div class="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6">
         <?php foreach (($newProducts ?? []) as $product): include VIEW_PATH . '/partials/product-card.php'; endforeach; ?>
     </div>

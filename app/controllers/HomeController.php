@@ -29,7 +29,17 @@ class HomeController extends BaseController
         // Danh mục cho menu/banner
         $categories = $this->categoryModel->getAll();
 
-        $this->render('home/index', compact('featuredProducts', 'newProducts', 'categories'));
+        // Ảnh đại diện cho từng ô loại sản phẩm: sản phẩm nổi bật (hoặc mới nhất) của loại đó và các loại con
+        $catImages = [];
+        foreach ($this->pdo->query("
+            SELECT c.id, (SELECT p.thumbnail_url FROM products p JOIN categories pc ON pc.id = p.category_id
+                          WHERE p.is_active = 1 AND p.thumbnail_url IS NOT NULL AND p.name NOT LIKE '%iPad%' AND p.name NOT LIKE '%Powerplay%' AND (pc.id = c.id OR pc.parent_id = c.id)
+                          ORDER BY p.is_featured DESC, p.id DESC LIMIT 1) AS img
+            FROM categories c WHERE c.parent_id IS NULL")->fetchAll() as $r) {
+            $catImages[(int) $r['id']] = $r['img'];
+        }
+
+        $this->render('home/index', compact('featuredProducts', 'newProducts', 'categories', 'catImages'));
     }
 
     /**

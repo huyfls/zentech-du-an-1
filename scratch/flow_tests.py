@@ -241,6 +241,13 @@ pg_ = req(cli(), "GET", f"/san-pham/{slug3}")[1]
 check("Tiếp cận", "Ô số lượng, ô tìm kiếm, ô ZenBot và nút gửi đều có nhãn", 'aria-label="Số lượng"' in pg_ and 'aria-label="Tìm sản phẩm' in pg_ and 'aria-label="Câu hỏi cho ZenBot"' in pg_ and 'aria-label="Gửi câu hỏi"' in pg_)
 ok_ = all('<h1' in req(cli(), "GET", u)[1] and 'name="description"' in req(cli(), "GET", u)[1] for u in ["/dang-nhap", "/dang-ky", "/quen-mat-khau", "/khong-co-trang"])
 check("Tiếp cận", "Trang đăng nhập, đăng ký, quên mật khẩu, 404 có h1 và mô tả meta", ok_)
+# Giao diện kiểu trình bày cao cấp: trang chủ, thanh con ở trang sản phẩm
+hh = req(cli(), "GET", "/")[1]
+check("Giao diện", "Trang chủ: tiêu đề lớn căn giữa và ô loại sản phẩm", 'class="hero-center' in hh and hh.count('class="tile') >= 3 and "t-marquee" in hh)
+dd = req(cli(), "GET", f"/san-pham/{slug3}")[1]
+check("Giao diện", "Trang sản phẩm: thanh con cố định có tên, đường tắt và nút Mua", 'id="localnav"' in dd and 'href="#overview"' in dd and 'href="#add-to-cart-form"' in dd and 'id="add-to-cart-form"' in dd)
+check("Giao diện", "Các đích của đường tắt tồn tại (tổng quan, tab, liên quan)", 'id="overview"' in dd and 'id="tabs"' in dd and 'id="tab-reviews"' in dd)
+check("Giao diện", "Tệp apple.css được nạp và phục vụ", "/assets/css/apple.css" in hh and req(cli(), "GET", "/assets/css/apple.css")[0] == 200)
 # Admin: quản lý mã giảm giá
 s, b, _ = req(ad, "GET", "/admin/coupons"); check("Admin mã giảm giá", "Xem danh sách mã", s == 200 and "ZENTECH10" in b)
 t = tok(ad, "/admin/coupons")

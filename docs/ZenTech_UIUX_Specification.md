@@ -104,6 +104,16 @@ Nút tròn cố định góc dưới bên phải, mở cửa sổ chat. Có ba c
 
 ---
 
+### 3.6b Nhịp trình bày kiểu cao cấp
+
+Tham khảo cách các trang sản phẩm cao cấp (như trang của Apple) tổ chức thông tin, rồi dựng lại bằng mã, chữ, hình và phông riêng của ZenTech, không sao chép nội dung của họ:
+
+- Thanh điều hướng mỏng 48px, mờ kính, đổ bóng khi cuộn.
+- Tiêu đề rất lớn, chữ chặt, kết thúc bằng dấu chấm ("Chọn gear theo thông số.", "Mua theo loại.").
+- Trang chủ: tiêu đề căn giữa, một sản phẩm lớn bên dưới, các ô loại sản phẩm lớn trên dải nền xám xen kẽ dải nền trắng, khoảng cách giữa các phần rộng.
+- Liên kết "Mua ngay ›" và nút dạng viên thuốc cho hành động chính.
+- Trang sản phẩm có thanh con cố định ngay dưới thanh điều hướng: tên sản phẩm, đường tắt Tổng quan, Thông số, Đánh giá, Sản phẩm liên quan, nút Mua. Trên điện thoại ẩn bớt vì đã có thanh Mua ở đáy màn hình.
+
 ### 3.7 Chuyển động
 
 Giữ nguyên giao diện sáng, tối giản và thêm lớp chuyển động nhẹ, phản hồi theo hành động của người dùng:
