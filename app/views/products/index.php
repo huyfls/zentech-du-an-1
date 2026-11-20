@@ -48,7 +48,7 @@ $pill = 'inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bor
     </nav>
 
     <div class="flex flex-col gap-1">
-        <h1 class="text-3xl sm:text-4xl font-bold text-zinc-100">Gaming gear &amp; phụ kiện</h1>
+        <h1 class="t-section text-zinc-100">Gaming gear &amp; phụ kiện.</h1>
         <p class="text-sm text-zinc-400"><?= (int) ($totalItems ?? 0) ?> sản phẩm phù hợp</p>
     </div>
 

@@ -1,6 +1,5 @@
 /**
- * ZenTech — lớp chuyển động: thanh tiến độ cuộn, hiện dần khi cuộn,
- * vòng tròn khi click, chuyển trang mượt, thẻ nghiêng theo chuột, bay vào giỏ hàng.
+ * ZenTech — lớp chuyển động: thanh tiến độ cuộn, hiện dần khi cuộn, chuyển trang mượt, thẻ nghiêng theo chuột, bay vào giỏ hàng.
  * Chỉ dùng transform và opacity. Tắt hoàn toàn khi người dùng chọn "giảm chuyển động".
  */
 @view-transition { navigation: auto; }
@@ -21,13 +20,6 @@ html.zt-js .zt-rv.in { opacity: 1; transform: none; }
 
 /* Thẻ sản phẩm nghiêng 3D theo con trỏ */
 .zt-tilt { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out; will-change: transform; }
-
-/* Click: vòng tròn lan ra và các chấm bắn ra */
-.zt-burst { position: fixed; z-index: 120; pointer-events: none; width: 0; height: 0; }
-.zt-burst i { position: absolute; left: 0; top: 0; width: 8px; height: 8px; margin: -4px; border-radius: 50%; background: var(--c, #0f5de0); animation: zt-dot .7s cubic-bezier(.2, .8, .3, 1) forwards; }
-.zt-burst b { position: absolute; left: 0; top: 0; width: 20px; height: 20px; margin: -10px; border-radius: 50%; border: 2px solid #0f5de0; animation: zt-ring .6s ease-out forwards; }
-@keyframes zt-dot { to { transform: translate(var(--x), var(--y)) scale(.2); opacity: 0; } }
-@keyframes zt-ring { to { transform: scale(5); opacity: 0; } }
 
 /* Bay vào giỏ hàng */
 .zt-fly { position: fixed; z-index: 130; pointer-events: none; border-radius: 18px; object-fit: contain; background: #fff; box-shadow: 0 12px 30px rgba(0, 0, 0, .18); }

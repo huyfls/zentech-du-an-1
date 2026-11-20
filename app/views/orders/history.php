@@ -7,16 +7,14 @@
  */
 ?>
 
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="apple-page max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6">
         <a href="/" class="hover:text-accent-400">Trang chủ</a>
         <span>/</span>
         <span class="text-zinc-200">Đơn hàng của tôi</span>
     </nav>
 
-    <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-8">
-        Lịch sử mua hàng
-    </h1>
+    <h1 class="t-section text-zinc-100 mb-8">Lịch sử mua hàng.</h1>
 
     <?php if (empty($orders)): ?>
         <div class="text-center py-16 bg-zinc-900/40 rounded-3xl border border-zinc-800 p-8">

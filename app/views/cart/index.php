@@ -11,7 +11,7 @@ $shippingFee = ($subtotal >= 500000 || $subtotal == 0) ? 0 : 30000;
 $total = $subtotal + $shippingFee;
 ?>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="apple-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6">
         <a href="/" class="hover:text-accent-400">Trang chủ</a>
@@ -19,8 +19,8 @@ $total = $subtotal + $shippingFee;
         <span class="text-zinc-200">Giỏ hàng của bạn</span>
     </nav>
 
-    <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-8 flex items-center gap-3">
-        <span>Giỏ hàng</span>
+    <h1 class="t-section text-zinc-100 mb-8 flex flex-wrap items-center gap-3">
+        <span>Giỏ hàng.</span>
         <span class="text-sm font-semibold px-2.5 py-0.5 rounded-full bg-accent-500/20 text-accent-400 border border-accent-500/30">
             <?= $itemCount ?> sản phẩm
         </span>

@@ -55,14 +55,6 @@
         });
     }
 
-    // ---- Click: vòng tròn và các chấm bắn ra ----
-    document.addEventListener('pointerdown', function (e) {
-        if (e.button) return;
-        var b = document.createElement('div'); b.className = 'zt-burst'; b.style.left = e.clientX + 'px'; b.style.top = e.clientY + 'px';
-        var h = '<b></b>', cols = ['#0f5de0', '#7a5cff', '#ff5fd2', '#2ee6ff'];
-        for (var i = 0; i < 8; i++) { var a = i / 8 * Math.PI * 2 + Math.random() * .4, d = 34 + Math.random() * 30; h += '<i style="--x:' + (Math.cos(a) * d).toFixed(0) + 'px;--y:' + (Math.sin(a) * d).toFixed(0) + 'px;--c:' + cols[i % 4] + '"></i>'; }
-        b.innerHTML = h; document.body.appendChild(b); setTimeout(function () { b.remove(); }, 800);
-    });
 
     // ---- Bay vào giỏ hàng: ztFly(phầnTửẢnh) ----
     window.ztFly = function (src) {

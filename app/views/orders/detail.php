@@ -17,7 +17,7 @@ $statusMap = [
 [$statusText, $statusClass] = $statusMap[$order['status']] ?? [$order['status'], 'bg-zinc-800 text-zinc-300 border-zinc-700'];
 ?>
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="apple-page max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6">
         <a href="/" class="hover:text-accent-400">Trang chủ</a>
         <span>/</span>
@@ -30,7 +30,7 @@ $statusMap = [
     <div class="bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-6 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
             <div class="flex items-center gap-3 mb-1">
-                <h1 class="text-xl font-black text-white font-mono"><?= htmlspecialchars($order['order_code']) ?></h1>
+                <h1 class="t-section text-zinc-100 font-mono"><?= htmlspecialchars($order['order_code']) ?></h1>
                 <span class="text-xs font-semibold px-3 py-0.5 rounded-full border <?= $statusClass ?>">
                     <?= $statusText ?>
                 </span>

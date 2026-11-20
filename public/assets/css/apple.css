@@ -45,3 +45,12 @@
 #localnav .buy { flex: none; padding: .4rem 1rem; border-radius: 999px; background: var(--accent); color: #fff; font-size: .8rem; font-weight: 600; }
 @media (max-width: 640px) { #localnav .links, #localnav .buy { display: none; } #localnav .name { max-width: 90vw; } }  /* trên điện thoại đã có thanh Mua cố định ở đáy */
 html { scroll-padding-top: calc(var(--nav-h) + 60px); }
+
+/* 7. Các trang còn lại (giỏ hàng, thanh toán, tài khoản, đơn hàng, đăng nhập...): thẻ nền xám nhạt không viền,
+      bo góc lớn, ô nhập cao 44px chữ 15px như các trang sản phẩm cao cấp */
+.apple-page .bg-zinc-900\/60, .apple-page .bg-zinc-900\/70, .apple-page .bg-zinc-900\/40 { background: var(--band) !important; border-color: transparent !important; border-radius: 22px !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; box-shadow: none !important; }
+.apple-page input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=number]), .apple-page select, .apple-page textarea { border-radius: 12px !important; min-height: 44px; font-size: 15px !important; background: #fff !important; border-color: #d2d2d7 !important; }
+.apple-page input:focus, .apple-page select:focus, .apple-page textarea:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(15, 93, 224, .18) !important; outline: none; }
+.apple-page label { letter-spacing: -.01em; }
+.apple-auth { background: #fff; }
+.apple-auth .card-free { background: transparent !important; border: 0 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; padding: 0 !important; }

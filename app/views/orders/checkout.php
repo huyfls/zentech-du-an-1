@@ -12,7 +12,7 @@ $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);
 ?>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="apple-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6">
         <a href="/" class="hover:text-accent-400">Trang chủ</a>
@@ -22,9 +22,7 @@ unset($_SESSION['flash']);
         <span class="text-zinc-200">Xác nhận thanh toán</span>
     </nav>
 
-    <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-8">
-        Thanh toán
-    </h1>
+    <h1 class="t-section text-zinc-100 mb-8">Thanh toán.</h1>
 
     <?php if (!empty($flash['errors'])): ?>
         <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-400 space-y-1">

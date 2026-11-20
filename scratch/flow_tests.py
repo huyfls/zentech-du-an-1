@@ -248,6 +248,11 @@ dd = req(cli(), "GET", f"/san-pham/{slug3}")[1]
 check("Giao diện", "Trang sản phẩm: thanh con cố định có tên, đường tắt và nút Mua", 'id="localnav"' in dd and 'href="#overview"' in dd and 'href="#add-to-cart-form"' in dd and 'id="add-to-cart-form"' in dd)
 check("Giao diện", "Các đích của đường tắt tồn tại (tổng quan, tab, liên quan)", 'id="overview"' in dd and 'id="tabs"' in dd and 'id="tab-reviews"' in dd)
 check("Giao diện", "Tệp apple.css được nạp và phục vụ", "/assets/css/apple.css" in hh and req(cli(), "GET", "/assets/css/apple.css")[0] == 200)
+# Kiểu trình bày cho các trang còn lại, bỏ hiệu ứng khi bấm
+okp = all("t-section" in req(c2 if u in ("/tai-khoan", "/don-hang") else cli(), "GET", u)[1] for u in ["/san-pham", "/thuong-hieu", "/gio-hang", "/yeu-thich", "/dang-nhap", "/dang-ky", "/quen-mat-khau", "/khong-co-trang"])
+check("Giao diện", "Tiêu đề lớn thống nhất ở các trang danh sách, giỏ, yêu thích, đăng nhập, đăng ký, 404", okp)
+check("Giao diện", "Đã bỏ hiệu ứng vòng tròn khi bấm", "zt-burst" not in req(cli(), "GET", "/assets/js/motion.js")[1])
+check("Giao diện", "Trang 404 không bị mã hóa ký tự hai lần", "&amp;#039;" not in req(cli(), "GET", "/khong-co-trang")[1])
 # Admin: quản lý mã giảm giá
 s, b, _ = req(ad, "GET", "/admin/coupons"); check("Admin mã giảm giá", "Xem danh sách mã", s == 200 and "ZENTECH10" in b)
 t = tok(ad, "/admin/coupons")

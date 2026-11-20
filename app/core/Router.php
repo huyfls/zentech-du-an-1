@@ -259,7 +259,7 @@ class Router {
         http_response_code(404);
         $viewFile = defined('VIEW_PATH') ? VIEW_PATH . '/errors/404.php' : null;
         if ($viewFile && file_exists($viewFile)) {
-            $errorMessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+            $errorMessage = $message;   // view tự escape, không escape hai lần
             require $viewFile;
         } else {
             echo "<h1>404 — Không tìm thấy trang</h1><p>" 

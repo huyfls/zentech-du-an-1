@@ -13,7 +13,7 @@ $rows[] = ['Tình trạng', array_map(fn($p) => (int) $p['total_stock'] > 0 ? 'C
 $diff = fn(array $vals) => count(array_unique(array_map(fn($v) => mb_strtolower(trim((string) $v)), $vals))) > 1;
 ?>
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-3xl font-bold text-zinc-100">So sánh sản phẩm</h1>
+    <h1 class="t-section text-zinc-100">So sánh sản phẩm.</h1>
 
     <?php if ($n < 2): ?>
         <div class="mt-10 rounded-3xl bg-zinc-900 px-6 py-16 text-center">

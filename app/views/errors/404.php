@@ -14,6 +14,7 @@ $title  = $titles[$errorCode] ?? 'Có lỗi xảy ra';
     <script src="/assets/vendor/tailwind-3.4.0.js"></script>
     <script src="/assets/js/tailwind-theme.js"></script>
     <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="/assets/css/apple.css">
     <meta name="description" content="Không tìm thấy trang – ZenTech, gaming gear chính hãng.">
 </head>
 <body class="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-4 font-sans antialiased">
@@ -23,7 +24,7 @@ $title  = $titles[$errorCode] ?? 'Có lỗi xảy ra';
             <span class="text-xl font-bold">ZenTech</span>
         </a>
         <p class="text-7xl font-extrabold text-accent-400"><?= (int) $errorCode ?></p>
-        <h1 class="mt-4 text-xl font-bold"><?= htmlspecialchars($title) ?></h1>
+        <h1 class="mt-4 t-section"><?= htmlspecialchars($title) ?></h1>
         <p class="mt-2 text-sm text-zinc-400"><?= htmlspecialchars($errorMessage) ?></p>
         <div class="mt-8 flex items-center justify-center gap-3">
             <a href="/" class="px-5 py-2.5 rounded-xl bg-accent-500 hover:bg-accent-400 text-zinc-950 text-sm font-bold transition">Về trang chủ</a>

@@ -112,6 +112,7 @@ Tham khảo cách các trang sản phẩm cao cấp (như trang của Apple) t�
 - Tiêu đề rất lớn, chữ chặt, kết thúc bằng dấu chấm ("Chọn gear theo thông số.", "Mua theo loại.").
 - Trang chủ: tiêu đề căn giữa, một sản phẩm lớn bên dưới, các ô loại sản phẩm lớn trên dải nền xám xen kẽ dải nền trắng, khoảng cách giữa các phần rộng.
 - Liên kết "Mua ngay ›" và nút dạng viên thuốc cho hành động chính.
+- Các trang còn lại (danh sách, thương hiệu, giới thiệu, giỏ hàng, thanh toán, tài khoản, đơn hàng, yêu thích, so sánh, đăng nhập, đăng ký, 404) dùng cùng thang tiêu đề lớn có dấu chấm; thẻ nền xám nhạt không viền, bo góc lớn; ô nhập cao 44px, chữ 15px, viền xanh khi đang nhập; trang đăng nhập và đăng ký bỏ khung kính, nền trắng.
 - Trang sản phẩm có thanh con cố định ngay dưới thanh điều hướng: tên sản phẩm, đường tắt Tổng quan, Thông số, Đánh giá, Sản phẩm liên quan, nút Mua. Trên điện thoại ẩn bớt vì đã có thanh Mua ở đáy màn hình.
 
 ### 3.7 Chuyển động
@@ -124,7 +125,6 @@ Giữ nguyên giao diện sáng, tối giản (nền trắng sạch, không có 
 | Các khối nội dung và thẻ sản phẩm hiện dần, lần lượt từng thẻ | Cuộn tới vị trí đó |
 | Ảnh chính trang chủ dịch chuyển chậm hơn nội dung (parallax) | Cuộn chuột |
 | Thẻ sản phẩm nghiêng 3D theo con trỏ | Di chuột lên thẻ |
-| Vòng tròn lan ra và các chấm bắn ra | Click |
 | Ảnh sản phẩm bay vào biểu tượng giỏ hàng, số trên giỏ nảy lên | Bấm Thêm vào giỏ hàng |
 | Chuyển trang mượt (mờ dần và trượt nhẹ) | Chuyển giữa các trang |
 

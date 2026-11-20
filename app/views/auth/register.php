@@ -15,13 +15,13 @@ unset($_SESSION['flash']);
     <script src="/assets/vendor/tailwind-3.4.0.js"></script>
     <script src="/assets/js/tailwind-theme.js"></script>
     <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="/assets/css/apple.css">
     
     <meta name="description" content="Đăng ký tài khoản – ZenTech, gaming gear chính hãng.">
 </head>
-<body class="min-h-full flex items-center justify-center p-4">
-    <h1 class="sr-only">Đăng ký tài khoản</h1>
+<body class="apple-page apple-auth min-h-full flex items-center justify-center p-4">
 
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-[440px]">
         <!-- Logo -->
         <div class="text-center mb-8">
             <a href="/" class="inline-flex items-center gap-2 group">
@@ -30,10 +30,11 @@ unset($_SESSION['flash']);
                     ZenTech
                 </span>
             </a>
-            <p class="text-xs text-zinc-400 mt-2">Tạo tài khoản để lưu giỏ hàng và theo dõi đơn hàng</p>
+            <h1 class="t-section mt-6 text-zinc-100">Tạo tài khoản.</h1>
+            <p class="mt-2 text-base text-zinc-400">Tạo tài khoản để lưu giỏ hàng và theo dõi đơn hàng</p>
         </div>
 
-        <div class="bg-zinc-900/70 backdrop-blur-xl border border-zinc-800 rounded-3xl p-8 ">
+        <div class="card-free bg-zinc-900/70 backdrop-blur-xl border border-zinc-800 rounded-3xl p-8 ">
             
             <?php if (!empty($flash['errors'])): ?>
                 <div class="mb-5 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-400 space-y-1">

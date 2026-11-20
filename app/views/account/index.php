@@ -2,10 +2,10 @@
 /** VIEW: Tài khoản của tôi. Biến: $user, $addresses */
 $in = 'w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none';
 $lb = 'block text-sm font-medium text-zinc-300 mb-1.5';
-$card = 'bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 space-y-4';
+$card = 'bg-zinc-900/60 border border-zinc-800 rounded-2xl p-6 sm:p-8 space-y-4';
 ?>
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-    <h1 class="text-3xl font-black text-white">Tài khoản của tôi</h1>
+<div class="apple-page max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <h1 class="t-section text-zinc-100">Tài khoản của tôi.</h1>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <form action="/tai-khoan/thong-tin" method="POST" class="<?= $card ?>"><?= Csrf::field() ?>
             <h2 class="text-base font-semibold text-white">Thông tin cá nhân</h2>
