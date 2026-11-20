@@ -27,13 +27,49 @@ $heroDisc = $hero ? (int) ($hero['max_discount_pct'] ?? 0) : 0;
             <button type="button" onclick="window.ZenBotWidget && window.ZenBotWidget.toggle()" class="link-more">Hỏi ZenBot chọn giúp</button>
         </div>
     </div>
-    <?php if ($hero): ?>
-    <a href="/san-pham/<?= e($hero['slug']) ?>" class="group block rise" style="animation-delay:.1s" aria-label="<?= e($hero['name']) ?>">
-        <div class="hero-img" data-par="0.06"><img src="<?= e($heroImg) ?>" alt="<?= e($hero['name']) ?>" class="transition-transform duration-700 ease-out group-hover:scale-[1.04]"></div>
-        <p class="mt-6 t-eyebrow text-zinc-100"><?= e($hero['name']) ?></p>
-        <p class="mt-1 text-zinc-400 tabular-nums">Từ <?= number_format($hero['min_price'], 0, ',', '.') ?>₫<?php if ($heroDisc > 0): ?> <span class="text-red-500 font-medium">· giảm <?= $heroDisc ?>%</span><?php endif; ?></p>
-        <span class="link-more mt-2 inline-block">Mua ngay</span>
-    </a>
+    <?php $slides = array_slice($featuredProducts ?? [], 0, 5); ?>
+    <?php if ($slides): ?>
+    <div id="hero-rotator" class="rise" style="animation-delay:.1s" role="region" aria-roledescription="băng chuyền" aria-label="Sản phẩm nổi bật">
+        <div class="grid">
+        <?php foreach ($slides as $k => $h): $d = (int) ($h['max_discount_pct'] ?? 0); ?>
+        <a href="/san-pham/<?= e($h['slug']) ?>" class="hero-slide group block [grid-area:1/1] transition-opacity duration-700 <?= $k ? 'opacity-0 pointer-events-none' : '' ?>" <?= $k ? 'aria-hidden="true" tabindex="-1"' : '' ?> aria-roledescription="trang" aria-label="<?= $k + 1 ?> / <?= count($slides) ?>: <?= e($h['name']) ?>">
+            <div class="hero-img"><img src="<?= e($h['thumbnail'] ?? '') ?>" alt="<?= e($h['name']) ?>" <?= $k ? 'loading="lazy"' : '' ?> class="transition-transform duration-700 ease-out group-hover:scale-[1.04]"></div>
+            <p class="mt-6 t-eyebrow text-zinc-100"><?= e($h['name']) ?></p>
+            <p class="mt-1 text-zinc-400 tabular-nums">Từ <?= number_format($h['min_price'], 0, ',', '.') ?>₫<?php if ($d > 0): ?> <span class="text-red-500 font-medium">· giảm <?= $d ?>%</span><?php endif; ?></p>
+            <span class="link-more mt-2 inline-block">Mua ngay</span>
+        </a>
+        <?php endforeach; ?>
+        </div>
+        <?php if (count($slides) > 1): ?>
+        <div class="mt-6 flex items-center justify-center gap-2">
+            <?php foreach ($slides as $k => $h): ?>
+            <button type="button" data-slide="<?= $k ?>" aria-label="Xem sản phẩm <?= $k + 1 ?>: <?= e($h['name']) ?>" aria-current="<?= $k ? 'false' : 'true' ?>"
+                    class="h-2 rounded-full transition-all duration-300 <?= $k ? 'w-2 bg-zinc-700' : 'w-6 bg-accent-500' ?>"></button>
+            <?php endforeach; ?>
+            <button type="button" id="hero-pause" aria-label="Tạm dừng tự chuyển" class="ml-2 text-xs text-zinc-400 hover:text-zinc-100 px-2 py-2">❚❚</button>
+        </div>
+        <?php endif; ?>
+    </div>
+    <script>
+    (function () {
+        const box = document.getElementById('hero-rotator'), slides = box.querySelectorAll('.hero-slide'), dots = box.querySelectorAll('[data-slide]'), pause = document.getElementById('hero-pause');
+        if (slides.length < 2) return;
+        let i = 0, timer = null, stopped = matchMedia('(prefers-reduced-motion: reduce)').matches;   // giảm chuyển động: không tự chuyển
+        function show(n) {
+            i = (n + slides.length) % slides.length;
+            slides.forEach((s, k) => { const on = k === i; s.classList.toggle('opacity-0', !on); s.classList.toggle('pointer-events-none', !on);
+                on ? (s.removeAttribute('aria-hidden'), s.removeAttribute('tabindex')) : (s.setAttribute('aria-hidden', 'true'), s.setAttribute('tabindex', '-1')); });
+            dots.forEach((d, k) => { const on = k === i; d.setAttribute('aria-current', on); d.classList.toggle('w-6', on); d.classList.toggle('bg-accent-500', on); d.classList.toggle('w-2', !on); d.classList.toggle('bg-zinc-700', !on); });
+        }
+        const play = () => { clearInterval(timer); if (!stopped) timer = setInterval(() => show(i + 1), 4000); };
+        dots.forEach(d => d.addEventListener('click', () => { show(+d.dataset.slide); play(); }));
+        pause.addEventListener('click', () => { stopped = !stopped; pause.textContent = stopped ? '▶' : '❚❚'; pause.setAttribute('aria-label', stopped ? 'Tiếp tục tự chuyển' : 'Tạm dừng tự chuyển'); play(); });
+        box.addEventListener('mouseenter', () => clearInterval(timer)); box.addEventListener('mouseleave', play);
+        box.addEventListener('focusin', () => clearInterval(timer)); box.addEventListener('focusout', play);
+        if (stopped) pause.textContent = '▶';
+        play();
+    })();
+    </script>
     <?php endif; ?>
 </section>
 
