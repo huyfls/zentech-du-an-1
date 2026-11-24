@@ -175,16 +175,13 @@ class AuthController extends BaseController
      */
     public function logout(): void
     {
-        // Xóa thông tin user nhưng giữ lại giỏ hàng trong session
-        $cart = $_SESSION['cart'] ?? [];
+        // Xóa toàn bộ phiên, kể cả giỏ hàng: người dùng sau trên cùng máy không thấy giỏ của người trước
         session_unset();
-        $_SESSION['cart'] = $cart;
         session_destroy();
 
         // Start session mới cho khách
         session_start();
         session_regenerate_id(true);   // session_destroy giữ nguyên mã cũ nếu không đổi
-        $_SESSION['cart'] = $cart;
 
         $this->setFlash('success', 'Bạn đã đăng xuất.');
         $this->redirect('/auth/login');
