@@ -52,6 +52,40 @@ class ProductModel extends BaseModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Đồng bộ giỏ hàng (session) với DB: giá mới, tồn kho, biến thể ngừng bán. Trả về các thông báo cho khách.
+     */
+    public function refreshCart(array &$cart): array
+    {
+        if (!$cart) return [];
+        $ids = array_map('intval', array_keys($cart));
+        $in = implode(',', array_fill(0, count($ids), '?'));
+        $rows = [];
+        foreach ($this->rawQuery("SELECT pv.id, pv.stock_qty, COALESCE(pv.sale_price, pv.price) AS price FROM product_variants pv
+                                  JOIN products p ON p.id = pv.product_id
+                                  WHERE pv.id IN ($in) AND pv.is_active = 1 AND p.is_active = 1", $ids) as $r) $rows[(int) $r['id']] = $r;
+        $notes = [];
+        foreach ($cart as $vid => $item) {
+            $name = $item['product_name'] ?? 'Sản phẩm';
+            $r = $rows[(int) $vid] ?? null;
+            if (!$r || (int) $r['stock_qty'] <= 0) {
+                unset($cart[$vid]);
+                $notes[] = "\"$name\" " . ($r ? 'đã hết hàng' : 'đã ngừng bán') . ' nên đã được bỏ khỏi giỏ.';
+                continue;
+            }
+            if ((float) $r['price'] != (float) $item['price']) {
+                $notes[] = "Giá \"$name\" đã đổi từ " . number_format((float) $item['price'], 0, ',', '.') . '₫ thành ' . number_format((float) $r['price'], 0, ',', '.') . '₫.';
+                $cart[$vid]['price'] = (float) $r['price'];
+            }
+            $cart[$vid]['stock_qty'] = (int) $r['stock_qty'];
+            if ((int) $item['quantity'] > (int) $r['stock_qty']) {
+                $cart[$vid]['quantity'] = (int) $r['stock_qty'];
+                $notes[] = "Kho chỉ còn {$r['stock_qty']} \"$name\", số lượng đã được điều chỉnh.";
+            }
+        }
+        return $notes;
+    }
+
     /** Sản phẩm theo danh sách id (cùng dạng dữ liệu với thẻ sản phẩm), giữ đúng thứ tự $ids. */
     public function getByIds(array $ids): array
     {

@@ -10,6 +10,17 @@ abstract class BaseController
     public function __construct()
     {
         $this->pdo = Database::getInstance();
+
+        // Quyền đăng nhập chỉ kiểm tra lúc đăng nhập, nên admin khóa hoặc xóa tài khoản thì phải chặn cả phiên đang mở
+        if (isset($_SESSION['user_id'])) {
+            $st = $this->pdo->prepare('SELECT is_active FROM users WHERE id = ?');
+            $st->execute([(int) $_SESSION['user_id']]);
+            if ((int) $st->fetchColumn() !== 1) {
+                session_unset();
+                session_regenerate_id(true);
+                $_SESSION['flash'] = ['error' => 'Tài khoản của bạn đã bị khóa hoặc không còn tồn tại. Vui lòng liên hệ quản trị viên.'];
+            }
+        }
     }
 
     // ─── Render view với layout ───────────────────────────────────

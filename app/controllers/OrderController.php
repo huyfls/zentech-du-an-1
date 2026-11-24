@@ -31,6 +31,12 @@ class OrderController extends BaseController
             return;
         }
 
+        // Giá và tồn kho có thể đã đổi từ lúc bỏ vào giỏ: đồng bộ trước khi hiện tổng tiền
+        if ($notes = $this->productModel->refreshCart($_SESSION['cart'])) {
+            $this->setFlash('error', implode(' ', $notes));
+            $this->redirect('/gio-hang');
+            return;
+        }
         $cartItems = $_SESSION['cart'];
 
         // Tính subtotal

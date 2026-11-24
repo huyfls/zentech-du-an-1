@@ -40,6 +40,11 @@ class CartController extends BaseController
      */
     public function index(): void
     {
+        $_SESSION['cart'] = $_SESSION['cart'] ?? [];
+        if ($notes = $this->productModel->refreshCart($_SESSION['cart'])) {
+            // nối thêm, không đè thông báo vừa đặt (ví dụ "Kho chỉ còn..." từ lần sửa số lượng trước)
+            $this->setFlash('error', trim(($_SESSION['flash']['error'] ?? '') . ' ' . implode(' ', $notes)));
+        }
         $summary = $this->getCartSummary();
 
         $this->render('cart/index', [
@@ -174,7 +179,13 @@ class CartController extends BaseController
                 $_SESSION['cart'][$variantId]['stock_qty'] = $stockLimit;
             }
 
-            $_SESSION['cart'][$variantId]['quantity'] = min($qty, $stockLimit);
+            if ($stockLimit <= 0) {
+                unset($_SESSION['cart'][$variantId]);
+                $this->setFlash('error', 'Sản phẩm đã hết hàng nên đã được bỏ khỏi giỏ.');
+            } else {
+                if ($qty > $stockLimit) $this->setFlash('error', 'Kho chỉ còn ' . $stockLimit . ' sản phẩm, số lượng đã được điều chỉnh về ' . $stockLimit . '.');
+                $_SESSION['cart'][$variantId]['quantity'] = min($qty, $stockLimit);
+            }
         }
 
         $summary = $this->getCartSummary();

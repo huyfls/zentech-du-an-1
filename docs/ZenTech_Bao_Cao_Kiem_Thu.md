@@ -1,8 +1,8 @@
 # Báo Cáo Kiểm Thử Hệ Thống ZenTech
 
-> **Ngày kiểm thử:** 20/11/2026  
+> **Ngày kiểm thử:** 24/11/2026  
 > **Môi trường:** PHP 8.2 (máy chủ tích hợp), MariaDB (XAMPP), Chrome; chạy tại `localhost:8001`  
-> **Kết quả tự động:** 155 trên 155 ca đạt
+> **Kết quả tự động:** 158 trên 158 ca đạt
 
 ---
 
@@ -11,7 +11,7 @@
 | Chỉ số | Kết quả |
 |---|---|
 | Ca kiểm thử tự động: kiểm tra trang, bảo mật, đơn hàng, quản trị | 59 / 59 đạt |
-| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 96 / 96 đạt |
+| Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 99 / 99 đạt |
 | Kiểm thử logic JavaScript: bộ chọn biến thể (Node, `scratch/variant_picker_test.js`) | Đạt |
 | Kiểm thử thủ công trên trình duyệt | Máy tính (khoảng 800px) và điện thoại giả lập (375px); không có thanh cuộn ngang |
 | Rà soát theo checklist thiết kế | 8 checklist: giỏ hàng, thanh toán, đăng nhập, đăng ký, tìm kiếm, 404, báo lỗi nhập liệu, gửi biểu mẫu |
@@ -26,8 +26,8 @@
 | Hình ảnh sản phẩm | 1848 |
 | Thông số kỹ thuật (EAV) | 1834 |
 | Thương hiệu | 34 |
-| Người dùng | 14 |
-| Đơn hàng | 25 |
+| Người dùng | 15 |
+| Đơn hàng | 31 |
 
 Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm dữ liệu mẫu. Tồn kho, lượt bán và lượt xem là số giả lập.
 
@@ -85,8 +85,8 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E44 | không có cảnh báo PHP tại /admin/products | Đạt |
 | E45 | Truy cập /admin/orders trả về 200 | Đạt |
 | E46 | không có cảnh báo PHP tại /admin/orders | Đạt |
-| E47 | Truy cập /admin/orders/detail/280 trả về 200 | Đạt |
-| E48 | không có cảnh báo PHP tại /admin/orders/detail/280 | Đạt |
+| E47 | Truy cập /admin/orders/detail/304 trả về 200 | Đạt |
+| E48 | không có cảnh báo PHP tại /admin/orders/detail/304 | Đạt |
 | E49 | Truy cập /admin/products/create trả về 200 | Đạt |
 | E50 | không có cảnh báo PHP tại /admin/products/create | Đạt |
 | E51 | Trang đơn hàng admin không có cảnh báo PHP | Đạt |
@@ -99,7 +99,7 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E58 | Đơn đã giao là trạng thái cuối, không đổi tiếp | Đạt |
 | E59 | Khách hàng không vào được khu quản trị | Đạt |
 
-### 2.2 Luồng nghiệp vụ (96 ca)
+### 2.2 Luồng nghiệp vụ (99 ca)
 
 | Mã | Khu vực | Nội dung kiểm tra | Kết quả |
 |---|---|---|---|
@@ -190,15 +190,18 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | F85 | Giao diện | Tiêu đề lớn thống nhất ở các trang danh sách, giỏ, yêu thích, đăng nhập, đăng ký, 404 | Đạt |
 | F86 | Giao diện | Đã bỏ hiệu ứng vòng tròn khi bấm | Đạt |
 | F87 | Giao diện | Trang 404 không bị mã hóa ký tự hai lần | Đạt |
-| F88 | Admin mã giảm giá | Xem danh sách mã | Đạt |
-| F89 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
-| F90 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
-| F91 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
-| F92 | Admin mã giảm giá | Bật/tắt mã | Đạt |
-| F93 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
-| F94 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
-| F95 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
-| F96 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
+| F88 | Chi tiết | Admin khóa tài khoản khi khách đang đăng nhập: bị đăng xuất ở lần tải trang kế tiếp, có thông báo | Đạt |
+| F89 | Chi tiết | Giá đổi sau khi đã bỏ vào giỏ: giỏ hiện giá mới và báo cho khách | Đạt |
+| F90 | Chi tiết | Sửa số lượng vượt kho: giảm về đúng số còn và báo lý do | Đạt |
+| F91 | Admin mã giảm giá | Xem danh sách mã | Đạt |
+| F92 | Admin mã giảm giá | Tạo mã mới (tự viết hoa) | Đạt |
+| F93 | Admin mã giảm giá | Từ chối mã trùng | Đạt |
+| F94 | Admin mã giảm giá | Từ chối giảm trên 100% | Đạt |
+| F95 | Admin mã giảm giá | Bật/tắt mã | Đạt |
+| F96 | Hồi quy | Trường form dạng mảng không làm trang lỗi nghiêm trọng | Đạt |
+| F97 | Hồi quy | Tham số URL dạng mảng (?sort[]=x, ?q[]=a) không có cảnh báo PHP | Đạt |
+| F98 | Hồi quy | Đăng xuất đổi mã phiên | Đạt |
+| F99 | Hồi quy | Phí ship tính theo giá hiện tại trong database, không theo giá cũ trong giỏ | Đạt |
 
 ---
 

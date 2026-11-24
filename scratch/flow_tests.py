@@ -253,6 +253,24 @@ okp = all("t-section" in req(c2 if u in ("/tai-khoan", "/don-hang") else cli(), 
 check("Giao diện", "Tiêu đề lớn thống nhất ở các trang danh sách, giỏ, yêu thích, đăng nhập, đăng ký, 404", okp)
 check("Giao diện", "Đã bỏ hiệu ứng vòng tròn khi bấm", "zt-burst" not in req(cli(), "GET", "/assets/js/motion.js")[1])
 check("Giao diện", "Trang 404 không bị mã hóa ký tự hai lần", "&amp;#039;" not in req(cli(), "GET", "/khong-co-trang")[1])
+# Các chi tiết nhỏ: khóa tài khoản giữa phiên, giá đổi sau khi bỏ vào giỏ, sửa số lượng vượt kho
+ck = cli(); follow(ck, "POST", "/auth/login", {"csrf_token": tok(ck), "email": em, "password": "Reset#Pass9"})
+sql(f"update users set is_active=0 where email='{em}'")
+s_, b_ = follow(ck, "GET", "/tai-khoan")
+check("Chi tiết", "Admin khóa tài khoản khi khách đang đăng nhập: bị đăng xuất ở lần tải trang kế tiếp, có thông báo", "đã bị khóa" in b_ and "Tài khoản của tôi." not in b_)
+sql(f"update users set is_active=1 where email='{em}'")
+cg = cli(); Hg = {"X-CSRF-Token": tok(cg, "/"), "X-Requested-With": "XMLHttpRequest"}
+vp = sql("select id from product_variants where is_active=1 and stock_qty between 3 and 50 and sale_price is null limit 1")
+p0 = sql(f"select price from product_variants where id={vp}")
+req(cg, "POST", "/cart/add", {"variant_id": vp, "quantity": 1}, Hg)
+sql(f"update product_variants set price=price+100000 where id={vp}")
+newp = f"{int(float(p0)) + 100000:,}".replace(",", ".")
+b_ = req(cg, "GET", "/gio-hang")[1]
+check("Chi tiết", "Giá đổi sau khi đã bỏ vào giỏ: giỏ hiện giá mới và báo cho khách", newp in b_ and "đã đổi từ" in b_)
+sql(f"update product_variants set price={p0} where id={vp}")
+stv = int(sql(f"select stock_qty from product_variants where id={vp}"))
+s_, b_, _ = req(cg, "POST", "/cart/update", {"variant_id": vp, "quantity": stv + 20}, Hg)
+check("Chi tiết", "Sửa số lượng vượt kho: giảm về đúng số còn và báo lý do", json.loads(b_)["quantity"] == stv and "Kho chỉ còn" in req(cg, "GET", "/gio-hang")[1])
 # Admin: quản lý mã giảm giá
 s, b, _ = req(ad, "GET", "/admin/coupons"); check("Admin mã giảm giá", "Xem danh sách mã", s == 200 and "ZENTECH10" in b)
 t = tok(ad, "/admin/coupons")
@@ -280,6 +298,7 @@ vrow = sql("select id, price, coalesce(sale_price,'NULL') from product_variants 
 c4 = cli(); t = tok(c4); follow(c4, "POST", "/auth/register", {"csrf_token": t, "full_name": "Ship Test", "email": f"ship_{ts}@zentech.vn", "password": "FlowTest#1", "confirm_password": "FlowTest#1", "phone": ""})
 req(c4, "POST", "/cart/add", {"variant_id": vrow[0], "quantity": 1}, {"X-CSRF-Token": tok(c4, "/"), "X-Requested-With": "XMLHttpRequest"})   # giá trong giỏ >= 500.000
 sql(f"update product_variants set sale_price=400000 where id={vrow[0]}")                                      # admin hạ giá sau đó
+req(c4, "GET", "/gio-hang")   # giỏ đồng bộ giá mới trước, rồi mới vào thanh toán
 t = tok(c4, "/checkout"); follow(c4, "POST", "/order/place", {"csrf_token": t, "receiver_name": "S", "receiver_phone": "0912345678", "shipping_address": "1 St", "payment_method": "cod"})
 row = sql(f"select shipping_fee, subtotal from orders where user_id=(select id from users where email='ship_{ts}@zentech.vn') order by id desc limit 1")
 sql(f"update product_variants set sale_price={'NULL' if vrow[2]=='NULL' else vrow[2]} where id={vrow[0]}")
