@@ -77,7 +77,7 @@ $actionUrl = $isEdit ? '/admin/products/update/' . $product['id'] : '/admin/prod
 
                 <div>
                     <label class="block text-xs font-semibold text-zinc-300 mb-1.5">URL Ảnh đại diện chính</label>
-                    <input type="url" name="thumbnail_url" placeholder="https://..."
+                    <input type="text" name="thumbnail_url" pattern="(https?://|/).+" title="Link https://... hoặc đường dẫn /uploads/..." placeholder="https://... hoặc /uploads/..."
                            value="<?= htmlspecialchars($product['thumbnail_url'] ?? '') ?>"
                            class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-4 py-2.5 text-xs text-white outline-none">
                 </div>
