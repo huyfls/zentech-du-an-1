@@ -87,19 +87,81 @@ s,_,h=req(a,"POST",f"/admin/orders/update/{oid2}",{"status":"delivered"}); check
 s,_,h=req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"delivered"})
 check("Không cho nhảy trạng thái từ chờ xử lý sang đã giao",sql(f"select status from orders where id={oid2}")=="pending",sql(f"select status from orders where id={oid2}"))
 check("Sau cập nhật chuyển về trang chi tiết đơn",h.get("Location","").endswith(f"/admin/orders/detail/{oid2}"),h.get("Location"))
-for st in ["confirmed","processing","shipping"]:
+for st in ["confirmed","processing","handed_over","shipping"]:
     req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":st})
-check("Chuỗi trạng thái hợp lệ đến đang giao",sql(f"select status from orders where id={oid2}")=="shipping")
+check("Chuỗi trạng thái một chiều đến shipper đang giao",sql(f"select status from orders where id={oid2}")=="shipping")
 s0=int(sql(f"select stock_qty from product_variants where id={vid}"))
-req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"returned"})
-check("Không còn chuyển đơn sang hoàn hàng",sql(f"select status from orders where id={oid2}")=="shipping" and int(sql(f"select stock_qty from product_variants where id={vid}"))==s0)
+req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"cancelled"})
+check("Đang giao thì admin không hủy được đơn",sql(f"select status from orders where id={oid2}")=="shipping" and int(sql(f"select stock_qty from product_variants where id={vid}"))==s0)
 req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"delivered"})
-check("Đang giao chuyển sang đã giao",sql(f"select status from orders where id={oid2}")=="delivered")
-req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"returned"})
-check("Đơn đã giao là trạng thái cuối, không đổi tiếp",sql(f"select status from orders where id={oid2}")=="delivered")
+check("Admin không được bấm đã giao hàng",sql(f"select status from orders where id={oid2}")=="shipping")
+req(a,"POST",f"/admin/orders/failed/{oid2}",{"csrf_token":tok,"note":"khong nghe may"})
+check("Ghi nhận giao thất bại lần 1, đơn vẫn đang giao",sql(f"select concat(status,fail_count) from orders where id={oid2}")=="shipping1")
+ctok=token(c,f"/orders/{oid2}")
+s,_,_=req(c,"POST",f"/orders/cancel/{oid2}",{"csrf_token":ctok}); check("Khách không hủy được đơn đã giao cho vận chuyển",sql(f"select status from orders where id={oid2}")=="shipping")
+s,_,_=req(c,"POST",f"/orders/received/{oid2}",{"csrf_token":ctok})
+check("Khách bấm Đã nhận hàng: đơn sang đã nhận, COD tính đã thanh toán",sql(f"select concat(status,'/',payment_status) from orders where id={oid2}")=="delivered/paid")
+req(a,"POST",f"/admin/orders/update/{oid2}",{"csrf_token":tok,"status":"completed"})
+check("Còn hạn trả hàng thì admin chưa hoàn thành được",sql(f"select status from orders where id={oid2}")=="delivered")
+# trả hàng: multipart có ảnh minh chứng
+import uuid, base64
+png=base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==")
+def multipart(c,path,fields,files):
+    bd=uuid.uuid4().hex; parts=[]
+    for k,v in fields.items(): parts.append(f'--{bd}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode())
+    for k,(fn,data,ct) in files.items(): parts.append(f'--{bd}\r\nContent-Disposition: form-data; name="{k}"; filename="{fn}"\r\nContent-Type: {ct}\r\n\r\n'.encode()+data+b"\r\n")
+    body=b"".join(parts)+f"--{bd}--\r\n".encode()
+    r=urllib.request.Request(B+path,data=body,method="POST",headers={"Content-Type":f"multipart/form-data; boundary={bd}"})
+    try: resp=c.open(r); return resp.status
+    except urllib.error.HTTPError as e: return e.code
+ctok=token(c,f"/orders/{oid2}")
+multipart(c,f"/orders/return/{oid2}",{"csrf_token":ctok,"reason":"Sản phẩm lỗi / không hoạt động","description":"ngắn","refund_method":"wallet"},{"evidence":("a.png",png,"image/png")})
+check("Trả hàng mô tả quá ngắn bị từ chối",sql(f"select status from orders where id={oid2}")=="delivered")
+multipart(c,f"/orders/return/{oid2}",{"csrf_token":ctok,"reason":"Sản phẩm lỗi / không hoạt động","description":"Chuột bị liệt nút trái sau 1 ngày dùng","refund_method":"wallet"},{"evidence":("a.php",b"<?php echo 1;","image/png")})
+check("Ảnh minh chứng không phải ảnh thật bị từ chối",sql(f"select status from orders where id={oid2}")=="delivered")
+multipart(c,f"/orders/return/{oid2}",{"csrf_token":ctok,"reason":"Sản phẩm lỗi / không hoạt động","description":"Chuột bị liệt nút trái sau 1 ngày dùng","refund_method":"wallet"},{"evidence":("a.png",png,"image/png")})
+check("Gửi yêu cầu trả hàng có ảnh minh chứng",sql(f"select concat(o.status,'/',r.status) from orders o join order_returns r on r.order_id=o.id where o.id={oid2}")=="return_requested/pending")
+s,b,_=req(a,"GET","/admin/returns"); check("Tab Hoàn hàng của admin hiện yêu cầu",s==200 and "Chuột bị liệt" in b,s)
+s0=int(sql(f"select stock_qty from product_variants where id={vid}")); total=int(sql(f"select total_amount from orders where id={oid2}"))
+tok=token(a,"/admin/returns")
+req(a,"POST",f"/admin/returns/{oid2}",{"csrf_token":tok,"decision":"approve"})
+check("Duyệt trả hàng: đơn đã trả, hàng về kho",sql(f"select status from orders where id={oid2}")=="returned" and int(sql(f"select stock_qty from product_variants where id={vid}"))==s0+1)
+check("Duyệt trả hàng: tiền hoàn vào ví ZenTech",int(sql(f"select wallet_balance from users where email='{email}'"))==total,sql(f"select wallet_balance from users where email='{email}'"))
+# thanh toán bằng ví, rồi giao thất bại 3 lần -> hủy + hoàn ví
+H={"X-CSRF-Token":token(c,"/san-pham/"+slug),"X-Requested-With":"XMLHttpRequest"}
+req(c,"POST","/cart/add",{"variant_id":vid,"quantity":1},H); ctok=token(c,"/checkout")
+price=int(sql(f"select coalesce(sale_price,price) from product_variants where id={vid}"))
+if price+ (0 if price>=500000 else 30000) <= total:
+    req(c,"POST","/order/place",{"csrf_token":ctok,"receiver_name":"E2E","receiver_phone":"0912345678","shipping_address":"1 Test St","payment_method":"wallet"})
+    oid3=sql(f"select max(id) from orders where user_id=(select id from users where email='{email}')")
+    check("Thanh toán bằng ví: đơn đã thanh toán, ví bị trừ",sql(f"select concat(payment_method,'/',payment_status) from orders where id={oid3}")=="wallet/paid" and int(sql(f"select wallet_balance from users where email='{email}'"))==total-int(sql(f"select total_amount from orders where id={oid3}")))
+    tok=token(a,f"/admin/orders/detail/{oid3}")
+    for st in ["confirmed","processing","handed_over"]: req(a,"POST",f"/admin/orders/update/{oid3}",{"csrf_token":tok,"status":st})
+    s0=int(sql(f"select stock_qty from product_variants where id={vid}"))
+    for i in range(3): req(a,"POST",f"/admin/orders/failed/{oid3}",{"csrf_token":tok})
+    check("Giao thất bại 3 lần: đơn hủy, hàng về kho, tiền về ví",sql(f"select concat(status,'/',payment_status) from orders where id={oid3}")=="cancelled/refunded" and int(sql(f"select stock_qty from product_variants where id={vid}"))==s0+1 and int(sql(f"select wallet_balance from users where email='{email}'"))==total)
+# giỏ hàng lưu DB: thiết bị thứ hai thấy cùng giỏ; tối đa 10 mỗi sản phẩm
+H={"X-CSRF-Token":token(c,"/san-pham/"+slug),"X-Requested-With":"XMLHttpRequest"}
+vid10=sql("select id from product_variants where is_active=1 and stock_qty>=15 limit 1")
+s,b,_=req(c,"POST","/cart/add",{"variant_id":vid10,"quantity":12},H)
+check("Thêm 12 cái bị giới hạn còn 10",'"success": true' in b and int(sql(f"select ci.quantity from cart_items ci join carts ct on ct.id=ci.cart_id where ct.user_id=(select id from users where email='{email}') and ci.variant_id={vid10}") or 0)==10,b[:200])
+c2,_=client(); tok=token(c2); req(c2,"POST","/auth/login",{"csrf_token":tok,"email":email,"password":pw})
+s,b,_=req(c2,"GET","/cart/count"); check("Trình duyệt thứ hai đăng nhập cùng tài khoản thấy cùng giỏ",'"count": 10' in b,b[:80])
+# mã giảm giá theo danh mục
+cat=sql(f"select p.category_id from product_variants pv join products p on p.id=pv.product_id where pv.id={vid10}")
+other=sql(f"select id from categories where id<>{cat} and (parent_id is null or parent_id<>{cat}) and id<>(select coalesce(parent_id,0) from categories where id={cat}) limit 1")
+sql(f"insert into coupons(code,discount_type,discount_value,category_id) values('E2ECAT{ts}','percent',10,{other}),('E2EOK{ts}','percent',10,{cat})")
+H={"X-CSRF-Token":token(c,"/checkout"),"X-Requested-With":"XMLHttpRequest"}
+s,b,_=req(c,"POST","/coupon/preview",{"coupon_code":f"E2ECAT{ts}"},H); check("Mã của danh mục khác bị từ chối",s==422 and "phạm vi" in b,(s,b[:120]))
+s,b,_=req(c,"POST","/coupon/preview",{"coupon_code":f"E2EOK{ts}"},H); check("Mã đúng danh mục được áp dụng",s==200 and '"ok": true' in b,(s,b[:120]))
+sql(f"delete from coupons where code in ('E2ECAT{ts}','E2EOK{ts}')")
+s,b,_=req(a,"GET","/admin?range=7d&status=pending"); check("Bộ lọc dashboard chạy, không cảnh báo PHP",s==200 and "Bộ lọc" not in b[:0] and not re.search(r"(Warning|Fatal error|Notice|Deprecated)</b>",b),s)
+s,b,_=req(a,"GET","/admin?range=custom&from=2026-13-40&to=abc"); check("Bộ lọc dashboard bỏ qua ngày sai",s==200,s)
 # non-admin can't access admin
 s,_,h=req(c,"GET","/admin"); check("Khách hàng không vào được khu quản trị",s in(302,403),s)
 # cleanup
+for f in sql(f"select evidence_url from order_returns where user_id=(select id from users where email='{email}')").split():
+    import os; os.remove("public"+f) if os.path.exists("public"+f) else None
 sql(f"delete from orders where user_id in (select id from users where email in ('{email}'))")
 sql(f"delete from users where email in ('{email}','{aemail}')")
 print("\nALL PASS" if ok else "\nSOME FAILED"); sys.exit(0 if ok else 1)

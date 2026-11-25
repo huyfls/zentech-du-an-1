@@ -56,8 +56,9 @@ unset($_SESSION['flash']);
 
                 <div>
                     <label class="block text-xs font-semibold text-zinc-300 mb-1">Email *</label>
-                    <input type="email" name="email" required autocomplete="email" placeholder="you@domain.com" value="<?= e($flash['old']['email'] ?? '') ?>"
+                    <input type="email" id="reg-email" name="email" aria-describedby="email-msg" required autocomplete="email" placeholder="you@domain.com" value="<?= e($flash['old']['email'] ?? '') ?>"
                            class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+                    <p id="email-msg" class="text-[11px] mt-1 min-h-[1em]" aria-live="polite"></p>
                 </div>
 
                 <div>
@@ -96,3 +97,27 @@ unset($_SESSION['flash']);
 <script src="/assets/js/form-loading.js"></script>
 </body>
 </html>
+<script>
+// Kiểm tra email ngay khi gõ: định dạng + đã có tài khoản chưa
+(function () {
+    const input = document.getElementById('reg-email'), msg = document.getElementById('email-msg');
+    if (!input) return;
+    let timer, last = '';
+    input.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(async () => {
+            const v = input.value.trim();
+            if (v === last) return;
+            last = v;
+            if (!v) { msg.textContent = ''; input.setCustomValidity(''); return; }
+            try {
+                const d = await (await fetch('/auth/check-email?email=' + encodeURIComponent(v))).json();
+                if (input.value.trim() !== v) return;
+                msg.textContent = d.message;
+                msg.className = 'text-[11px] mt-1 min-h-[1em] ' + (d.ok ? 'text-green-400' : 'text-red-400');
+                input.setCustomValidity(d.ok ? '' : d.message);
+            } catch (e) { input.setCustomValidity(''); }
+        }, 400);
+    });
+})();
+</script>

@@ -28,16 +28,7 @@
     <?php else: ?>
         <div class="space-y-4">
             <?php foreach ($orders as $order): 
-                $statusMap = [
-                    'pending'    => ['Chờ xác nhận', 'bg-amber-500/10 text-amber-400 border-amber-500/20'],
-                    'confirmed'  => ['Đã xác nhận',  'bg-accent-500/10 text-accent-400 border-accent-500/20'],
-                    'processing' => ['Đang xử lý',   'bg-ember-500/10 text-ember-400 border-ember-500/20'],
-                    'shipping'   => ['Đang giao',     'bg-accent-500/10 text-accent-400 border-accent-500/20'],
-                    'delivered'  => ['Đã giao',       'bg-green-500/10 text-green-400 border-green-500/20'],
-                    'cancelled'  => ['Đã hủy',        'bg-red-500/10 text-red-400 border-red-500/20'],
-                    'returned'   => ['Đã trả hàng',   'bg-zinc-800 text-zinc-300 border-zinc-700'],
-                ];
-                [$statusText, $statusClass] = $statusMap[$order['status']] ?? [$order['status'], 'bg-zinc-800 text-zinc-300 border-zinc-700'];
+                [$statusText, $statusClass] = OrderModel::badge($order['status']);
             ?>
                 <div class="bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-zinc-700 transition">
                     <div>

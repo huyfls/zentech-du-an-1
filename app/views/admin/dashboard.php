@@ -8,21 +8,40 @@
     <!-- Page Header -->
     <div>
         <h1 class="text-2xl font-black text-white tracking-tight">Tổng Quan Hệ Thống</h1>
-        <p class="text-xs text-zinc-400 mt-1">Dữ liệu thống kê doanh số và tình trạng vận hành của ZenTech</p>
+        <p class="text-xs text-zinc-400 mt-1">Số liệu từ <?= date('d/m/Y', strtotime($filter['from'])) ?> đến <?= date('d/m/Y', strtotime($filter['to'])) ?> (theo ngày đặt đơn)</p>
     </div>
+
+    <!-- Bộ lọc -->
+    <form method="GET" action="/admin" class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 flex flex-wrap items-end gap-3 text-xs">
+        <label><span class="block mb-1 text-zinc-400 font-semibold">Khoảng thời gian</span>
+            <select name="range" class="bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white" onchange="document.getElementById('dash-custom').classList.toggle('hidden', this.value !== 'custom'); document.getElementById('dash-custom').classList.toggle('flex', this.value === 'custom'); if (this.value !== 'custom') this.form.submit()">
+                <?php foreach (AdminDashboardController::RANGES as $k => $l): ?><option value="<?= $k ?>" <?= $filter['range'] === $k ? 'selected' : '' ?>><?= $l ?></option><?php endforeach; ?>
+            </select></label>
+        <div id="dash-custom" class="items-end gap-3 <?= $filter['range'] === 'custom' ? 'flex' : 'hidden' ?>">
+            <label><span class="block mb-1 text-zinc-400 font-semibold">Từ ngày</span><input type="date" name="from" value="<?= e($filter['from']) ?>" class="bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white"></label>
+            <label><span class="block mb-1 text-zinc-400 font-semibold">Đến ngày</span><input type="date" name="to" value="<?= e($filter['to']) ?>" class="bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white"></label>
+        </div>
+        <label><span class="block mb-1 text-zinc-400 font-semibold">Trạng thái đơn (danh sách bên dưới)</span>
+            <select name="status" class="bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white" onchange="this.form.submit()">
+                <option value="">Tất cả trạng thái</option>
+                <?php foreach (OrderModel::LABELS as $k => $l): ?><option value="<?= $k ?>" <?= $filter['status'] === $k ? 'selected' : '' ?>><?= e($l) ?></option><?php endforeach; ?>
+            </select></label>
+        <button class="px-4 py-2 rounded-xl bg-accent-500 text-white font-bold">Lọc</button>
+        <?php if ($filter['range'] !== '30d' || $filter['status']): ?><a href="/admin" class="py-2 text-zinc-400 hover:text-white">Đặt lại</a><?php endif; ?>
+    </form>
 
     <!-- Metric Stat Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <!-- Doanh thu -->
         <div class="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 hover:border-accent-500/30 transition">
             <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Doanh Thu Đã Giao</span>
+                <span class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Doanh thu</span>
                 <span class="w-8 h-8 rounded-xl bg-accent-500/10 text-accent-400 flex items-center justify-center text-sm"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h20v10H2zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg></span>
             </div>
             <div class="text-2xl font-black text-white">
                 <?= number_format($stats['total_revenue'] ?? 0, 0, ',', '.') ?>₫
             </div>
-            <div class="text-[11px] text-green-400 mt-1">Đơn hoàn tất giao</div>
+            <div class="text-[11px] text-green-400 mt-1">Đơn khách đã nhận / hoàn thành</div>
         </div>
 
         <!-- Tổng đơn hàng -->
@@ -34,7 +53,7 @@
             <div class="text-2xl font-black text-white">
                 <?= number_format($stats['total_orders'] ?? 0) ?>
             </div>
-            <div class="text-[11px] text-zinc-400 mt-1">Toàn bộ đơn phát sinh</div>
+            <div class="text-[11px] text-zinc-400 mt-1">Đã hủy: <?= $stats['cancelled'] ?> · Trả hàng: <?= $stats['returns'] ?></div>
         </div>
 
         <!-- Đơn chờ duyệt -->
@@ -58,7 +77,7 @@
             <div class="text-2xl font-black text-white">
                 <?= number_format($stats['total_products'] ?? 0) ?>
             </div>
-            <div class="text-[11px] text-accent-400 mt-1">Trong kho sản phẩm</div>
+            <div class="text-[11px] text-accent-400 mt-1">Khách mới trong kỳ: <?= $stats['new_customers'] ?></div>
         </div>
     </div>
 
@@ -70,7 +89,7 @@
             <div class="flex items-center justify-between">
                 <h2 class="text-base font-bold text-white flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-accent-400"></span>
-                    Đơn Hàng Gần Đây
+                    Đơn hàng trong kỳ<?= $filter['status'] ? ' — ' . e(OrderModel::LABELS[$filter['status']]) : '' ?>
                 </h2>
                 <a href="/admin/orders" class="text-xs text-accent-400 hover:underline">Xem tất cả &rarr;</a>
             </div>
@@ -79,25 +98,16 @@
                 <table class="w-full text-left text-xs">
                     <thead>
                         <tr class="text-zinc-500 border-b border-zinc-800 pb-2">
-                            <th class="py-2.5 font-semibold">MÃ ĐƠN</th>
-                            <th class="py-2.5 font-semibold">KHÁCH HÀNG</th>
-                            <th class="py-2.5 font-semibold">TỔNG TIỀN</th>
-                            <th class="py-2.5 font-semibold">TRẠNG THÁI</th>
-                            <th class="py-2.5 font-semibold text-right">THAO TÁC</th>
+                            <th class="py-2.5 font-semibold">Mã đơn</th>
+                            <th class="py-2.5 font-semibold">Khách hàng</th>
+                            <th class="py-2.5 font-semibold">Tổng tiền</th>
+                            <th class="py-2.5 font-semibold">Trạng thái</th>
+                            <th class="py-2.5 font-semibold text-right">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-zinc-800/60">
                         <?php foreach ($recentOrders as $ro): 
-                            $statusMap = [
-                                'pending'    => ['Chờ xác nhận', 'bg-amber-500/10 text-amber-400 border-amber-500/20'],
-                                'confirmed'  => ['Đã xác nhận',  'bg-accent-500/10 text-accent-400 border-accent-500/20'],
-                                'shipping'   => ['Đang giao',     'bg-accent-500/10 text-accent-400 border-accent-500/20'],
-                                'delivered'  => ['Đã giao',       'bg-green-500/10 text-green-400 border-green-500/20'],
-                                'cancelled'  => ['Đã hủy',        'bg-red-500/10 text-red-400 border-red-500/20'],
-                                'processing' => ['Đang xử lý',   'bg-accent-500/10 text-accent-400 border-accent-500/20'],
-                                'returned'   => ['Đã trả hàng',   'bg-zinc-800 text-zinc-300 border-zinc-700'],
-                            ];
-                            [$stText, $stClass] = $statusMap[$ro['status']] ?? [$ro['status'], 'bg-zinc-800 text-zinc-300 border-zinc-700'];
+                            [$stText, $stClass] = OrderModel::badge($ro['status']);
                         ?>
                             <tr class="hover:bg-zinc-800/30 transition">
                                 <td class="py-3 font-mono font-bold text-white"><?= htmlspecialchars($ro['order_code']) ?></td>
@@ -115,6 +125,7 @@
                                 </td>
                             </tr>
                         <?php endforeach; ?>
+                        <?php if (!$recentOrders): ?><tr><td colspan="5" class="py-8 text-center text-zinc-500">Không có đơn hàng nào trong kỳ này.</td></tr><?php endif; ?>
                     </tbody>
                 </table>
             </div>

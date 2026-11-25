@@ -1,5 +1,5 @@
 <?php
-/** VIEW: Admin - Mã giảm giá. Biến: $coupons */
+/** VIEW: Admin - Mã giảm giá. Biến: $coupons, $categories, $products */
 $in = 'w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded-xl px-3 py-2 text-xs text-white outline-none';
 ?>
 <div class="space-y-6">
@@ -19,19 +19,30 @@ $in = 'w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 rounded
         <div><label class="block text-[11px] font-semibold text-zinc-300 mb-1">Bắt đầu</label><input name="starts_at" type="datetime-local" class="<?= $in ?>"></div>
         <div><label class="block text-[11px] font-semibold text-zinc-300 mb-1">Hết hạn</label><input name="expires_at" type="datetime-local" class="<?= $in ?>"></div>
         <div><label class="block text-[11px] font-semibold text-zinc-300 mb-1">Mô tả</label><input name="description" maxlength="255" class="<?= $in ?>"></div>
+        <div><label class="block text-[11px] font-semibold text-zinc-300 mb-1">Áp dụng cho</label>
+            <select name="scope" class="<?= $in ?>" onchange="document.getElementById('scope-cat').hidden = this.value !== 'category'; document.getElementById('scope-prod').hidden = this.value !== 'product'">
+                <option value="all">Toàn bộ sản phẩm</option><option value="category">Một danh mục</option><option value="product">Một sản phẩm</option></select></div>
+        <div id="scope-cat" hidden><label class="block text-[11px] font-semibold text-zinc-300 mb-1">Danh mục (gồm cả danh mục con)</label>
+            <select name="category_id" class="<?= $in ?>"><option value="">-- Chọn danh mục --</option>
+            <?php foreach ($categories as $cat): ?><option value="<?= (int) $cat['id'] ?>"><?= $cat['parent_id'] ? '— ' : '' ?><?= e($cat['name']) ?></option><?php endforeach; ?></select></div>
+        <div id="scope-prod" hidden class="sm:col-span-2"><label class="block text-[11px] font-semibold text-zinc-300 mb-1">Sản phẩm</label>
+            <input list="coupon-products" placeholder="Gõ tên để tìm..." class="<?= $in ?>" oninput="const o = [...document.querySelectorAll('#coupon-products option')].find(x => x.value === this.value); this.form.product_id.value = o ? o.dataset.id : ''">
+            <input type="hidden" name="product_id">
+            <datalist id="coupon-products"><?php foreach ($products as $p): ?><option data-id="<?= (int) $p['id'] ?>" value="<?= e($p['name']) ?>"></option><?php endforeach; ?></datalist></div>
         <div class="sm:col-span-2 lg:col-span-4"><button class="px-5 py-2.5 rounded-xl bg-accent-500 text-white text-xs font-bold">+ Tạo mã</button></div>
     </form>
 
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-x-auto">
         <table class="w-full text-xs">
             <thead><tr class="text-left text-[11px] uppercase text-zinc-500">
-                <th class="px-5 py-3">Mã</th><th class="px-3">Giảm</th><th class="px-3">Đơn tối thiểu</th><th class="px-3">Đã dùng</th><th class="px-3">Hiệu lực</th><th class="px-3">Trạng thái</th><th class="px-5"></th>
+                <th class="px-5 py-3">Mã</th><th class="px-3">Giảm</th><th class="px-3">Áp dụng cho</th><th class="px-3">Đơn tối thiểu</th><th class="px-3">Đã dùng</th><th class="px-3">Hiệu lực</th><th class="px-3">Trạng thái</th><th class="px-5"></th>
             </tr></thead>
             <tbody>
             <?php foreach ($coupons as $c): ?>
                 <tr class="border-t border-zinc-800">
                     <td class="px-5 py-3"><div class="font-bold text-white"><?= e($c['code']) ?></div><div class="text-zinc-500"><?= e($c['description']) ?></div></td>
                     <td class="px-3"><?= $c['discount_type'] === 'percent' ? (float) $c['discount_value'] . '%' : number_format($c['discount_value'], 0, ',', '.') . '₫' ?></td>
+                    <td class="px-3 text-zinc-300"><?= $c['product_name'] ? 'Sản phẩm: ' . e($c['product_name']) : ($c['category_name'] ? 'Danh mục: ' . e($c['category_name']) : 'Toàn bộ') ?></td>
                     <td class="px-3"><?= number_format($c['min_order_value'], 0, ',', '.') ?>₫</td>
                     <td class="px-3"><?= (int) $c['used_count'] ?><?= $c['max_uses'] !== null ? ' / ' . (int) $c['max_uses'] : '' ?></td>
                     <td class="px-3 text-zinc-400"><?= $c['starts_at'] ? date('d/m/Y', strtotime($c['starts_at'])) : '—' ?> → <?= $c['expires_at'] ? date('d/m/Y', strtotime($c['expires_at'])) : '—' ?></td>

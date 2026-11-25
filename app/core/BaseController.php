@@ -21,6 +21,25 @@ abstract class BaseController
                 $_SESSION['flash'] = ['error' => 'Tài khoản của bạn đã bị khóa hoặc không còn tồn tại. Vui lòng liên hệ quản trị viên.'];
             }
         }
+
+        // Giỏ hàng của khách đã đăng nhập lấy từ DB mỗi request (đồng bộ giữa các trình duyệt), lưu lại khi có thay đổi
+        if (isset($_SESSION['user_id'])) {
+            $uid   = (int) $_SESSION['user_id'];
+            $carts = new CartModel($this->pdo);
+            $saved = $carts->load($uid);
+            $before = $saved;
+            if (empty($_SESSION['cart_synced'])) { // request đầu sau khi đăng nhập: gộp giỏ lúc chưa đăng nhập
+                $saved = CartModel::merge($saved, $_SESSION['cart'] ?? []);
+                $_SESSION['cart_synced'] = true;
+            }
+            $_SESSION['cart'] = $saved;
+            // redirect()/renderJson() kết thúc bằng exit nên lưu ở shutdown để không sót đường nào
+            register_shutdown_function(function () use ($carts, $uid, &$before) {
+                if ((int) ($_SESSION['user_id'] ?? 0) === $uid && ($_SESSION['cart'] ?? []) != $before) {
+                    $carts->save($uid, $_SESSION['cart'] ?? []);
+                }
+            });
+        }
     }
 
     // ─── Render view với layout ───────────────────────────────────

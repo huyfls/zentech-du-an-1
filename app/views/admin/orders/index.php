@@ -8,14 +8,8 @@
  *   $status, $search
  *   $counts: array
  */
-$statusTabs = [
-    ''           => ['Tất cả', $counts['all'] ?? 0],
-    'pending'    => ['Chờ xác nhận', $counts['pending'] ?? 0],
-    'confirmed'  => ['Đã xác nhận', $counts['confirmed'] ?? 0],
-    'shipping'   => ['Đang giao', $counts['shipping'] ?? 0],
-    'delivered'  => ['Đã giao', $counts['delivered'] ?? 0],
-    'cancelled'  => ['Đã hủy', $counts['cancelled'] ?? 0],
-];
+$statusTabs = ['' => ['Tất cả', $counts['all'] ?? 0]];
+foreach (OrderModel::LABELS as $k => $l) $statusTabs[$k] = [$l, $counts[$k] ?? 0];
 ?>
 
 <div class="space-y-6">
@@ -63,12 +57,12 @@ $statusTabs = [
                 <thead class="bg-zinc-950/60 text-zinc-400 border-b border-zinc-800">
                     <tr>
                         <th class="py-3.5 px-4 font-semibold">MÃ ĐƠN HÀNG</th>
-                        <th class="py-3.5 px-4 font-semibold">KHÁCH HÀNG</th>
-                        <th class="py-3.5 px-4 font-semibold">SĐT</th>
-                        <th class="py-3.5 px-4 font-semibold">TỔNG TIỀN</th>
-                        <th class="py-3.5 px-4 font-semibold">THANH TOÁN</th>
-                        <th class="py-3.5 px-4 font-semibold">TRẠNG THÁI</th>
-                        <th class="py-3.5 px-4 font-semibold">THỜI GIAN</th>
+                        <th class="py-3.5 px-4 font-semibold">Khách hàng</th>
+                        <th class="py-3.5 px-4 font-semibold">Số điện thoại</th>
+                        <th class="py-3.5 px-4 font-semibold">Tổng tiền</th>
+                        <th class="py-3.5 px-4 font-semibold">Thanh toán</th>
+                        <th class="py-3.5 px-4 font-semibold">Trạng thái</th>
+                        <th class="py-3.5 px-4 font-semibold">Thời gian</th>
                         <th class="py-3.5 px-4 font-semibold text-right">THAO TÁC</th>
                     </tr>
                 </thead>
@@ -81,16 +75,7 @@ $statusTabs = [
                         </tr>
                     <?php else: ?>
                         <?php foreach ($orders as $o): 
-                            $statusMap = [
-                                'pending'    => ['Chờ xác nhận', 'bg-amber-500/10 text-amber-400 border-amber-500/20'],
-                                'confirmed'  => ['Đã xác nhận',  'bg-accent-500/10 text-accent-400 border-accent-500/20'],
-                                'processing' => ['Đang xử lý',   'bg-ember-500/10 text-ember-400 border-ember-500/20'],
-                                'shipping'   => ['Đang giao',     'bg-accent-500/10 text-accent-400 border-accent-500/20'],
-                                'delivered'  => ['Đã giao',       'bg-green-500/10 text-green-400 border-green-500/20'],
-                                'cancelled'  => ['Đã hủy',        'bg-red-500/10 text-red-400 border-red-500/20'],
-                                'returned'   => ['Đã trả hàng',   'bg-zinc-800 text-zinc-300 border-zinc-700'],
-                            ];
-                            [$stText, $stClass] = $statusMap[$o['status']] ?? [$o['status'], 'bg-zinc-800 text-zinc-300 border-zinc-700'];
+                            [$stText, $stClass] = OrderModel::badge($o['status']);
                         ?>
                             <tr class="hover:bg-zinc-800/30 transition">
                                 <td class="py-3 px-4 font-mono font-bold text-white">
@@ -104,8 +89,8 @@ $statusTabs = [
                                     <?= number_format($o['total_amount'], 0, ',', '.') ?>₫
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="text-[11px] uppercase font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">
-                                        <?= strtoupper($o['payment_method']) ?>
+                                    <span class="text-[11px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                                        <?= e(OrderModel::PAYMENT_LABELS[$o['payment_method']] ?? $o['payment_method']) ?>
                                     </span>
                                 </td>
                                 <td class="py-3 px-4">

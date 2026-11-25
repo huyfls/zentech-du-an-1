@@ -294,7 +294,7 @@ $mainImage = $images[0] ?? $product['thumbnail_url'] ?? $product['thumbnail'] ??
                         <button type="button" onclick="changeQty(-1)"
                                 class="px-4 h-full text-zinc-400 hover:text-accent-400 hover:bg-zinc-700 transition-colors text-lg font-bold">−</button>
                         <input type="number" name="quantity" id="qty-input" aria-label="Số lượng"
-                               value="1" min="1" max="<?= $firstVariant['stock_qty'] ?? 99 ?>"
+                               value="1" min="1" max="<?= min(CartModel::MAX_QTY, (int) ($firstVariant['stock_qty'] ?? 99)) ?>"
                                class="w-14 h-full bg-transparent text-center text-white font-semibold focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         <button type="button" onclick="changeQty(1)"
                                 class="px-4 h-full text-zinc-400 hover:text-accent-400 hover:bg-zinc-700 transition-colors text-lg font-bold">+</button>
@@ -632,9 +632,9 @@ function updateVariantUI(variant) {
 
     // Giới hạn số lượng tối đa
     const qtyInput = document.getElementById('qty-input');
-    qtyInput.max = variant.stock_qty;
-    if (parseInt(qtyInput.value) > variant.stock_qty) {
-        qtyInput.value = Math.max(1, variant.stock_qty);
+    qtyInput.max = Math.min(<?= CartModel::MAX_QTY ?>, variant.stock_qty);
+    if (parseInt(qtyInput.value) > qtyInput.max) {
+        qtyInput.value = Math.max(1, qtyInput.max);
     }
 }
 

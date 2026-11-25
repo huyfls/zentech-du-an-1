@@ -252,4 +252,16 @@ class AuthController extends BaseController
         $this->setFlash('success', 'Đã đặt lại mật khẩu. Bạn có thể đăng nhập.');
         $this->redirect('/dang-nhap');
     }
+
+    /** GET (AJAX) - Kiểm tra email ngay khi gõ ở trang đăng ký. */
+    public function checkEmail(): void
+    {
+        $email = (string) $this->getGet('email', '');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->renderJson(['ok' => false, 'message' => 'Email chưa đúng định dạng (ví dụ: ten@gmail.com).']);
+        }
+        // shortcut: cho biết email đã có tài khoản (form đăng ký vốn đã báo điều này); thêm giới hạn tần suất nếu bị dò hàng loạt
+        $taken = (bool) $this->userModel->findByEmail($email);
+        $this->renderJson(['ok' => !$taken, 'message' => $taken ? 'Email này đã được sử dụng. Bạn có thể đăng nhập hoặc dùng email khác.' : 'Email có thể sử dụng.']);
+    }
 }

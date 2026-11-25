@@ -16,25 +16,51 @@ class AdminDashboardController extends BaseController
         $this->productModel = new ProductModel($this->pdo);
     }
 
+    public const RANGES = ['today' => 'Hôm nay', '7d' => '7 ngày qua', '30d' => '30 ngày qua', 'month' => 'Tháng này', 'all' => 'Toàn thời gian', 'custom' => 'Tùy chọn'];
+
     public function index(): void
     {
-        // Thống kê doanh thu và đơn hàng
+        // Bộ lọc: khoảng thời gian (theo ngày đặt đơn) + trạng thái cho danh sách đơn
+        $range  = $this->getGet('range', '30d');
+        $range  = isset(self::RANGES[$range]) ? $range : '30d';
+        $status = $this->getGet('status', '');
+        $status = isset(OrderModel::LABELS[$status]) ? $status : '';
+        $today  = date('Y-m-d');
+        [$from, $to] = match ($range) {
+            'today'  => [$today, $today],
+            '7d'     => [date('Y-m-d', strtotime('-6 days')), $today],
+            '30d'    => [date('Y-m-d', strtotime('-29 days')), $today],
+            'month'  => [date('Y-m-01'), $today],
+            'all'    => ['2000-01-01', $today],
+            'custom' => [$this->validDate($this->getGet('from', '')) ?? date('Y-m-d', strtotime('-29 days')), $this->validDate($this->getGet('to', '')) ?? $today],
+        };
+        if ($from > $to) [$from, $to] = [$to, $from];
+        $p = [$from . ' 00:00:00', $to . ' 23:59:59'];
+        $one = function (string $sql, array $extra = []) use ($p) {
+            $st = $this->pdo->prepare($sql);
+            $st->execute(array_merge($p, $extra));
+            return $st->fetchColumn() ?: 0;
+        };
+        $in = 'created_at BETWEEN ? AND ?';
+
         $stats = [
-            'total_revenue' => (float) ($this->pdo->query("SELECT SUM(total_amount) FROM orders WHERE status = 'delivered'")->fetchColumn() ?: 0),
-            'total_orders'  => (int) ($this->pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn() ?: 0),
-            'pending_orders'=> (int) ($this->pdo->query("SELECT COUNT(*) FROM orders WHERE status = 'pending'")->fetchColumn() ?: 0),
-            'total_products'=> (int) ($this->pdo->query("SELECT COUNT(*) FROM products WHERE is_active = 1")->fetchColumn() ?: 0),
-            'total_users'   => (int) ($this->pdo->query("SELECT COUNT(*) FROM users WHERE role_id = 2")->fetchColumn() ?: 0),
+            // doanh thu tính đơn khách đã nhận (chưa/đã hết hạn trả hàng), không tính đơn trả hàng hay hủy
+            'total_revenue'  => (float) $one("SELECT SUM(total_amount) FROM orders WHERE $in AND status IN ('delivered', 'completed')"),
+            'total_orders'   => (int) $one("SELECT COUNT(*) FROM orders WHERE $in"),
+            'pending_orders' => (int) $one("SELECT COUNT(*) FROM orders WHERE $in AND status = 'pending'"),
+            'cancelled'      => (int) $one("SELECT COUNT(*) FROM orders WHERE $in AND status = 'cancelled'"),
+            'returns'        => (int) $one("SELECT COUNT(*) FROM order_returns WHERE $in"),
+            'new_customers'  => (int) $one("SELECT COUNT(*) FROM users WHERE $in AND role_id = 2"),
+            'total_products' => (int) ($this->pdo->query("SELECT COUNT(*) FROM products WHERE is_active = 1")->fetchColumn() ?: 0),
         ];
 
-        // 5 đơn hàng mới nhất
-        $recentOrders = $this->pdo->query("
-            SELECT o.*, u.full_name AS user_name 
-            FROM orders o 
-            LEFT JOIN users u ON u.id = o.user_id 
-            ORDER BY o.created_at DESC 
-            LIMIT 5
-        ")->fetchAll();
+        $st = $this->pdo->prepare("
+            SELECT o.*, u.full_name AS user_name
+            FROM orders o LEFT JOIN users u ON u.id = o.user_id
+            WHERE o.created_at BETWEEN ? AND ?" . ($status ? ' AND o.status = ?' : '') . "
+            ORDER BY o.created_at DESC LIMIT 10");
+        $st->execute($status ? array_merge($p, [$status]) : $p);
+        $recentOrders = $st->fetchAll();
 
         // Sản phẩm sắp hết hàng (< 5 cái)
         $lowStockProducts = $this->pdo->query("
@@ -46,6 +72,13 @@ class AdminDashboardController extends BaseController
             LIMIT 5
         ")->fetchAll();
 
-        $this->render('admin/dashboard', compact('stats', 'recentOrders', 'lowStockProducts'), 'admin');
+        $filter = compact('range', 'status', 'from', 'to');
+        $this->render('admin/dashboard', compact('stats', 'recentOrders', 'lowStockProducts', 'filter'), 'admin');
+    }
+
+    private function validDate(string $d): ?string
+    {
+        $t = DateTime::createFromFormat('!Y-m-d', $d);
+        return $t && $t->format('Y-m-d') === $d ? $d : null;
     }
 }

@@ -52,7 +52,11 @@ class OrderController extends BaseController
         $st->execute([(int) $_SESSION['user_id']]);
         $addresses = $st->fetchAll();
 
-        $this->render('orders/checkout', compact('cartItems', 'subtotal', 'shippingFee', 'addresses'));
+        $st = $this->pdo->prepare('SELECT phone, wallet_balance FROM users WHERE id = ?');
+        $st->execute([(int) $_SESSION['user_id']]);
+        $me = $st->fetch();
+
+        $this->render('orders/checkout', compact('cartItems', 'subtotal', 'shippingFee', 'addresses', 'me'));
     }
 
     /**
@@ -96,7 +100,7 @@ class OrderController extends BaseController
         if (empty($shippingAddress)) {
             $errors[] = 'Vui lòng nhập địa chỉ giao hàng.';
         }
-        if (!in_array($paymentMethod, ['cod', 'bank_transfer', 'momo'])) {
+        if (!in_array($paymentMethod, ['cod', 'online', 'wallet'], true)) {
             $errors[] = 'Phương thức thanh toán không hợp lệ.';
         }
 
@@ -182,7 +186,11 @@ class OrderController extends BaseController
             return;
         }
 
-        $this->render('orders/detail', compact('order'));
+        $st = $this->pdo->prepare('SELECT * FROM order_returns WHERE order_id = ?');
+        $st->execute([$id]);
+        $return = $st->fetch() ?: null;
+
+        $this->render('orders/detail', compact('order', 'return'));
     }
 
     /**
@@ -211,9 +219,9 @@ class OrderController extends BaseController
             return;
         }
 
-        // Chỉ được hủy khi đơn đang ở trạng thái 'pending'
-        if ($order['status'] !== 'pending') {
-            $this->setFlash('error', 'Chỉ có thể hủy đơn hàng đang chờ xử lý.');
+        // Đơn đã giao cho đơn vị vận chuyển thì không hủy được nữa
+        if (!in_array($order['status'], OrderModel::CUSTOMER_CANCELLABLE, true)) {
+            $this->setFlash('error', 'Đơn đã giao cho đơn vị vận chuyển nên không thể hủy.');
             $this->redirect('/orders/' . $id);
             return;
         }
@@ -230,4 +238,57 @@ class OrderController extends BaseController
         $this->redirect('/orders/' . $id);
     }
 
+    /** POST - Khách bấm "Đã nhận hàng" (chỉ khi shipper đang giao). */
+    public function received(int $id): void
+    {
+        $this->requireLogin();
+        $ok = $this->orderModel->confirmReceived($id, (int) $_SESSION['user_id']);
+        $this->setFlash($ok ? 'success' : 'error', $ok
+            ? 'Cảm ơn bạn! Hãy đánh giá sản phẩm. Bạn có thể yêu cầu trả hàng trong ' . OrderModel::RETURN_DAYS . ' ngày.'
+            : 'Chỉ xác nhận được khi đơn đang được shipper giao.');
+        $this->redirect('/orders/' . $id);
+    }
+
+    /** POST - Khách gửi yêu cầu trả hàng: lý do (chọn sẵn) + mô tả + ảnh minh chứng + cách hoàn tiền. */
+    public function requestReturn(int $id): void
+    {
+        $this->requireLogin();
+        $reason = (string) $this->getPost('reason', '');
+        $desc   = (string) $this->getPost('description', '');
+        $method = (string) $this->getPost('refund_method', 'wallet');
+        $bank   = (string) $this->getPost('bank_info', '');
+
+        $err = null;
+        if (!in_array($reason, OrderModel::RETURN_REASONS, true)) $err = 'Vui lòng chọn lý do trả hàng.';
+        elseif (mb_strlen($desc) < 10) $err = 'Vui lòng mô tả rõ tình trạng sản phẩm (ít nhất 10 ký tự).';
+        elseif (!in_array($method, ['wallet', 'bank'], true)) $err = 'Cách hoàn tiền không hợp lệ.';
+        elseif ($method === 'bank' && mb_strlen($bank) < 8) $err = 'Vui lòng nhập ngân hàng, số tài khoản và tên chủ tài khoản.';
+
+        $evidence = null;
+        $f = $_FILES['evidence'] ?? null;
+        if (!$err) {
+            if (!$f || $f['error'] !== UPLOAD_ERR_OK) $err = 'Vui lòng tải lên ảnh minh chứng.';
+            elseif ($f['size'] > 5 * 1024 * 1024) $err = 'Ảnh minh chứng tối đa 5MB.';
+            else {
+                $ext = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'][(new finfo(FILEINFO_MIME_TYPE))->file($f['tmp_name'])] ?? null;
+                if (!$ext) $err = 'Ảnh minh chứng phải là JPG, PNG hoặc WEBP.';
+                else {
+                    $dir = dirname(__DIR__, 2) . '/public/uploads/returns';
+                    if (!is_dir($dir)) mkdir($dir, 0755, true);
+                    $name = bin2hex(random_bytes(12)) . '.' . $ext;
+                    if (move_uploaded_file($f['tmp_name'], "$dir/$name")) $evidence = "/uploads/returns/$name";
+                    else $err = 'Không lưu được ảnh, vui lòng thử lại.';
+                }
+            }
+        }
+
+        if (!$err && !$this->orderModel->requestReturn($id, (int) $_SESSION['user_id'], [
+            'reason' => $reason, 'description' => $desc, 'evidence_url' => $evidence,
+            'refund_method' => $method, 'bank_info' => $method === 'bank' ? $bank : null,
+        ])) {
+            $err = 'Đơn này không thể yêu cầu trả hàng (đã quá ' . OrderModel::RETURN_DAYS . ' ngày hoặc chưa nhận hàng).';
+        }
+        $this->setFlash($err ? 'error' : 'success', $err ?? 'Đã gửi yêu cầu trả hàng, shop sẽ xem xét trong 1–2 ngày.');
+        $this->redirect('/orders/' . $id);
+    }
 }

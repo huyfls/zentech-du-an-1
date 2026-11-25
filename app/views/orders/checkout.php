@@ -57,8 +57,8 @@ unset($_SESSION['flash']);
                     <label class="block text-sm font-medium text-zinc-300 mb-1.5" for="saved-address">Chọn nhanh địa chỉ đã lưu</label>
                     <select id="saved-address" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-sm text-white">
                         <option value="">-- Nhập địa chỉ mới --</option>
-                        <?php foreach ($addresses as $a): ?>
-                        <option value="1" data-name="<?= e($a['receiver_name']) ?>" data-phone="<?= e($a['phone']) ?>" data-addr="<?= e($a['street'] . ', ' . $a['ward'] . ', ' . $a['district'] . ', ' . $a['province']) ?>"><?= e($a['receiver_name'] . ' – ' . $a['street'] . ', ' . $a['province']) ?></option>
+                        <?php foreach ($addresses as $i => $a): ?>
+                        <option value="1" <?= $i === 0 && empty($flash['old']) ? 'selected' : '' ?> data-name="<?= e($a['receiver_name']) ?>" data-phone="<?= e($a['phone']) ?>" data-addr="<?= e($a['street'] . ', ' . $a['ward'] . ', ' . $a['district'] . ', ' . $a['province']) ?>"><?= e($a['receiver_name'] . ' – ' . $a['street'] . ', ' . $a['province']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -72,7 +72,7 @@ unset($_SESSION['flash']);
                                required 
                                placeholder="VD: Nguyễn Văn A"
                                autocomplete="name"
-                               value="<?= e($flash['old']['receiver_name'] ?? ($_SESSION['user_name'] ?? '')) ?>"
+                               value="<?= e($flash['old']['receiver_name'] ?? ($addresses[0]['receiver_name'] ?? ($_SESSION['user_name'] ?? ''))) ?>"
                                class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
                     </div>
 
@@ -84,7 +84,7 @@ unset($_SESSION['flash']);
                                placeholder="VD: 0912345678"
                                pattern="0[0-9]{9}"
                                title="10 chữ số, bắt đầu bằng 0" autocomplete="tel" inputmode="numeric"
-                               value="<?= e($flash['old']['receiver_phone'] ?? '') ?>"
+                               value="<?= e($flash['old']['receiver_phone'] ?? ($addresses[0]['phone'] ?? ($me['phone'] ?? ''))) ?>"
                                class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
                     </div>
                 </div>
@@ -94,7 +94,7 @@ unset($_SESSION['flash']);
                     <input type="text" 
                            name="shipping_address" 
                            required autocomplete="street-address"
-                           value="<?= e($flash['old']['shipping_address'] ?? '') ?>"
+                           value="<?= e($flash['old']['shipping_address'] ?? (isset($addresses[0]) ? $addresses[0]['street'] . ', ' . $addresses[0]['ward'] . ', ' . $addresses[0]['district'] . ', ' . $addresses[0]['province'] : '')) ?>"
                            placeholder="Số nhà, tên đường, Phường/Xã, Quận/Huyện, Tỉnh/TP"
                            class="w-full bg-zinc-950 border border-zinc-700 focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30 rounded-xl px-3.5 py-2.5 text-sm text-white outline-none">
                 </div>
@@ -115,44 +115,21 @@ unset($_SESSION['flash']);
                     Phương thức thanh toán
                 </h2>
 
-                <div class="space-y-3">
-                    <!-- COD -->
-                    <label class="flex items-center gap-3 p-4 rounded-xl border border-accent-500/40 bg-zinc-900/80 cursor-pointer hover:border-accent-400 transition">
-                        <input type="radio" name="payment_method" value="cod" <?= ($flash['old']['payment_method'] ?? 'cod') === 'cod' ? 'checked' : '' ?> class="text-accent-500 focus:ring-0">
-                        <div class="w-8 h-8 rounded-lg bg-accent-500/10 text-accent-400 flex items-center justify-center text-lg">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h20v10H2zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-                        </div>
+                <div class="space-y-3" role="radiogroup" aria-label="Phương thức thanh toán">
+                    <?php $pmSel = $flash['old']['payment_method'] ?? 'cod'; $bal = (float) ($me['wallet_balance'] ?? 0); ?>
+                    <?php foreach ([
+                        'cod'    => ['Thanh toán khi nhận hàng (COD)', 'Trả tiền mặt cho shipper khi nhận hàng'],
+                        'online' => ['Thanh toán online (thẻ / QR)', 'Bản demo: cổng thanh toán giả lập, đơn được ghi nhận đã thanh toán ngay. Hủy/trả hàng hoàn về ví ZenTech'],
+                        'wallet' => ['Ví ZenTech — số dư ' . number_format($bal, 0, ',', '.') . '₫', 'Trừ thẳng vào số dư ví (tiền hoàn từ đơn hủy/trả hàng)'],
+                    ] as $val => [$title, $sub]): ?>
+                    <label class="flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition has-[:checked]:border-accent-500 has-[:checked]:bg-accent-500/5 border-zinc-800 bg-zinc-950/60 hover:border-zinc-700 <?= $val === 'wallet' && $bal <= 0 ? 'opacity-60' : '' ?>">
+                        <input type="radio" name="payment_method" value="<?= $val ?>" <?= $pmSel === $val ? 'checked' : '' ?> <?= $val === 'wallet' && $bal <= 0 ? 'disabled' : '' ?> class="text-accent-500 focus:ring-0">
                         <div>
-                            <div class="text-xs font-bold text-white">Thanh toán khi nhận hàng (COD)</div>
-                            <div class="text-[11px] text-zinc-400">Kiểm tra hàng trước khi thanh toán tiền mặt</div>
+                            <div class="text-xs font-bold text-white"><?= e($title) ?></div>
+                            <div class="text-[11px] text-zinc-400"><?= e($sub) ?></div>
                         </div>
                     </label>
-
-                    <!-- Chuyển khoản ngân hàng -->
-                    <label class="flex items-center gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 cursor-pointer hover:border-zinc-700 transition">
-                        <input type="radio" name="payment_method" value="bank_transfer" <?= ($flash['old']['payment_method'] ?? '') === 'bank_transfer' ? 'checked' : '' ?> class="text-accent-500 focus:ring-0">
-                        <div class="w-8 h-8 rounded-lg bg-ember-500/10 text-ember-400 flex items-center justify-center text-lg">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6M5 10v8m4-8v8m6-8v8m4-8v8M3 21h18"/></svg>
-                        </div>
-                        <div>
-                            <div class="text-xs font-bold text-white">Chuyển khoản VietQR / 247</div>
-                            <div class="text-[11px] text-zinc-400">Mã QR động tự động xác nhận đơn trong 1 phút</div>
-                        </div>
-                    </label>
-
-                    <!-- Ví điện tử (sắp ra mắt) -->
-                    <div class="flex items-center justify-between p-4 rounded-xl border border-zinc-800/60 bg-zinc-950/30 opacity-60">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-pink-500/10 text-accent-400 flex items-center justify-center text-lg">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm5 17h.01"/></svg>
-                            </div>
-                            <div>
-                                <div class="text-xs font-semibold text-zinc-300">Ví MoMo / VNPay</div>
-                                <div class="text-[11px] text-zinc-500">Cổng thanh toán tự động</div>
-                            </div>
-                        </div>
-                        <span class="text-[11px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">Sắp ra mắt</span>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 

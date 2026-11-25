@@ -563,7 +563,7 @@ class ProductModel extends BaseModel
             "SELECT o.id FROM orders o
              JOIN order_items oi ON oi.order_id = o.id
              JOIN product_variants pv ON pv.id = oi.variant_id
-             WHERE o.user_id = ? AND o.status = 'delivered' AND pv.product_id = ?
+             WHERE o.user_id = ? AND o.status IN ('delivered', 'completed', 'return_requested') AND pv.product_id = ?
              ORDER BY o.id DESC LIMIT 1",
             [$userId, $productId]
         );

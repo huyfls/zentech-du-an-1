@@ -95,7 +95,7 @@ $total = $subtotal + $shippingFee;
                                            id="qty-<?= $vid ?>" 
                                            value="<?= (int)$item['quantity'] ?>" 
                                            min="1" 
-                                           max="<?= (int)($item['stock_qty'] ?? 99) ?>"
+                                           max="<?= min(CartModel::MAX_QTY, (int)($item['stock_qty'] ?? 99)) ?>"
                                            onchange="updateCart(<?= $vid ?>, this.value)"
                                            class="w-10 text-center bg-transparent text-xs font-bold text-white outline-none">
                                     <button type="button" 

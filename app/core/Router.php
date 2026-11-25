@@ -48,6 +48,9 @@ class Router {
         ['GET',  '/don-hang/{id}',             'OrderController',         'detail'],
         ['GET',  '/orders/{id}',               'OrderController',         'detail'],
         ['POST', '/orders/cancel/{id}',        'OrderController',         'cancel'],
+        ['POST', '/orders/received/{id}',      'OrderController',         'received'],
+        ['POST', '/orders/return/{id}',        'OrderController',         'requestReturn'],
+        ['GET',  '/auth/check-email',          'AuthController',          'checkEmail'],
 
         // Tài khoản cá nhân
         ['GET',  '/tai-khoan',                 'AccountController',       'index'],
@@ -105,6 +108,9 @@ class Router {
         ['GET',  '/403',                       'ErrorController',         'forbidden'],
         ['GET',  '/404',                       'ErrorController',         'notFound'],
         ['POST', '/admin/orders/update/{id}',  'AdminOrderController',    'updateStatus'],
+        ['POST', '/admin/orders/failed/{id}',  'AdminOrderController',    'deliveryFailed'],
+        ['GET',  '/admin/returns',             'AdminOrderController',    'returns'],
+        ['POST', '/admin/returns/{id}',        'AdminOrderController',    'resolveReturn'],
     ];
 
     // -------------------------------------------------------------------------

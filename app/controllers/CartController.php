@@ -82,6 +82,15 @@ class CartController extends BaseController
             return;
         }
 
+        // Chống spam: tối đa 20 lần thêm vào giỏ mỗi phút cho một phiên
+        $now = time();
+        $_SESSION['cart_add_log'] = array_values(array_filter($_SESSION['cart_add_log'] ?? [], fn($t) => $t > $now - 60));
+        if (count($_SESSION['cart_add_log']) >= 20) {
+            $this->renderJson(['success' => false, 'message' => 'Bạn thao tác quá nhanh, vui lòng thử lại sau ít phút.'], 429);
+            return;
+        }
+        $_SESSION['cart_add_log'][] = $now;
+
         // Lấy thông tin variant từ DB (kiểm tra tồn kho thực tế)
         $variant = $this->productModel->getVariantById($variantId);
 
@@ -98,6 +107,17 @@ class CartController extends BaseController
         // Tính số lượng hiện có trong giỏ
         $currentQty = $_SESSION['cart'][$variantId]['quantity'] ?? 0;
         $newQty     = $currentQty + $qty;
+
+        // Mỗi sản phẩm tối đa MAX_QTY cái trong giỏ
+        $max = CartModel::MAX_QTY;
+        if ($newQty > $max && $max <= $variant['stock_qty']) {
+            if ($currentQty >= $max) {
+                $this->renderJson(['success' => false, 'message' => "Mỗi sản phẩm chỉ được mua tối đa $max cái, giỏ của bạn đã có đủ $max."]);
+                return;
+            }
+            $newQty = $max;
+            $limitMsg = "Mỗi sản phẩm chỉ được mua tối đa $max cái, giỏ hàng đã được điều chỉnh về $max.";
+        }
 
         // Vượt tồn kho: không cộng thêm và báo rõ số còn lại
         $adjusted = false;
@@ -137,7 +157,7 @@ class CartController extends BaseController
 
         $this->renderJson([
             'success'  => true,
-            'message'  => $adjusted ? 'Kho chỉ còn ' . $newQty . ' sản phẩm, giỏ hàng của bạn đã được điều chỉnh về ' . $newQty . '.' : 'Đã thêm vào giỏ hàng!',
+            'message'  => $limitMsg ?? ($adjusted ? 'Kho chỉ còn ' . $newQty . ' sản phẩm, giỏ hàng của bạn đã được điều chỉnh về ' . $newQty . '.' : 'Đã thêm vào giỏ hàng!'),
             'count'    => $summary['count'],
             'subtotal' => $summary['subtotal'],
         ]);
@@ -183,8 +203,9 @@ class CartController extends BaseController
                 unset($_SESSION['cart'][$variantId]);
                 $this->setFlash('error', 'Sản phẩm đã hết hàng nên đã được bỏ khỏi giỏ.');
             } else {
-                if ($qty > $stockLimit) $this->setFlash('error', 'Kho chỉ còn ' . $stockLimit . ' sản phẩm, số lượng đã được điều chỉnh về ' . $stockLimit . '.');
-                $_SESSION['cart'][$variantId]['quantity'] = min($qty, $stockLimit);
+                if ($qty > $stockLimit && $stockLimit <= CartModel::MAX_QTY) $this->setFlash('error', 'Kho chỉ còn ' . $stockLimit . ' sản phẩm, số lượng đã được điều chỉnh về ' . $stockLimit . '.');
+                elseif ($qty > CartModel::MAX_QTY) $this->setFlash('error', 'Mỗi sản phẩm chỉ được mua tối đa ' . CartModel::MAX_QTY . ' cái, số lượng đã được điều chỉnh về ' . CartModel::MAX_QTY . '.');
+                $_SESSION['cart'][$variantId]['quantity'] = min($qty, $stockLimit, CartModel::MAX_QTY);
             }
         }
 
