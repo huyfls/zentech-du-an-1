@@ -8,3 +8,7 @@ _temp_combined.md
 backup/
 ~$*
 NOP_BAI_GIAI_DOAN_2/ZenTech_SourceCode.zip
+
+# Ảnh gốc sản phẩm Apple lấy từ CellphoneS (~1,5GB): tải lại bằng python3 scratch/cellphones/build.py
+public/uploads/products/apple/
+scratch/cellphones/pages/

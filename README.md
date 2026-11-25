@@ -69,3 +69,16 @@ Tên, giá và ảnh lấy từ các trang công khai của CellphoneS làm dữ
 ## Tài liệu
 
 Tài liệu Giai đoạn 1 nằm trong `docs/tuần 1 - dự án 1/`; bắt đầu từ `README_CHUAN_BI_BAO_CAO_GIAI_DOAN_1.md` (danh sách file, kịch bản trình bày, câu hỏi dự kiến). Sửa file `.md` trong `docs/` rồi chạy `python3 docs/convert_to_docx.py` để sinh lại file Word. Phân tích khảo sát: `python3 scratch/analyze_survey.py`. Ảnh giao diện: `scratch/capture_screens.py`. Sơ đồ Mermaid: `scratch/render_mermaid.py`.
+
+## Dữ liệu sản phẩm Apple (lấy từ CellphoneS)
+
+73 dòng máy Apple (iPhone, iPad, Mac, Apple Watch, AirPods; không gồm phụ kiện) với 684 biến thể phiên bản × màu, giá và ảnh gốc.
+Ảnh gốc khoảng 1,5GB nên không đưa lên GitHub. Để có dữ liệu này trên máy mới:
+
+```bash
+python3 scratch/cellphones/crawl.py   # lấy danh sách + trang chi tiết -> scratch/cellphones/data.json
+python3 scratch/cellphones/build.py   # tải ảnh gốc vào public/uploads/products/apple/ và sinh database/seeds/2026_11_25_apple_cellphones.sql
+mysql -uroot zentech_db < database/seeds/2026_11_25_apple_cellphones.sql
+```
+
+File SQL chạy lại được nhiều lần (xóa sản phẩm SKU `CPS-*` cũ trước khi nhập). 3 dòng máy được xem nhiều nhất mỗi nhóm trên CellphoneS được đánh dấu nổi bật.
