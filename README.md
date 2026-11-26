@@ -70,10 +70,16 @@ Tên, giá và ảnh lấy từ các trang công khai của CellphoneS làm dữ
 
 Tài liệu Giai đoạn 1 nằm trong `docs/tuần 1 - dự án 1/`; bắt đầu từ `README_CHUAN_BI_BAO_CAO_GIAI_DOAN_1.md` (danh sách file, kịch bản trình bày, câu hỏi dự kiến). Sửa file `.md` trong `docs/` rồi chạy `python3 docs/convert_to_docx.py` để sinh lại file Word. Phân tích khảo sát: `python3 scratch/analyze_survey.py`. Ảnh giao diện: `scratch/capture_screens.py`. Sơ đồ Mermaid: `scratch/render_mermaid.py`.
 
+## Chạy trên Windows (thành viên nhóm)
+
+Xem [docs/HUONG_DAN_CHAY_TREN_WINDOWS.md](docs/HUONG_DAN_CHAY_TREN_WINDOWS.md). Tóm tắt: cài XAMPP (PHP 8.2) → Download ZIP repo này → Start MySQL trong XAMPP → bấm đúp `windows\1_cai_dat.bat` (lần đầu) → bấm đúp `windows\2_chay_web.bat`.
+
 ## Dữ liệu sản phẩm Apple (lấy từ CellphoneS)
 
 73 dòng máy Apple (iPhone, iPad, Mac, Apple Watch, AirPods; không gồm phụ kiện) với 684 biến thể phiên bản × màu, giá và ảnh gốc.
-Ảnh gốc khoảng 1,5GB nên không đưa lên GitHub. Để có dữ liệu này trên máy mới:
+Dữ liệu đã có sẵn trong `database/zentech_full_dump.sql`. Ảnh gốc (~1,6GB) không nằm trong repo mà ở mục
+[Releases](https://github.com/huyfls/zentech-du-an-1/releases/tag/anh-apple-v1): tải `apple_images.zip`, giải nén vào `public/uploads/products/`
+(trên Windows `1_cai_dat.bat` tự làm bước này). Muốn lấy lại dữ liệu mới nhất từ CellphoneS:
 
 ```bash
 python3 scratch/cellphones/crawl.py   # lấy danh sách + trang chi tiết -> scratch/cellphones/data.json

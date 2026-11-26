@@ -1,8 +1,8 @@
 # Báo Cáo Kiểm Thử Hệ Thống ZenTech
 
-> **Ngày kiểm thử:** 24/11/2026  
+> **Ngày kiểm thử:** 26/11/2026  
 > **Môi trường:** PHP 8.2 (máy chủ tích hợp), MariaDB (XAMPP), Chrome; chạy tại `localhost:8001`  
-> **Kết quả tự động:** 159 trên 159 ca đạt
+> **Kết quả tự động:** 176 trên 176 ca đạt
 
 ---
 
@@ -10,24 +10,24 @@
 
 | Chỉ số | Kết quả |
 |---|---|
-| Ca kiểm thử tự động: kiểm tra trang, bảo mật, đơn hàng, quản trị | 59 / 59 đạt |
+| Ca kiểm thử tự động: kiểm tra trang, bảo mật, đơn hàng, quản trị | 76 / 76 đạt |
 | Ca kiểm thử tự động: luồng nghiệp vụ (đăng ký, đặt hàng, lọc, admin) | 100 / 100 đạt |
 | Kiểm thử logic JavaScript: bộ chọn biến thể (Node, `scratch/variant_picker_test.js`) | Đạt |
 | Kiểm thử thủ công trên trình duyệt | Máy tính (khoảng 800px) và điện thoại giả lập (375px); không có thanh cuộn ngang |
 | Rà soát theo checklist thiết kế | 8 checklist: giỏ hàng, thanh toán, đăng nhập, đăng ký, tìm kiếm, 404, báo lỗi nhập liệu, gửi biểu mẫu |
-| Kiểm tra schema | File SQL nạp sạch vào database trống: 26 bảng, 29 khóa ngoại, khớp database đang chạy |
+| Kiểm tra schema | File SQL nạp sạch vào database trống: 28 bảng, 35 khóa ngoại, khớp database đang chạy |
 
 ### Dữ liệu trong hệ thống khi kiểm thử
 
 | Bảng | Số dòng |
 |---|---|
-| Sản phẩm | 330 |
-| Biến thể (màu, phiên bản, giá, tồn kho) | 571 |
-| Hình ảnh sản phẩm | 1848 |
+| Sản phẩm | 403 |
+| Biến thể (màu, phiên bản, giá, tồn kho) | 1255 |
+| Hình ảnh sản phẩm | 2709 |
 | Thông số kỹ thuật (EAV) | 1834 |
 | Thương hiệu | 34 |
-| Người dùng | 15 |
-| Đơn hàng | 31 |
+| Người dùng | 4 |
+| Đơn hàng | 8 |
 
 Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm dữ liệu mẫu. Tồn kho, lượt bán và lượt xem là số giả lập.
 
@@ -35,7 +35,7 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 
 ## 2. Kết quả kiểm thử tự động
 
-### 2.1 Trang, bảo mật, đơn hàng, quản trị (59 ca)
+### 2.1 Trang, bảo mật, đơn hàng, quản trị (76 ca)
 
 | Mã | Nội dung kiểm tra | Kết quả |
 |---|---|---|
@@ -85,19 +85,36 @@ Dữ liệu sản phẩm lấy từ các trang công khai của CellphoneS làm 
 | E44 | không có cảnh báo PHP tại /admin/products | Đạt |
 | E45 | Truy cập /admin/orders trả về 200 | Đạt |
 | E46 | không có cảnh báo PHP tại /admin/orders | Đạt |
-| E47 | Truy cập /admin/orders/detail/310 trả về 200 | Đạt |
-| E48 | không có cảnh báo PHP tại /admin/orders/detail/310 | Đạt |
+| E47 | Truy cập /admin/orders/detail/157 trả về 200 | Đạt |
+| E48 | không có cảnh báo PHP tại /admin/orders/detail/157 | Đạt |
 | E49 | Truy cập /admin/products/create trả về 200 | Đạt |
 | E50 | không có cảnh báo PHP tại /admin/products/create | Đạt |
 | E51 | Trang đơn hàng admin không có cảnh báo PHP | Đạt |
 | E52 | Admin cập nhật đơn thiếu CSRF token bị từ chối (419) | Đạt |
 | E53 | Không cho nhảy trạng thái từ chờ xử lý sang đã giao | Đạt |
 | E54 | Sau cập nhật chuyển về trang chi tiết đơn | Đạt |
-| E55 | Chuỗi trạng thái hợp lệ đến đang giao | Đạt |
-| E56 | Không còn chuyển đơn sang hoàn hàng | Đạt |
-| E57 | Đang giao chuyển sang đã giao | Đạt |
-| E58 | Đơn đã giao là trạng thái cuối, không đổi tiếp | Đạt |
-| E59 | Khách hàng không vào được khu quản trị | Đạt |
+| E55 | Chuỗi trạng thái một chiều đến shipper đang giao | Đạt |
+| E56 | Đang giao thì admin không hủy được đơn | Đạt |
+| E57 | Admin không được bấm đã giao hàng | Đạt |
+| E58 | Ghi nhận giao thất bại lần 1, đơn vẫn đang giao | Đạt |
+| E59 | Khách không hủy được đơn đã giao cho vận chuyển | Đạt |
+| E60 | Khách bấm Đã nhận hàng: đơn sang đã nhận, COD tính đã thanh toán | Đạt |
+| E61 | Còn hạn trả hàng thì admin chưa hoàn thành được | Đạt |
+| E62 | Trả hàng mô tả quá ngắn bị từ chối | Đạt |
+| E63 | Ảnh minh chứng không phải ảnh thật bị từ chối | Đạt |
+| E64 | Gửi yêu cầu trả hàng có ảnh minh chứng | Đạt |
+| E65 | Tab Hoàn hàng của admin hiện yêu cầu | Đạt |
+| E66 | Duyệt trả hàng: đơn đã trả, hàng về kho | Đạt |
+| E67 | Duyệt trả hàng: tiền hoàn vào ví ZenTech | Đạt |
+| E68 | Thanh toán bằng ví: đơn đã thanh toán, ví bị trừ | Đạt |
+| E69 | Giao thất bại 3 lần: đơn hủy, hàng về kho, tiền về ví | Đạt |
+| E70 | Thêm 12 cái bị giới hạn còn 10 | Đạt |
+| E71 | Trình duyệt thứ hai đăng nhập cùng tài khoản thấy cùng giỏ | Đạt |
+| E72 | Mã của danh mục khác bị từ chối | Đạt |
+| E73 | Mã đúng danh mục được áp dụng | Đạt |
+| E74 | Bộ lọc dashboard chạy, không cảnh báo PHP | Đạt |
+| E75 | Bộ lọc dashboard bỏ qua ngày sai | Đạt |
+| E76 | Khách hàng không vào được khu quản trị | Đạt |
 
 ### 2.2 Luồng nghiệp vụ (100 ca)
 

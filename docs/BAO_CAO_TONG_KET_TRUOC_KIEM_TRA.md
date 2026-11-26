@@ -193,3 +193,76 @@ Mật khẩu băm bcrypt; token đặt lại mật khẩu chỉ lưu dạng băm
 | Admin khóa tài khoản đang đăng nhập? | Phiên đó bị đăng xuất ở lần tải trang kế tiếp |
 | Đã kiểm thử thế nào? | 159 ca tự động chạy trên website thật, cộng kiểm tra giao diện bằng trình duyệt |
 | Phần nào chưa làm? | Xem mục 7, nói thật từng mục |
+
+---
+
+## 10. Cập nhật ngày 25/11/2026
+
+Các chức năng thêm sau khi hoàn thiện báo cáo này. Chi tiết từng mục: `docs/CHECKLIST_THU_4_25_11_2026.md`.
+
+### 10.1 Phía khách hàng
+
+- [x] Giỏ hàng lưu vào database, đăng nhập ở 2 trình duyệt thấy cùng một giỏ
+- [x] Gộp giỏ lúc chưa đăng nhập vào giỏ đã lưu khi đăng nhập
+- [x] Mỗi sản phẩm tối đa 10 cái trong giỏ, vượt thì tự chỉnh và báo lý do
+- [x] Chống spam thêm giỏ: tối đa 20 lần mỗi phút
+- [x] Trang đăng ký kiểm tra email ngay khi gõ (sai định dạng / đã có tài khoản)
+- [x] Trang thanh toán có 3 lựa chọn: COD, thanh toán online (giả lập), ví ZenTech
+- [x] Thông tin giao hàng tự điền từ địa chỉ mặc định
+- [x] Trang chi tiết đơn có thanh tiến trình các bước
+- [x] Nút "Đã nhận hàng" khi shipper đang giao, sau đó hiện nút đánh giá sản phẩm
+- [x] Yêu cầu trả hàng trong 7 ngày: chọn lý do, mô tả, ảnh minh chứng, hoàn tiền về ví hoặc tài khoản ngân hàng
+- [x] Khách chỉ hủy được đơn trước khi giao cho đơn vị vận chuyển
+
+### 10.2 Phía quản trị
+
+- [x] Trạng thái đơn đi một chiều: Chờ xác nhận → Đã xác nhận → Đang đóng gói → Giao đơn vị vận chuyển → Shipper đang giao → Đã nhận hàng → Hoàn thành
+- [x] Admin không được bấm "Đã giao hàng" (khách tự xác nhận)
+- [x] Đơn đã giao cho đơn vị vận chuyển thì không hủy được
+- [x] Nút "Giao thất bại" đếm 1/3, 2/3, 3/3; lần thứ 3 tự hủy đơn, hàng về kho, tiền đã trả hoàn về ví
+- [x] Tab mới "Hoàn hàng": xem ảnh minh chứng, duyệt hoặc từ chối
+- [x] Duyệt trả hàng: hàng về kho và hoàn tiền; từ chối: đơn chuyển sang Hoàn thành
+- [x] Chỉ đánh dấu "Hoàn thành" được khi khách đã hết hạn 7 ngày trả hàng
+- [x] Mã giảm giá áp dụng cho toàn bộ / một danh mục (gồm danh mục con) / một sản phẩm
+- [x] Bộ lọc dashboard theo khoảng thời gian (hôm nay, 7 ngày, 30 ngày, tháng này, toàn thời gian, tùy chọn) và theo trạng thái đơn
+- [x] Dashboard thêm số đơn hủy, trả hàng, khách mới trong kỳ
+- [x] Đồng nhất tiếng Việt toàn bộ trang quản trị
+
+### 10.3 Database
+
+- [x] Migration `2026_11_25_order_flow_cart_wallet_returns.sql`: trạng thái đơn mới, đếm giao thất bại, ngày nhận hàng
+- [x] Bảng mới `order_returns` (yêu cầu trả hàng) và `wallet_transactions` (lịch sử ví)
+- [x] Cột `wallet_balance` cho người dùng
+- [x] Giỏ hàng lưu giá lúc bỏ vào giỏ; xóa tài khoản thì xóa luôn giỏ
+- [x] Mã giảm giá thêm `category_id`, `product_id`
+- [x] Cập nhật `zentech_full_dump.sql` và `zentech_schema.sql`, đã thử import vào database trống
+
+### 10.4 Dữ liệu sản phẩm Apple từ CellphoneS
+
+- [x] Lấy 73 dòng máy Apple, không gồm phụ kiện, tổng 684 biến thể phiên bản × màu
+
+  | Nhóm | Dòng máy | Biến thể |
+  |---|---|---|
+  | iPhone | 17 | 136 |
+  | iPad | 11 | 150 |
+  | Mac | 30 | 207 |
+  | Apple Watch | 7 | 175 |
+  | AirPods | 8 | 16 |
+
+- [x] Thêm 4 danh mục mới: Điện Thoại, Máy Tính Bảng, Laptop & Máy Mac, Đồng Hồ Thông Minh
+- [x] Tải 1.367 ảnh gốc (khoảng 1,5 GB) về `public/uploads/products/apple/`
+- [x] Đánh dấu 3 dòng được xem nhiều nhất mỗi nhóm là sản phẩm nổi bật
+- [x] Script `crawl.py` và `build.py` để chạy lại trên máy khác, hướng dẫn trong README
+
+### 10.5 Kiểm thử
+
+- [x] Kiểm thử luồng (`flow_tests.py`): 100/100 đạt
+- [x] Kiểm thử end-to-end (`e2e_test.py`): đạt hết, gồm 25 test mới cho quy trình đơn, trả hàng, ví, giỏ lưu database, giới hạn 10 sản phẩm, mã giảm giá theo danh mục, bộ lọc dashboard
+- [x] Chụp màn hình kiểm tra giao diện: dashboard, chi tiết đơn admin, mã giảm giá, đăng ký, trang sản phẩm iPhone và Apple Watch
+
+### 10.6 Hạn chế mới cần biết
+
+- Đơn khách không bấm "Đã nhận hàng" sẽ nằm ở bước "Shipper đang giao"; chưa có tự chuyển trạng thái sau một thời gian.
+- Thanh toán online là giả lập, chưa nối cổng thanh toán thật. Hoàn tiền qua ngân hàng chỉ ghi nhận, kế toán chuyển khoản tay.
+- Tồn kho sản phẩm Apple là số mặc định (20) vì CellphoneS không công khai tồn kho. Ảnh và thông tin sản phẩm là của CellphoneS, chỉ dùng cho mục đích học tập.
+- Chạy trên Windows: xem `docs/HUONG_DAN_CHAY_TREN_WINDOWS.md`.
